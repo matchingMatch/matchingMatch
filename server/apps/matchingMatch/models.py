@@ -16,7 +16,7 @@ class Team(models.Model):
   
 
 class User(AbstractUser, PermissionsMixin):
-  team = models.ForeignKey(Team, on_delete= models.CASCADE, related_name = "user_team")
+  team = models.ForeignKey(Team, on_delete= models.CASCADE, null=True, related_name = "user_team")
 
 class Stadium(models.Model):
   stadium_name = models.CharField(max_length = 250, null = False)

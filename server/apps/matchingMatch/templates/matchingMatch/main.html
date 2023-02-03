@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>매칭매치</title>
+</head>
+<body>
+  <header>
+    <h1>Matching Match</h1>
+    <h1>매칭매치</h1>
+  </header>
+  <main>
+    <div class="week">
+      <div class="days"></div>
+      <div class="dates"></div>
+    </div>
+    <div>
+      <div class="match_detail_btn">
+        <a href="">매치 상세 설정</a>
+      </div>
+    </div>
+    <div class="match_list">
+
+    </div>
+    <div class="match_register_btn">
+      <a href="">매치 등록하기</a>
+    </div>
+  </main>
+  <script>
+    let date = new Date()
+    const thisYear = date.getFullYear()
+    const thisMonth = date.getMonth()
+    const thisDate = date.getDate()
+    const thisDay = date.getDay()
+    const lastDate = new Date(thisYear, thisMonth + 1, 0).getDate()
+    daysKorean = ['일', '월', '화', '수', '목', '금', '토']
+    days=[]
+    dates = []
+    
+    for (let i = thisDay; i<thisDay+7; i++) {
+      days.push(i%7)
+    }
+    days.forEach((day, i) => {
+      days[i] = `<div>${daysKorean[day]}요일</div>`
+    })
+    console.log(days)
+    if (thisDate+6 <= lastDate) {
+    for(let i = thisDate; i < thisDate + 7; i++) {
+      dates.push(i)
+    }
+  } else {
+    for (let i = thisDate; i < lastDate + 1; i++) {
+      dates.push(i)
+    }
+    restDateCount = 7 - (lastDate - thisDate + 1)
+    for (let i = 1; i < restDateCount + 1; i++) {
+      dates.push(i)
+    }
+  }
+
+  dates.forEach((date, i) => {
+    dates[i] = `<div>${date}일</div> ` 
+  })
+  
+  const week = document.querySelector('.week .dates')
+  week.innerHTML = dates.join('')
+
+  const daysList = document.querySelector('.week .days')
+  daysList.innerHTML = days.join('')
+  </script>
+</body>
+</html>

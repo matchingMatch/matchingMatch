@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'server.apps.matchingMatch',
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [
