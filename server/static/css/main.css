@@ -1,0 +1,39 @@
+a {
+  text-decoration: none;
+  color: black;
+  border: 1px solid black;
+  width: fit-content;
+  padding: 5px;
+  background-color: #cecece;
+}
+header {
+  text-align: center;
+}
+main {
+  padding: 20px;
+}
+.week {
+  padding: 0 300px;
+  display: flex;
+  justify-content: space-between;
+}
+.date {
+  text-align: center;
+  border: 1px solid black;
+  height: fit-content;
+  padding: 10px;
+  cursor: pointer;
+}
+.match_list {
+  height: 500px;
+}
+.sun {
+  color: red;
+}
+.sat {
+  color: blue;
+}
+.match_register_btn {
+  display: flex;
+  justify-content: end;
+}
