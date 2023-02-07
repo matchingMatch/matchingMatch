@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from server.apps.matchingMatch.models import Team, MatchInfo, Stadium
-from server.apps.matchingMatch.forms import MatchRegisterForm
+from models import Team, MatchInfo, Stadium, User
+from forms import MatchRegisterForm, TeamRegisterForm
 from django.shortcuts import get_object_or_404
 # Create your views here.
 
@@ -34,14 +34,14 @@ def team_detail(request, pk): # pk = 팀 아이디
 def team_update(request, pk):
   match = get_object_or_404(Team, pk = pk)
   if request.method == "POST":
-    match_form = MatchRegisterForm(request.POST)
+    match_form = TeamRegisterForm(request.POST)
     if match_form.is_valid():
       match_form.save()
       return redirect("/")
     else:
       return render()
   else:
-    match_form = MatchRegisterForm(instance=match)
+    match_form = TeamRegisterForm(instance=match)
     context = {"match_form" : match_form}
 
     return render(request, "html", context=context)
