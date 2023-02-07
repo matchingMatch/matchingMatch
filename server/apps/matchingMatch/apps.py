@@ -8,5 +8,5 @@ class MatchingmatchConfig(AppConfig):
 
     def ready(self):
         if settings.SCHEDULER_DEFAULT:
-            from jobs import updater
+            from server.apps.matchingMatch.jobs import updater
             updater.start()
