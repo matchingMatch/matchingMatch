@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from models import Team, MatchInfo, Stadium, User
-from forms import MatchRegisterForm
+from server.apps.matchingMatch.models import Team, MatchInfo, Stadium
+from server.apps.matchingMatch.forms import MatchRegisterForm
 from django.shortcuts import get_object_or_404
 # Create your views here.
 
@@ -65,7 +65,7 @@ def match_register(request):
   match_form = MatchRegisterForm()
   context = {"match_form" : match_form}
 
-  return render(request, "html", context=context)
+  return render(request, "matchingMatch/match_register.html", context=context)
 
 
 # def match_select(request, pk): 매치 선택
