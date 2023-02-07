@@ -136,3 +136,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # date format
 
 DATE_INPUT_FORMAT = ["%Y-%m-%d"]
+
+SILENCED_SYSTEM_CHECKS = ['auth.E003', 'auth.W004']
+

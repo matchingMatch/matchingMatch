@@ -4,7 +4,10 @@ from .models import MatchInfo, Alarm
 from models import Team, MatchInfo, Stadium
 from forms import MatchRegisterForm, TeamRegisterForm
 from django.shortcuts import get_object_or_404
+from django.http.request import HttpRequest
 # Create your views here.
+
+
 
 
 
@@ -67,7 +70,7 @@ def match_register(request):
   match_form = MatchRegisterForm()
   context = {"match_form" : match_form}
 
-  return render(request, "html", context=context)
+  return render(request, "matchingMatch/match_register.html", context=context)
 
 
 # def match_select(request, pk): 매치 선택

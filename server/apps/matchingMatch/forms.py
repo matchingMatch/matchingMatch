@@ -1,18 +1,18 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from models import MatchInfo, Team
+from server.apps.matchingMatch.models import MatchInfo, Team
 
 
 
-class MatchRegisterForm(forms.ModelForm):
+class MatchRegisterForm(UserCreationForm):
   
   class Meta:
     model = MatchInfo
-    field = []
+    fields = ['stadium','date','gender','stadium_cost','etc','start_time','end_time']
 
 
-class TeamRegisterForm(UserCreationForm):
+# class TeamRegisterForm(UserCreationForm):
   
-  class Meta:
-    model = Team
-    fiedl = []
+#   class Meta:
+#     model = Team
+#     fiedl = []
