@@ -6,3 +6,5 @@ admin.site.register(Team)
 admin.site.register(Stadium)
 admin.site.register(MatchInfo)
 admin.site.register(Alarm)
+
+admin.site.register(Team)

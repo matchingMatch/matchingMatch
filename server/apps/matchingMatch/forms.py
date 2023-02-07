@@ -16,3 +16,8 @@ class MatchRegisterForm(UserCreationForm):
 #   class Meta:
 #     model = Team
 #     fiedl = []
+
+class CustomUserCreateForm(UserCreationForm):
+    class Meta:
+        model = Team
+        fields = ['username', 'email', 'password1', 'password2', 'team_name', 'team_logo', 'team_intro', 'region', 'photo', 'pre_proplayer']
