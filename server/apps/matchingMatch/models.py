@@ -48,6 +48,6 @@ class MatchInfo(models.Model):
 
 class Alarm(models.Model):
   team_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, related_name = "team_alarm")
-  match_id = models.OneToOneField(MatchInfo, on_delete=models.CASCADE, related_name="designated_match")
+  match_id = models.ForeignKey(MatchInfo, on_delete=models.CASCADE, related_name="designated_match")
   
 
