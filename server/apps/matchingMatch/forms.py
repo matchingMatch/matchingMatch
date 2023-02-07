@@ -4,13 +4,13 @@ from server.apps.matchingMatch.models import MatchInfo, Team
 
 
 
-class MatchRegisterForm(UserCreationForm):
+class MatchRegisterForm(forms.ModelForm):
   
   class Meta:
     model = MatchInfo
     fields = ['stadium','date','gender','stadium_cost','etc','start_time','end_time']
 
-
+# 수정할 때만 사용되는 폼
 # class TeamRegisterForm(UserCreationForm):
   
 #   class Meta:

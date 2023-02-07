@@ -1,16 +1,13 @@
 import re
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .forms import CustomUserCreateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
-from forms import MatchRegisterForm, TeamRegisterForm
-from models import Team, MatchInfo, Stadium
+from .forms import MatchRegisterForm
+from .models import Team, MatchInfo, Stadium, Alarm
 import datetime
-from django.http.request import HttpRequest
-from .models import MatchInfo, Alarm
 # Create your views here.
 
 
@@ -45,14 +42,14 @@ def team_detail(request, pk): # pk = 팀 아이디
 def team_update(request, pk):
   match = get_object_or_404(Team, pk = pk)
   if request.method == "POST":
-    match_form = TeamRegisterForm(request.POST)
+    match_form = CustomUserCreateForm(request.POST)
     if match_form.is_valid():
       match_form.save()
       return redirect("/")
     else:
       return render()
   else:
-    match_form = TeamRegisterForm(instance=match)
+    match_form = CustomUserCreateForm(instance=match)
     context = {"match_form" : match_form}
 
     return render(request, "html", context=context)
@@ -118,7 +115,7 @@ def match_resolve(request, pk): # pk = 매치 아이디
 
 
 def main(request, *args, **kwargs):
-    alarm = Alarm.objects.filter(team_id=request.user)
+    alarm = Alarm.objects.filter(team_id=request.user.pk)
     return render(request, "matchingMatch/main.html", {'alarm': alarm})
 
 

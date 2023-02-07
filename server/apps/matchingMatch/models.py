@@ -16,7 +16,7 @@ class Team(AbstractUser, PermissionsMixin):
     level = models.IntegerField(null=True, default=0)
     match_count = models.PositiveIntegerField(default=0)
     pre_proplayer = models.TextField(null=True)
-    USERNAME_FIELD = 'team_name'
+    USERNAME_FIELD = 'username'
 
 
 class Stadium(models.Model):
