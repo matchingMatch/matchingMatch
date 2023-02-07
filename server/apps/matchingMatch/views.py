@@ -1,50 +1,51 @@
 from django.shortcuts import render, redirect
-from models import Team, MatchInfo, Stadium, User
-from forms import MatchRegisterForm, TeamRegisterForm
+from server.apps.matchingMatch.models import Team, MatchInfo, Stadium
+from server.apps.matchingMatch.forms import MatchRegisterForm
 from django.shortcuts import get_object_or_404
+from django.http.request import HttpRequest
 # Create your views here.
 
 
 
-def match_detail(request, pk): # pk = 매치 아이디
+# def match_detail(request, pk): # pk = 매치 아이디
 
-  user = request.user
+#   user = request.user
 
-  match = get_object_or_404(MatchInfo, pk = pk)
+#   match = get_object_or_404(MatchInfo, pk = pk)
 
-  context = {"user" : user, "match" : match}
+#   context = {"user" : user, "match" : match}
 
-  return render(request, "html", context=context)
-
-
-
-def team_detail(request, pk): # pk = 팀 아이디
-
-  user = request.user
-
-  match = get_object_or_404(Team, pk = pk)
-
-  context = {"user" : user, "match" : match}
-
-  return render(request, "html", context=context)
+#   return render(request, "html", context=context)
 
 
 
+# def team_detail(request, pk): # pk = 팀 아이디
 
-def team_update(request, pk):
-  match = get_object_or_404(Team, pk = pk)
-  if request.method == "POST":
-    match_form = TeamRegisterForm(request.POST)
-    if match_form.is_valid():
-      match_form.save()
-      return redirect("/")
-    else:
-      return render()
-  else:
-    match_form = TeamRegisterForm(instance=match)
-    context = {"match_form" : match_form}
+#   user = request.user
 
-    return render(request, "html", context=context)
+#   match = get_object_or_404(Team, pk = pk)
+
+#   context = {"user" : user, "match" : match}
+
+#   return render(request, "html", context=context)
+
+
+
+
+# def team_update(request, pk):
+#   match = get_object_or_404(Team, pk = pk)
+#   if request.method == "POST":
+#     match_form = TeamRegisterForm(request.POST)
+#     if match_form.is_valid():
+#       match_form.save()
+#       return redirect("/")
+#     else:
+#       return render()
+#   else:
+#     match_form = TeamRegisterForm(instance=match)
+#     context = {"match_form" : match_form}
+
+#     return render(request, "html", context=context)
 
 
 
@@ -93,15 +94,15 @@ def match_update(request, pk):
     return render(request, "html", context=context)
 
 
-#매치 결정
-def match_resolve(request, pk): # pk = 매치 아이디
+# #매치 결정
+# def match_resolve(request, pk): # pk = 매치 아이디
   
-  if request.method == "POST":
-    match = get_object_or_404(MatchInfo, id = pk)
-    match.participant_id = request.user.pk
-    match.is_matched = True
-    match.save()
-    return redirect("/")
+#   if request.method == "POST":
+#     match = get_object_or_404(MatchInfo, id = pk)
+#     match.participant_id = request.user.pk
+#     match.is_matched = True
+#     match.save()
+#     return redirect("/")
 
-  return render(request, "html")
+#   return render(request, "html")
 

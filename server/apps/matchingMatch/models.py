@@ -9,7 +9,7 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 
 
 class Team(AbstractUser):
-  team_name = models.CharField(null = False, max_length=20)
+  team_name = models.CharField(null = False, max_length=20, unique=True)
   team_logo = models.ImageField()
   team_intro = models.TextField(blank= True) #팀소개
   region = models.CharField(max_length=20)
@@ -18,6 +18,7 @@ class Team(AbstractUser):
   level = models.IntegerField(null = True, default = 0) # 실력 점수의 합
   match_count = models.PositiveIntegerField(default = 0) # 경기 수
   pre_proplayer = models.TextField(null = True)
+  USERNAME_FIELD = 'team_name'
 
 
 
@@ -30,7 +31,7 @@ class Stadium(models.Model):
 
 class MatchInfo(models.Model):
   gender_list = (("male", "남성"), ("female", "여성"), ("mixed", "혼성"))
-  host_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="host_team")
+  host_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="host_team",unique=True )
   participant_id = models.ForeignKey(
     settings.AUTH_USER_MODEL, 
     null = True, 
@@ -44,7 +45,7 @@ class MatchInfo(models.Model):
   etc = models.CharField(max_length=200, null = True)
   start_time = models.DateTimeField()
   end_time = models.DateTimeField()
-
+  USERNAME_FIELD ='host_id'
 
 class Alarm(models.Model):
   team_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, related_name = "team_alarm")

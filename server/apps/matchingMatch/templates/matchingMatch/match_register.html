@@ -18,21 +18,9 @@
     <main>
         <form action="{% url 'matchingMatch:match_register' %}" method="post" enctype="multipart/form-data" >
             {% csrf_token %}
-            <label for="select_team"> 팀 선택 </label>
-            <select name="select_teams" value="팀 선택">
-                {% for team_name in team_list %} <!--team list 가져올 방법 모르겠음-->
-                <option value="{{team_name}}" name="team_name">
-                    {{team_name}}
-                </option>
-                {% endfor %}
-            </select>
 
             <label for="gender"> 성별 </label>
-            <select name="gender" value="성별">
-                <option value="gender" name="gender">
-                    {{MatchInfo.gender}}
-                </option>
-            </select>
+            {{match_form.gender}}
 
             <label for="date"> 날짜 </label>
             <input type="date" id="date">
@@ -46,7 +34,7 @@
 
             <label for="stadium"> 축구장 </label>
             <select name="stadium" value="축구장">
-                <option value="{{}}" name="stadium">
+                <option value="{{stadium}}" name="stadium">
                     {{stadium}}
                 </option>
             </select>
