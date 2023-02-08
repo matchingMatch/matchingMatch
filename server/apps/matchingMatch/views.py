@@ -15,7 +15,7 @@ import datetime
 
 
 def match_detail(request, pk): # pk = 매치 아이디
-
+  # Review : 권한 제한 없이 누구나 볼 수 있는 건가요?
   user = request.user
 
   match = get_object_or_404(MatchInfo, pk = pk)
@@ -63,13 +63,13 @@ def my_page(request, pk): # pk = 유저 아이디
 
 
 def match_register(request):
-  
+
   if request.method == "POST":
     match_form = MatchRegisterForm(request.POST)
     if match_form.is_valid():
       match_form.save()
       return redirect("/")
-  
+
   match_form = MatchRegisterForm()
   context = {"match_form" : match_form}
 
@@ -85,16 +85,16 @@ def match_register(request):
 # def match_open(request, pk):
 
 def match_update(request, pk):
-  
+
   if request.method == "POST":
     match_form = MatchRegisterForm(request.POST)
     if match_form.is_valid():
       id = match_form.save()
       return redirect("/") # 수정된 페이지로 이동
-    
+
     else:
       return redirect("/") # 다시 작성하기
-  
+
   else:
     match_form = MatchRegisterForm()
     context = {"match_form" : match_form}
@@ -103,7 +103,7 @@ def match_update(request, pk):
 
 #매치 결정
 def match_resolve(request, pk): # pk = 매치 아이디
-  
+
   if request.method == "POST":
     match = get_object_or_404(MatchInfo, id = pk)
     match.participant_id = request.user.pk
@@ -125,6 +125,8 @@ def endOfGame(request, *args, **kwargs):
 
 def check_endOfGame():
     # 날짜 셋팅
+    # Review : 알람 기능인 것 같은데, 알람 기능은 조금 복잡합니다.
+    # Review : 참고해보세요! https://dongsik93.github.io/til/2019/07/31/til-etc-fcm/
     now = datetime.datetime.now()
 
     MatchInfos = MatchInfo.objects.filter(
@@ -158,11 +160,11 @@ def login_page(request):
         if user is not None:
             login(request, user)
             messages.info(request, '성공적으로 로그인 하셨습니다.')
-            return redirect('home') 
+            return redirect('home')
         else:
             messages.error(request, '이메일 혹은 비밀번호를 다시 확인해주세요.')
             return redirect('login')
-    
+
     context = {'page':page}
     return render(request, 'login_register.html', context)
 
@@ -201,7 +203,7 @@ def account_page(request):
     # img = Image.open(user.avatar)
     # newsize = (10, 10)
     # img = img.resize(newsize)
-  
+
     # user.avatar = img
     # user.save()
     # user.save()

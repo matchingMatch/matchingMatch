@@ -16,6 +16,9 @@ class Team(AbstractUser, PermissionsMixin):
     level = models.IntegerField(null=True, default=0)
     match_count = models.PositiveIntegerField(default=0)
     pre_proplayer = models.TextField(null=True)
+    # Review : 상수값은 클래스 밖으로 따로 분류하는게 좋습니다.
+    # Review : Class Variable vs Instance Variable 차이가 있는데,
+    # Review : Instance Variable이 기본이라 Instance마다 변수가 새로 생성됩니다.
     USERNAME_FIELD = 'username'
 
 
@@ -47,9 +50,11 @@ class MatchInfo(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     is_alarmed = models.BooleanField(default=False)
-    USERNAME_FIELD ='host_id' 
+    USERNAME_FIELD ='host_id'
 
 class Alarm(models.Model):
+    # Review : MatchInfo와 Alarm의 관계가 완벽히 정의된 것 같지 않습니다.
+    # Review : MatchInfo.is_alarmed와 Alarm이 중복되는 것 같습니다.
     team_id = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="team_alarm")
     match_id = models.ForeignKey(
