@@ -1,12 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
 from django.contrib.auth.validators import UnicodeUsernameValidator
 # Create your models here.
 
 
 class Team(AbstractUser, PermissionsMixin):
-    team_name = models.CharField(null=False, max_length=20)
+    team_name = models.CharField(null=False, max_length=20, unique = True)
     team_logo = models.ImageField(blank=True, null=True)
     team_intro = models.TextField(blank=True)  # 팀소개
     region = models.CharField(max_length=20)
@@ -15,6 +16,7 @@ class Team(AbstractUser, PermissionsMixin):
     level = models.IntegerField(null=True, default=0)
     match_count = models.PositiveIntegerField(default=0)
     pre_proplayer = models.TextField(null=True)
+    USERNAME_FIELD = 'username'
 
 
 class Stadium(models.Model):
@@ -28,9 +30,9 @@ class Stadium(models.Model):
 class MatchInfo(models.Model):
     gender_list = (("male", "남성"), ("female", "여성"), ("mixed", "혼성"))
     host_id = models.ForeignKey(
-        Team, on_delete=models.CASCADE, related_name="host_team")
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="host_team", unique=True)
     participant_id = models.ForeignKey(
-        Team,
+        settings.AUTH_USER_MODEL,
         null=True,
         on_delete=models.CASCADE,
         related_name="participant_team")
@@ -45,10 +47,10 @@ class MatchInfo(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     is_alarmed = models.BooleanField(default=False)
-
+    USERNAME_FIELD ='host_id' 
 
 class Alarm(models.Model):
     team_id = models.ForeignKey(
-        Team, on_delete=models.CASCADE, related_name="team_alarm")
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="team_alarm")
     match_id = models.ForeignKey(
         MatchInfo, on_delete=models.CASCADE, related_name="designated_match")
