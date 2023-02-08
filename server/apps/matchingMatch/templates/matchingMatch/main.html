@@ -13,7 +13,16 @@
     <h1>Matching Match</h1>
     <h1>매칭매치</h1>
     {%if alarm %}
-    <div>모달</div>
+    <div class="alarm_modal">
+      <div class="exit_modal">X</div>
+      <div>{{ alarm.team_id.team_name }} VS {{ alarm.match_id.participant_id.team_name }}</div>
+      <div>경기 종료 시간: {{alarm.match_id.end_time}}</div>
+      <div>즐거운 경기 되셨나요? 수고한 상대팀에게 좋은 점수 부탁드려요!</div>
+      <form action="{% url 'matchingMatch:rate' %}" method="post">
+        <label>실력: <input name="level" type="number"></label>
+        <label>매너: <input name="manner" type="number"></label>
+      </form>
+    </div>
     {% endif %}
   </header>
   <main>
@@ -68,6 +77,11 @@
   
   const week = document.querySelector('.week')
   week.innerHTML = dates.join('')
+
+  exitModal = document.querySelector('.exit_modal')
+  exitModal.addEventListener('click', ()=> {
+    document.querySelector('.alarm_modal').style.display = 'none'
+  })
   </script>
 </body>
 </html>
