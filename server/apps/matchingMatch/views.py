@@ -109,11 +109,14 @@ def match_resolve(request, pk):  # pk = 매치 아이디
 def main(request, *args, **kwargs):
     alarm = Alarm.objects.filter(team_id=request.user.pk)
     alarm = alarm.first()
-    return render(request, "matchingMatch/main.html", {'alarm': alarm})
+    print(alarm)
+    matches = MatchInfo.objects.filter(is_alarmed=False)
+    context = {
+        'alarm': alarm,
+        'matches': matches,
 
-
-def endOfGame(request, *args, **kwargs):
-    return render(request, "matchingMatch/endOfGame.html")
+    }
+    return render(request, "matchingMatch/main.html", context=context)
 
 
 def check_endOfGame():
@@ -205,3 +208,14 @@ def account_page(request):
 
     context = {'user': user}
     return render(request, 'account.html', context)
+
+
+def rate(request, participant_id):
+    if request.method == "POST":
+        participant = Team.objects.get(id=participant_id)
+        participant.level = (participant.level +
+                             int(request.POST['level']))/participant.match_count
+        participant.manner = (participant.manner +
+                              int(request.POST['manner']))/participant.match_count
+        participant.save()
+        return redirect('/')

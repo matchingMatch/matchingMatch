@@ -7,13 +7,13 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 
 
 class Team(AbstractUser, PermissionsMixin):
-    team_name = models.CharField(null=False, max_length=20, unique = True)
+    team_name = models.CharField(null=False, max_length=20, unique=True)
     team_logo = models.ImageField(blank=True, null=True)
     team_intro = models.TextField(blank=True)  # 팀소개
     region = models.CharField(max_length=20)
     photo = models.ImageField(blank=True, null=True)
-    manner = models.IntegerField(null=True, default=0)  # 지금까지 받은 매너 점수의 합
-    level = models.IntegerField(null=True, default=0)
+    manner = models.FloatField(null=True, default=0)  # 지금까지 받은 매너 점수의 합
+    level = models.FloatField(null=True, default=0)
     match_count = models.PositiveIntegerField(default=0)
     pre_proplayer = models.TextField(null=True)
     USERNAME_FIELD = 'username'
@@ -30,7 +30,7 @@ class Stadium(models.Model):
 class MatchInfo(models.Model):
     gender_list = (("male", "남성"), ("female", "여성"), ("mixed", "혼성"))
     host_id = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="host_team", unique=True)
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="host_team")
     participant_id = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,
@@ -47,7 +47,8 @@ class MatchInfo(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     is_alarmed = models.BooleanField(default=False)
-    USERNAME_FIELD ='host_id' 
+    USERNAME_FIELD = 'host_id'
+
 
 class Alarm(models.Model):
     team_id = models.ForeignKey(

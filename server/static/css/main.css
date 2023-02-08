@@ -26,6 +26,7 @@ main {
 }
 .match_list {
   height: 500px;
+  overflow: scroll;
 }
 .sun {
   color: red;
@@ -45,5 +46,4 @@ main {
 .exit_modal {
   cursor: pointer;
   border: 1px solid black;
-
 }
