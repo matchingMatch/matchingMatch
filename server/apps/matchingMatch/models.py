@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth.validators import UnicodeUsernameValidator
 # Create your models here.
 
-
+USERNAME_FIELD = 'username'
 class Team(AbstractUser, PermissionsMixin):
     team_name = models.CharField(null=False, max_length=20, unique = True)
     team_logo = models.ImageField(blank=True, null=True)
@@ -16,7 +16,7 @@ class Team(AbstractUser, PermissionsMixin):
     level = models.IntegerField(null=True, default=0)
     match_count = models.PositiveIntegerField(default=0)
     pre_proplayer = models.TextField(null=True)
-    USERNAME_FIELD = 'username'
+    
 
 
 class Stadium(models.Model):
@@ -45,10 +45,10 @@ class MatchInfo(models.Model):
     gender = models.CharField(choices=gender_list, max_length=10, null=False)
     stadium_cost = models.CharField(max_length=200, null=True)
     etc = models.CharField(max_length=200, null=True)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     is_alarmed = models.BooleanField(default=False)
-    USERNAME_FIELD ='host_id' 
+    
 
 class Alarm(models.Model):
     team_id = models.ForeignKey(

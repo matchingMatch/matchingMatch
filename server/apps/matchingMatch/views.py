@@ -64,19 +64,28 @@ def my_page(request, pk): # pk = 유저 아이디
 
 def match_register(request):
   
-  stadium_name = Stadium.objects.all()
-  stadium_name_list = stadium_name
-  match_form = MatchRegisterForm()
+  
   
   if request.method == "POST":
     match_form = MatchRegisterForm(request.POST)
+    user = request.user.pk
+    match_form.host_id = user
     if match_form.is_valid():
+      
+      
       match_form.save()
       return redirect("/")
+    else:
+      print(match_form.cleaned_data)
+      return redirect("/")
+    
+  else:
+    stadium_name = Stadium.objects.all()
+    stadium_name_list = stadium_name
+    match_form = MatchRegisterForm()
+    context = {"match_form" : match_form , "stadium_name":stadium_name, "stadium_name_list":stadium_name_list,}
   
-  context = {"match_form" : match_form , "stadium_name":stadium_name, "stadium_name_list":stadium_name_list,}
-  
-  return render(request, "matchingMatch/match_register.html", context=context)
+    return render(request, "matchingMatch/match_register.html", context=context)
 
 
 # def match_select(request, pk): 매치 선택
@@ -150,7 +159,7 @@ def check_endOfGame():
                 )
 
 def login_page(request):
-    page = 'login'
+    page = 'matchingMatch:login'
 
     if request.method == "POST":
         user = authenticate(
@@ -161,10 +170,10 @@ def login_page(request):
         if user is not None:
             login(request, user)
             messages.info(request, '성공적으로 로그인 하셨습니다.')
-            return redirect('home') 
+            return redirect('matchingMatch:home') 
         else:
             messages.error(request, '이메일 혹은 비밀번호를 다시 확인해주세요.')
-            return redirect('login')
+            return redirect('matchingMatch:login')
     
     context = {'page':page}
     return render(request, 'login_register.html', context)
@@ -179,7 +188,7 @@ def register_page(request):
             user.save()
             login(request, user)
             messages.success(request, '성공적으로 회원가입이 진행됐습니다.')
-            return redirect('home')
+            return redirect('matchingMatch:home')
         else:
             messages.error(request, '회원가입 도중에 문제가 발생하였습니다.')
 
