@@ -158,13 +158,13 @@ def login_page(request):
         if user is not None:
             login(request, user)
             messages.info(request, '성공적으로 로그인 하셨습니다.')
-            return redirect('home') 
+            return redirect('/') 
         else:
             messages.error(request, '이메일 혹은 비밀번호를 다시 확인해주세요.')
             return redirect('login')
     
     context = {'page':page}
-    return render(request, 'login_register.html', context)
+    return render(request, 'matchingMatch/login_register.html', context)
 
 def register_page(request):
     form = CustomUserCreateForm()
@@ -176,22 +176,19 @@ def register_page(request):
             user.save()
             login(request, user)
             messages.success(request, '성공적으로 회원가입이 진행됐습니다.')
-            return redirect('home')
+            return redirect('/')
         else:
             messages.error(request, '회원가입 도중에 문제가 발생하였습니다.')
 
 
     page = 'register'
     context = {'page':page, 'form':form}
-    return render(request, 'login_register.html', context)
+    return render(request, 'matchingMatch/login_register.html', context)
 
 def logout_user(request):
     logout(request)
     messages.info(request, '로그아웃 상태입니다.')
-    return redirect('login')
-
-def home_page(request):
-    return render(request, 'home.html')
+    return redirect('matchingMatch:login')
 
 @login_required(login_url='/login')
 def account_page(request):
@@ -208,3 +205,12 @@ def account_page(request):
 
     context = {'user':user}
     return render(request, 'account.html', context)
+
+@login_required(login_url='/login') #해당 pk에 해당하는 유저가 로그인 했을 때만 이 페이지가 보이게끔 만들어야됨.
+def my_match_list(request, pk): # pk는 team pk, 마이페이지에서 pk를 받아옴. 
+  my_not_matched_matches = MatchInfo.objects.filter(is_matched=False, host_id=pk)
+  context = {
+    'my_not_matched_matches' : my_not_matched_matches
+  }
+  return render(request, 'matchingMatch/myMatches.html', context=context)
+  

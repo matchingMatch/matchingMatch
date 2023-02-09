@@ -10,4 +10,5 @@ urlpatterns = [
     path('register/', views.register_page, name="register"),
     path('logout/', views.logout_user, name="logout"),
     path('account/', views.account_page, name="account"),
+    path('my_match_list/<int:pk>', views.my_match_list, name="my_match_list"),
 ]
