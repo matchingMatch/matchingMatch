@@ -34,7 +34,7 @@ class MatchInfo(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="host_team")
     participant_id = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        null=True,
+        null=True, blank=True,
         on_delete=models.CASCADE,
         related_name="participant_team")
     stadium = models.ForeignKey(
@@ -51,6 +51,8 @@ class MatchInfo(models.Model):
     
 
 class Alarm(models.Model):
+    # Review : MatchInfo와 Alarm의 관계가 완벽히 정의된 것 같지 않습니다.
+    # Review : MatchInfo.is_alarmed와 Alarm이 중복되는 것 같습니다.
     team_id = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="team_alarm")
     match_id = models.ForeignKey(
