@@ -31,10 +31,10 @@ class Stadium(models.Model):
 class MatchInfo(models.Model):
     gender_list = (("male", "남성"), ("female", "여성"), ("mixed", "혼성"))
     host_id = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="host_team", unique=True)
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="host_team")
     participant_id = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        null=True,
+        null=True, blank=True,
         on_delete=models.CASCADE,
         related_name="participant_team")
     stadium = models.ForeignKey(

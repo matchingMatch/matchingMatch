@@ -38,7 +38,7 @@ def team_detail(request, pk): # pk = 팀 아이디
 
 
 
-
+@login_required
 def team_update(request, pk):
   match = get_object_or_404(Team, pk = pk)
   if request.method == "POST":
@@ -64,20 +64,22 @@ def my_page(request, pk): # pk = 유저 아이디
 
 def match_register(request):
   
-  
-  
   if request.method == "POST":
     match_form = MatchRegisterForm(request.POST)
-    user = request.user.pk
-    match_form.host_id = user
+    
+    
+    
     if match_form.is_valid():
-      
-      
-      match_form.save()
+      match = match_form.save(commit=False)
+      match.host_id = request.user
+      match.save()
       return redirect("/")
     else:
       print(match_form.cleaned_data)
-      return redirect("/")
+      stadium_name = Stadium.objects.all()
+      stadium_name_list = stadium_name
+      context = {"match_form" : match_form ,"stadium_name":stadium_name,"stadium_name_list":stadium_name_list,}
+      return render(request, "matchingMatch/match_register.html", context=context)
     
   else:
     stadium_name = Stadium.objects.all()
