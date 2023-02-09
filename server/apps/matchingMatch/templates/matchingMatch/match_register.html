@@ -23,27 +23,31 @@
             {{match_form.gender}}
 
             <label for="date"> 날짜 </label>
-            <input type="date" id="date">
+            <input name = "date"type="date" id="date">
                 
             <label for="start_time">시작시간</label>
-            <input type="time" id="start_time">
+            <input name = "start_time" type="time" id="start_time">
 
             <label for="end_time"> 끝나는 시간</label>
-            <input type="time" id="end_time">
+            <input name = "end_time" type="time" id="end_time">
 
 
             <label for="stadium"> 축구장 </label>
             <select name="stadium" value="축구장">
-                <option value="{{stadium}}" name="stadium">
-                    {{stadium}}
+                {% for stadium in stadium_name_list %}
+                <option value="{{stadium_name}}" name="stadium">
+                    {{stadium.stadium_name}}
                 </option>
+                {% endfor %}
             </select>
 
-            <label for="cost"> 축구장 비용 </label>
-            <input type="text" name="cost" placeholder="원구장비/상대팀 부담비용">
+            <label for="stadium_cost"> 축구장 비용 </label>
+            <input type="text" name="stadium_cost" placeholder="원구장비/상대팀 부담비용">
 
             <label for="etc"> 기타사항 </label>
-            <input type="text" id="etc" placeholder="기타사항">
+            <input name = "etc" type="text" id="etc" placeholder="기타사항">
+
+            <input type="submit" , value="저장하기" />
         </form>
     </main>
 
