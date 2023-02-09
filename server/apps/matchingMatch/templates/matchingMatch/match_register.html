@@ -34,9 +34,11 @@
 
             <label for="stadium"> 축구장 </label>
             <select name="stadium" value="축구장">
-                <option value="{{stadium}}" name="stadium">
-                    {{stadium}}
+                {% for stadium in stadium_name_list %}
+                <option value="{{stadium_name}}" name="stadium">
+                    {{stadium.stadium_name}}
                 </option>
+                {% endfor %}
             </select>
 
             <label for="cost"> 축구장 비용 </label>
@@ -44,6 +46,8 @@
 
             <label for="etc"> 기타사항 </label>
             <input type="text" id="etc" placeholder="기타사항">
+
+            <input type="submit" , value="저장하기" />
         </form>
     </main>
 

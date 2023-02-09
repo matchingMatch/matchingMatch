@@ -64,15 +64,18 @@ def my_page(request, pk): # pk = 유저 아이디
 
 def match_register(request):
   
+  stadium_name = Stadium.objects.all()
+  stadium_name_list = stadium_name
+  match_form = MatchRegisterForm()
+  
   if request.method == "POST":
     match_form = MatchRegisterForm(request.POST)
     if match_form.is_valid():
       match_form.save()
       return redirect("/")
   
-  match_form = MatchRegisterForm()
-  context = {"match_form" : match_form}
-
+  context = {"match_form" : match_form , "stadium_name":stadium_name, "stadium_name_list":stadium_name_list,}
+  
   return render(request, "matchingMatch/match_register.html", context=context)
 
 

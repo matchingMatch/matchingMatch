@@ -25,7 +25,8 @@ class Stadium(models.Model):
     address = models.CharField(max_length=250)
     is_park = models.BooleanField(default=0, null=True)
     location = models.CharField(max_length=10, null=False)
-
+    def __str__(self):
+        return self.stadium_name
 
 class MatchInfo(models.Model):
     gender_list = (("male", "남성"), ("female", "여성"), ("mixed", "혼성"))
