@@ -131,7 +131,6 @@ def check_endOfGame():
             matchTime = match.end_time.replace(tzinfo=None)
             if matchTime < now:
                 match.is_alarmed = True
-                match.save()
                 Alarm.objects.create(
                     team_id=match.host_id,
                     match_id=match
@@ -141,6 +140,7 @@ def check_endOfGame():
                     team_id=match.participant_id,
                     match_id=match
                 )
+                match.save()
 
 
 def login_page(request):
