@@ -41,7 +41,7 @@ def start():
     scheduler.add_jobstore(DjangoJobStore(), 'djangojobstore')
     register_events(scheduler)
 
-    @scheduler.scheduled_job('interval', minutes=10, name='auto_check')
+    @scheduler.scheduled_job('cron', second='*/5', name='auto_check')
     def auto_check():
         timeZone = datetime.now()
         print(f'Now: {timeZone.second}')
@@ -49,4 +49,3 @@ def start():
         check_endOfGame()
 
     scheduler.start()
-    scheduler.remove_jobstore('djangojobstore', shutdown=True)

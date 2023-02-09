@@ -33,7 +33,7 @@ class MatchInfo(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="host_team")
     participant_id = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        null=True,
+        null=True, blank=True,
         on_delete=models.CASCADE,
         related_name="participant_team")
     stadium = models.ForeignKey(

@@ -128,9 +128,12 @@ def check_endOfGame():
 
     if len(MatchInfos) != 0:
         for match in MatchInfos:
+            print(match.participant_id)
             matchTime = match.end_time.replace(tzinfo=None)
             if matchTime < now:
                 match.is_alarmed = True
+                match.host_id.match_count += 1
+                match.participant_id.match_count += 1
                 Alarm.objects.create(
                     team_id=match.host_id,
                     match_id=match
