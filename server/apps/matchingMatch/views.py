@@ -17,12 +17,14 @@ import datetime
 def match_detail(request, pk): # pk = 매치 아이디
 
   user = request.user
-
+  match = MatchInfo.objects.get(id=pk)
+  
+  
   match = get_object_or_404(MatchInfo, pk = pk)
 
   context = {"user" : user, "match" : match}
 
-  return render(request, "html", context=context)
+  return render(request, "matchingMatch/match_detail.html", context=context)
 
 
 
@@ -63,8 +65,6 @@ def my_page(request, pk): # pk = 유저 아이디
 
 
 def match_register(request):
-  
-  
   
   if request.method == "POST":
     match_form = MatchRegisterForm(request.POST)
@@ -176,7 +176,7 @@ def login_page(request):
             return redirect('matchingMatch:login')
     
     context = {'page':page}
-    return render(request, 'login_register.html', context)
+    return render(request, 'matchingMatch/login_register.html', context)
 
 def register_page(request):
     form = CustomUserCreateForm()
@@ -195,12 +195,12 @@ def register_page(request):
 
     page = 'register'
     context = {'page':page, 'form':form}
-    return render(request, 'login_register.html', context)
+    return render(request, 'matchingMatch/login_register.html', context)
 
 def logout_user(request):
     logout(request)
     messages.info(request, '로그아웃 상태입니다.')
-    return redirect('login')
+    return redirect('matchingMatch/login')
 
 def home_page(request):
     return render(request, 'home.html')
