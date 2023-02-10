@@ -2,16 +2,17 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+from PIL import Image
 from django.contrib.auth.validators import UnicodeUsernameValidator
 # Create your models here.
 
 
 class Team(AbstractUser, PermissionsMixin):
     team_name = models.CharField(null=False, max_length=20, unique = True)
-    team_logo = models.ImageField(blank=True, null=True)
+    team_logo = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
     team_intro = models.TextField(blank=True)  # 팀소개
     region = models.CharField(max_length=20)
-    photo = models.ImageField(blank=True, null=True)
+    photo = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
     manner = models.IntegerField(null=True, default=0)  # 지금까지 받은 매너 점수의 합
     level = models.IntegerField(null=True, default=0)
     match_count = models.PositiveIntegerField(default=0)

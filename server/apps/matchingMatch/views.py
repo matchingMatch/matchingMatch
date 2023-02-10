@@ -1,11 +1,11 @@
 import re
 from django.shortcuts import render, redirect
-from .forms import CustomUserCreateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
-from .forms import MatchRegisterForm
+from .forms import MatchRegisterForm, UserForm, CustomUserCreateForm
 from .models import Team, MatchInfo, Stadium, Alarm
 import datetime
 # Create your views here.
@@ -157,14 +157,14 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            messages.info(request, '성공적으로 로그인 하셨습니다.')
-            return redirect('home') 
+            messages.error(request, '성공적으로 로그인이 진행됐습니다.')
+            return redirect('matchingMatch:main') 
         else:
             messages.error(request, '이메일 혹은 비밀번호를 다시 확인해주세요.')
-            return redirect('login')
+            return redirect('matchingMatch:login')
     
     context = {'page':page}
-    return render(request, 'login_register.html', context)
+    return render(request, 'matchingMatch/login_register.html', context)
 
 def register_page(request):
     form = CustomUserCreateForm()
@@ -175,23 +175,19 @@ def register_page(request):
             user = form.save(commit=False)
             user.save()
             login(request, user)
-            messages.success(request, '성공적으로 회원가입이 진행됐습니다.')
-            return redirect('home')
+            messages.error(request, '성공적으로 회원가입이 진행됐습니다.')
+            return redirect('matchingMatch:main')
         else:
             messages.error(request, '회원가입 도중에 문제가 발생하였습니다.')
 
-
     page = 'register'
     context = {'page':page, 'form':form}
-    return render(request, 'login_register.html', context)
+    return render(request, 'matchingMatch/login_register.html', context)
 
 def logout_user(request):
     logout(request)
     messages.info(request, '로그아웃 상태입니다.')
-    return redirect('login')
-
-def home_page(request):
-    return render(request, 'home.html')
+    return redirect('matchingMatch:login')
 
 @login_required(login_url='/login')
 def account_page(request):
@@ -207,4 +203,43 @@ def account_page(request):
     # user.save()
 
     context = {'user':user}
-    return render(request, 'account.html', context)
+    return render(request, 'matchingMatch/account.html', context)
+
+@login_required(login_url='/login')
+def change_password(request):   
+    if request.method == 'POST':
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+       
+        if password1 == password2:
+             new_pass = make_password(password1)
+             request.user.password = new_pass
+             request.user.save()
+             messages.success(request, '비밀번호를 성공적으로 변경하셨습니다!')
+             return redirect('matchingMatch:account')
+
+    return render(request, 'matchingMatch/change_password.html')
+
+@login_required(login_url='/login')
+def edit_account(request):
+
+    form = UserForm(instance=request.user)
+
+    if request.method == 'POST':
+        #print('ORIGINAL Image', request.FILES.get('avatar'))
+        # img = Image.open(request.FILES.get('avatar'))
+        # newsize = (10, 10)
+        # img = img.resize(newsize)
+        # request.FILES['avatar'] = img
+        # img = Image.open(user.avatar)
+        # newsize = (10, 10)
+        # img = img.resize(newsize)
+        #print('NEW Image', request.FILES.get('avatar'))
+        form = UserForm(request.POST, request.FILES,  instance=request.user)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            return redirect('matchingMatch:account')
+
+    context = {'form':form}
+    return render(request, 'matchingMatch/user_form.html', context)

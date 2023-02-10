@@ -1,0 +1,24 @@
+<nav>
+  <div>
+    <!-- <a href="#">Events</a> -->
+    <!-- <a href="#">Hall of fame</a> -->
+  </div>
+
+  <div id="nav--col3">
+    {% if request.user.is_authenticated %}
+    <a class="btn btn--secondary" href="{% url 'matchingMatch:account' %}"
+      >{{request.user.team_name}}</a
+    >
+    <a class="btn btn--primary" href="{% url 'matchingMatch:logout' %}"
+      >로그아웃</a
+    >
+    {% else %}
+    <a class="btn btn--secondary" href="{% url 'matchingMatch:login' %}"
+      >로그인</a
+    >
+    <a class="btn btn--primary" href="{% url 'matchingMatch:register' %}"
+      >회원가입</a
+    >
+    {% endif %}
+  </div>
+</nav>
