@@ -11,11 +11,39 @@
 <body>
     <h1>{{match.stadium}}</h1>
 
-    {{match.start_time}}
-    {{match.end_time}}
-    {{match.gender}}
-    {{match.etc}}
+    <h3>
+        날짜: {{match.date}}
+    </h3>
+    <h3>
+        시작시간: {{match.start_time}}
+    </h3>
+    <h3>
+        종료시간: {{match.end_time}}
+    </h3>
 
-    {{stadiuminfo.address}}
+    주최자 아이디: {{match.host_id.team_name}}
+    로고: {{match.host_id.team_logo}}
+    <br>성별: {{match.gender}}
+    <br>기타사항 : {{match.etc}}
+
+    <h3>
+        지역: {{match.stadium.location}}
+        <br>주소: {{match.stadium.address}}
+    </h3>
+
+    {% if status == 1 %}
+    <button>
+        마감하기
+    </button>
+    {% endif %}
+
+    {% if status == 0 %}
+    <button>
+        신청하기
+    </button>
+    {% endif %}
+    
+
+
 </body>
 </html>

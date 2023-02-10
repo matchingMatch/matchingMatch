@@ -18,11 +18,21 @@ def match_detail(request, pk): # pk = 매치 아이디
 
   user = request.user
   match = MatchInfo.objects.get(id=pk)
-  
-  
   match = get_object_or_404(MatchInfo, pk = pk)
-
-  context = {"user" : user, "match" : match}
+  
+  if match.host_id == request.user:
+    context={
+      "user" : user, 
+      "match" : match,
+      "status": 1
+    }
+    
+  else: 
+    context={
+      "user" : user, 
+      "match" : match,
+      "status": 0
+    }
 
   return render(request, "matchingMatch/match_detail.html", context=context)
 
@@ -69,7 +79,7 @@ def match_register(request):
   if request.method == "POST":
     match_form = MatchRegisterForm(request.POST)
     
-    
+
     
     if match_form.is_valid():
       match = match_form.save(commit=False)
@@ -131,6 +141,7 @@ def match_resolve(request, pk): # pk = 매치 아이디
 
 
 def main(request, *args, **kwargs):
+    
     alarm = Alarm.objects.filter(team_id=request.user.pk)
     return render(request, "matchingMatch/main.html", {'alarm': alarm})
 
