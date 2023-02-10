@@ -36,7 +36,9 @@ def match_detail(request, pk):  # pk = 매치 아이디
 
   return render(request, "matchingMatch/match_detail.html", context=context)
 
-    match = get_object_or_404(Team, pk=pk)
+
+
+
 
 def team_detail(request, pk):  # pk = 팀 아이디
 
@@ -69,7 +71,7 @@ def team_update(request, pk):
     team_form = CustomUserCreateForm(instance=pk)
     context = {"team_form" : team_form}
 
-        return render(request, "html", context=context)
+  return render(request, "html", context=context)
 
 
 @login_required(login_url='/login')
