@@ -18,12 +18,24 @@ def match_detail(request, pk): # pk = 매치 아이디
   # Review : 권한 제한 없이 누구나 볼 수 있는 건가요?
 
   user = request.user
-
+  match = MatchInfo.objects.get(id=pk)
   match = get_object_or_404(MatchInfo, pk = pk)
+  
+  if match.host_id == request.user:
+    context={
+      "user" : user, 
+      "match" : match,
+      "status": 1
+    }
+    
+  else: 
+    context={
+      "user" : user, 
+      "match" : match,
+      "status": 0
+    }
 
-  context = {"user" : user, "match" : match}
-
-  return render(request, "html", context=context)
+  return render(request, "matchingMatch/match_detail.html", context=context)
 
 
 
@@ -125,16 +137,16 @@ def match_cancel(request, pk): #매치 신청 취소
 
 @login_required(login_url='/login')
 def match_update(request, pk):
-
+  
   if request.method == "POST":
     match_form = MatchRegisterForm(request.POST, instance=pk)
     if match_form.is_valid():
       match = match_form.save()
       return redirect("/") # 수정된 페이지로 이동
-
+    
     else:
       return redirect("/") # 다시 작성하기
-
+  
   else:
     match_form = MatchRegisterForm(instance=pk)
     context = {"match_form" : match_form}
@@ -144,7 +156,7 @@ def match_update(request, pk):
 #매치 결정
 @login_required(login_url='/login')
 def match_resolve(request, pk): # pk = 매치 아이디
-
+  
   if request.method == "POST":
     match = get_object_or_404(MatchInfo, id = pk)
     match.participant_id = request.user
@@ -156,6 +168,7 @@ def match_resolve(request, pk): # pk = 매치 아이디
 
 
 def main(request, *args, **kwargs):
+    
     alarm = Alarm.objects.filter(team_id=request.user.pk)
     return render(request, "matchingMatch/main.html", {'alarm': alarm})
 
@@ -207,7 +220,7 @@ def login_page(request):
             return redirect('matchingMatch:login')
     
     context = {'page':page}
-    return render(request, 'login_register.html', context)
+    return render(request, 'matchingMatch/login_register.html', context)
 
 def register_page(request):
     form = CustomUserCreateForm()
@@ -226,7 +239,7 @@ def register_page(request):
 
     page = 'register'
     context = {'page':page, 'form':form}
-    return render(request, 'login_register.html', context)
+    return render(request, 'matchingMatch/login_register.html', context)
 
 def logout_user(request):
     logout(request)
@@ -241,7 +254,7 @@ def account_page(request):
     # img = Image.open(user.avatar)
     # newsize = (10, 10)
     # img = img.resize(newsize)
-
+  
     # user.avatar = img
     # user.save()
     # user.save()
