@@ -3,7 +3,7 @@ from . import views
 app_name = "matchingMatch"
 
 urlpatterns = [
-    path("match_register",views.match_register, name="match_register"),
+    path("match_register", views.match_register, name="match_register"),
     path("", views.main, name="main"),
     path("endOfGame/", views.endOfGame, name="endOfGame"),
     path('login/', views.login_page, name="login"),
@@ -11,4 +11,6 @@ urlpatterns = [
     path('logout/', views.logout_user, name="logout"),
     path('account/', views.account_page, name="account"),
     path('my_match_list/<int:pk>', views.my_match_list, name="my_match_list"),
+    path('applying_team_list/<int:pk>',
+         views.applying_team_list, name="applying_team_list"),
 ]
