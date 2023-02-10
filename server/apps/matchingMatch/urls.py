@@ -12,5 +12,6 @@ urlpatterns = [
     path('logout/', views.logout_user, name="logout"),
     path('account/', views.account_page, name="account"),
     path('match_detail/<int:pk>', views.match_detail, name="match_detail"),
-
+    path('match_request/', views.match_request, name = "match_request"),
+    path('match_cancel/', views.match_cancel, name = "match_cancel"),
 ]

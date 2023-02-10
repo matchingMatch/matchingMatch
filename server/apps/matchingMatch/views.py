@@ -1,13 +1,16 @@
-import re
 from django.shortcuts import render, redirect
-from .forms import CustomUserCreateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 from .forms import MatchRegisterForm
-from .models import Team, MatchInfo, Stadium, Alarm
+from .models import Team, MatchInfo, Stadium, Alarm, MatchRequest
+from .forms import CustomUserCreateForm
+import re
 import datetime
+import json
 # Create your views here.
 
 
@@ -17,23 +20,25 @@ import datetime
 def match_detail(request, pk): # pk = 매치 아이디
   # Review : 권한 제한 없이 누구나 볼 수 있는 건가요?
 
-  user = request.user
-  match = MatchInfo.objects.get(id=pk)
+  team = request.user
   match = get_object_or_404(MatchInfo, pk = pk)
-  
-  if match.host_id == request.user:
+
+  try:
+    MatchRequest.objects.get(team_id=team)
     context={
-      "user" : user, 
+      "user" : team, 
       "match" : match,
       "status": 1
     }
-    
-  else: 
+  except:
     context={
-      "user" : user, 
+      "user" : team, 
       "match" : match,
       "status": 0
     }
+ 
+  
+
 
   return render(request, "matchingMatch/match_detail.html", context=context)
 
@@ -81,6 +86,7 @@ def my_page(request, pk): # pk = 유저 아이디
   pass
 
 
+
 @login_required(login_url='/login')
 def match_register(request):
   
@@ -106,6 +112,8 @@ def match_register(request):
   
     return render(request, "matchingMatch/match_register.html", context=context)
 
+
+
 @login_required(login_url='/login')
 def match_select(request, pk): # 매치 신청 ajax로 해보는 게 좋을듯
 
@@ -120,18 +128,38 @@ def match_select(request, pk): # 매치 신청 ajax로 해보는 게 좋을듯
       messages.success(request, '경기 신청이 완료되었습니다.')
       return redirect("/")
 
-@login_required(login_url='/login')
-def match_cancel(request, pk): #매치 신청 취소
-  match = get_object_or_404(MatchInfo, id=pk)
 
-  if match.is_matched == False:
-    # 매치 신청목록에서 이미 자신의 것이 있는 경우 돌아가기
-    # 있을 경우 신청 취소
-    return
-  else:
-    #이미 매치가 성사된 경우는 일단 보류
-    ...
+
+
+@csrf_exempt
+def match_cancel(request): #매치 신청 취소
+  body_unicode = request.body.decode('utf-8')
   
+  req = json.loads(body_unicode) 
+  match_request = get_object_or_404(MatchRequest, team_id = req['team.id'])
+
+  match_request.delete()
+
+  status = not req['status']
+
+  return JsonResponse({'status' : status})
+
+  
+
+@csrf_exempt
+def match_request(request): #매치 신청
+  body_unicode = request.body.decode('utf-8')
+  
+  req = json.loads(body_unicode)
+  
+  MatchRequest.objects.create(match_id = req['match.id'], team_id = req['team.id'])
+  status = not req['status']
+
+  return JsonResponse({'status' : status})
+
+
+
+
 
 # def match_open(request, pk):
 
@@ -153,6 +181,8 @@ def match_update(request, pk):
     return render(request, "html", context=context)
 
 
+
+
 #매치 결정
 @login_required(login_url='/login')
 def match_resolve(request, pk): # pk = 매치 아이디
@@ -167,10 +197,17 @@ def match_resolve(request, pk): # pk = 매치 아이디
   return render(request, "html")
 
 
+
+
+
+
+
 def main(request, *args, **kwargs):
     
     alarm = Alarm.objects.filter(team_id=request.user.pk)
     return render(request, "matchingMatch/main.html", {'alarm': alarm})
+
+
 
 
 def endOfGame(request, *args, **kwargs):
