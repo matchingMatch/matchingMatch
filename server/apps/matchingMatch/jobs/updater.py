@@ -1,6 +1,6 @@
-from apscheduler.schedulers.background import BackgroundScheduler
-from django_apscheduler.jobstores import register_events, DjangoJobStore
-from server.apps.matchingMatch.views import check_endOfGame
+# from apscheduler.schedulers.background import BackgroundScheduler
+# from django_apscheduler.jobstores import register_events, DjangoJobStore
+# from server.apps.matchingMatch.views import check_endOfGame
 
 
 # def start():
@@ -33,20 +33,20 @@ from server.apps.matchingMatch.views import check_endOfGame
 #     def auto_check():
 #         check_endOfGame()
 #     scheduler.start()
-from datetime import datetime
+# from datetime import datetime
 
 
-def start():
-    scheduler = BackgroundScheduler()
-    scheduler.add_jobstore(DjangoJobStore(), 'djangojobstore')
-    register_events(scheduler)
+# def start():
+#     scheduler = BackgroundScheduler()
+#     scheduler.add_jobstore(DjangoJobStore(), 'djangojobstore')
+#     register_events(scheduler)
 
-    @scheduler.scheduled_job('interval', minutes=1, name='auto_check')
-    def auto_check():
-        timeZone = datetime.now()
-        print(f'Now: {timeZone.second}')
-        print("This is SCHEDULER APPS PROCESSING")
-        check_endOfGame()
+#     @scheduler.scheduled_job('interval', minutes=1, name='auto_check')
+#     def auto_check():
+#         timeZone = datetime.now()
+#         print(f'Now: {timeZone.second}')
+#         print("This is SCHEDULER APPS PROCESSING")
+#         check_endOfGame()
 
-    scheduler.start()
-    scheduler.remove_jobstore('djangojobstore', shutdown=True)
+#     scheduler.start()
+#     scheduler.remove_jobstore('djangojobstore', shutdown=True)
