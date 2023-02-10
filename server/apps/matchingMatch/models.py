@@ -8,7 +8,7 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 
 USERNAME_FIELD = 'username'
 class Team(AbstractUser, PermissionsMixin):
-    team_name = models.CharField(null=False, max_length=20, unique = True)
+    team_name = models.CharField(null=False, max_length=20)
     team_logo = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
     team_intro = models.TextField(blank=True)  # 팀소개
     region = models.CharField(max_length=20)
@@ -50,6 +50,7 @@ class MatchInfo(models.Model):
     end_time = models.TimeField()
     is_alarmed = models.BooleanField(default=False)
     
+
 
 class Alarm(models.Model):
     # Review : MatchInfo와 Alarm의 관계가 완벽히 정의된 것 같지 않습니다.

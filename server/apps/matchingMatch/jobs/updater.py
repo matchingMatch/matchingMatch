@@ -41,12 +41,11 @@
 #     scheduler.add_jobstore(DjangoJobStore(), 'djangojobstore')
 #     register_events(scheduler)
 
-#     @scheduler.scheduled_job('interval', minutes=1, name='auto_check')
-#     def auto_check():
-#         timeZone = datetime.now()
-#         print(f'Now: {timeZone.second}')
-#         print("This is SCHEDULER APPS PROCESSING")
-#         check_endOfGame()
+    @scheduler.scheduled_job('cron', second='*/5', name='auto_check')
+    def auto_check():
+        timeZone = datetime.now()
+        print(f'Now: {timeZone.second}')
+        print("This is SCHEDULER APPS PROCESSING")
+        check_endOfGame()
 
-#     scheduler.start()
-#     scheduler.remove_jobstore('djangojobstore', shutdown=True)
+    scheduler.start()
