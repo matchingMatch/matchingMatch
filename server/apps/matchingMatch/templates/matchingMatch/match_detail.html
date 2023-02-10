@@ -38,12 +38,27 @@
     {% endif %}
 
     {% if status == 0 %}
-    <button>
+    <button  class ="enroll">
         신청하기
     </button>
     {% endif %}
     
-
-
 </body>
+<!-- <script>
+    const changeEnroll = (id)=> {
+        const url = "/change_enroll";
+
+        requestEnroll.open("POST", url, true);
+		requestEnroll.setRequestHeader(
+			"Content-Type",
+			"application/x-www-form-urlencoded"
+		);
+		requestEnroll.send(JSON.stringify({id: id }));
+    };
+
+    requestEnroll.onreadystatechange = () =>{
+
+    }
+</script> -->
+
 </html>

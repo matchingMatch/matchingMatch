@@ -1,4 +1,7 @@
 import re
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .forms import CustomUserCreateForm
 from django.contrib.auth import authenticate, login, logout
@@ -261,3 +264,13 @@ def account_page(request):
 
     context = {'user':user}
     return render(request, 'account.html', context)
+  
+  
+# def change_enroll(request):
+#   req = json.loads(request.body)
+  
+  
+#   return JsonResponse({'id' : id})
+  
+  
+  
