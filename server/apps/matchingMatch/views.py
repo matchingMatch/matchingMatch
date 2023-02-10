@@ -71,7 +71,7 @@ def team_update(request, pk):
     team_form = CustomUserCreateForm(instance=pk)
     context = {"team_form" : team_form}
 
-    return render(request, "html", context=context)
+  return render(request, "html", context=context)
 
 
 @login_required(login_url='/login')
