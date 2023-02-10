@@ -16,6 +16,7 @@ import datetime
 
 def match_detail(request, pk): # pk = 매치 아이디
   # Review : 권한 제한 없이 누구나 볼 수 있는 건가요?
+
   user = request.user
 
   match = get_object_or_404(MatchInfo, pk = pk)
