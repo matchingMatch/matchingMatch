@@ -268,6 +268,16 @@ def account_page(request):
 
     context = {'user': user}
     return render(request, 'account.html', context)
+  
+  
+# def change_enroll(request):
+#   req = json.loads(request.body)
+  
+  
+#   return JsonResponse({'id' : id})
+  
+  
+  
 
 
 # 해당 pk에 해당하는 유저가 로그인 했을 때만 이 페이지가 보이게끔 만들어야됨.
