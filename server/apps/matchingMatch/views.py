@@ -18,7 +18,6 @@ import json
 
 
 def match_detail(request, pk): # pk = 매치 아이디
-  # Review : 권한 제한 없이 누구나 볼 수 있는 건가요?
 
   team = request.user
   match = get_object_or_404(MatchInfo, pk = pk)
@@ -36,9 +35,6 @@ def match_detail(request, pk): # pk = 매치 아이디
       "match" : match,
       "status": 0
     }
- 
-  
-
 
   return render(request, "matchingMatch/match_detail.html", context=context)
 
@@ -78,15 +74,6 @@ def team_update(request, pk):
     return render(request, "html", context=context)
 
 
-
-
-
-def my_page(request, pk): # pk = 유저 아이디
-  #아직 어떤 기능을 넣을지 미정
-  pass
-
-
-
 @login_required(login_url='/login')
 def match_register(request):
   
@@ -111,23 +98,6 @@ def match_register(request):
     context = {"match_form" : match_form , "stadium_name":stadium_name, "stadium_name_list":stadium_name_list,}
   
     return render(request, "matchingMatch/match_register.html", context=context)
-
-
-
-@login_required(login_url='/login')
-def match_select(request, pk): # 매치 신청 ajax로 해보는 게 좋을듯
-
-  if request.method == "POST":
-    match = get_object_or_404(MatchInfo, id = pk)
-    #신청한 리스트에 현재 본인의 것이 존재하는지 여부를 확인
-    if match.is_matched:
-      
-      messages.error(request, '이미 상대가 결정된 경기입니다.')
-      return redirect("/")
-    else:
-      messages.success(request, '경기 신청이 완료되었습니다.')
-      return redirect("/")
-
 
 
 
@@ -158,10 +128,6 @@ def match_request(request): #매치 신청
   return JsonResponse({'status' : status})
 
 
-
-
-
-# def match_open(request, pk):
 
 @login_required(login_url='/login')
 def match_update(request, pk):
@@ -197,6 +163,11 @@ def match_resolve(request, pk): # pk = 매치 아이디
   return render(request, "html")
 
 
+# def match_delete(request, pk): 매치 자체를 없애기
+
+def my_page(request, pk): # pk = 유저 아이디
+  #아직 어떤 기능을 넣을지 미정
+  pass
 
 
 
@@ -240,7 +211,7 @@ def endOfGame(request, *args, **kwargs):
 #                 )
 
 def login_page(request):
-    page = 'matchingMatch:login'
+    page = 'login'
 
     if request.method == "POST":
         user = authenticate(
@@ -297,4 +268,4 @@ def account_page(request):
     # user.save()
 
     context = {'user':user}
-    return render(request, 'account.html', context)
+    return render(request, 'matchingMatch/account.html', context)
