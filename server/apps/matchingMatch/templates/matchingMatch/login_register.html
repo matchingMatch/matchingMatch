@@ -1,86 +1,85 @@
-{% extends 'matchingMatch/main.html' %} {% block content %} 
-{% if page == 'register' %}
+{% extends 'matchingMatch/main.html' %}{% block content %} {% if page == 'register' %}
 <div class="login-register--container">
-	<h1 class="form-field--title">회원 가입</h1>
+  <h1 class="form-field--title">회원 가입</h1>
 
-	<div>
-		<form
-			method="POST"
-			action="{% url 'matchingMatch:register' %}"
-			enctype="multipart/form-data"
-		>
-			<div id="form-wrapper">
-				{% csrf_token %} {% for field in form %}
-				<div class="form-field--wrapper">
-					<label>{{field.label}}</label>
-					{{field}}
-					<div>
-						{% for error in field.errors %}
-						<p class="error">{{error}}</p>
-						{% endfor %}
-					</div>
-				</div>
-				{% endfor %}
+  <div>
+    <form
+      method="POST"
+      action="{% url 'matchingMatch:register' %}"
+      enctype="multipart/form-data"
+    >
+      <div id="form-wrapper">
+        {% csrf_token %} {% for field in form %}
+        <div class="form-field--wrapper">
+          <label>{{field.label}}</label>
+          {{field}}
+          <div>
+            {% for error in field.errors %}
+            <p class="error">{{error}}</p>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
 
-				<input
-					class="btn btn--primary formsubmit-btn"
-					type="submit"
-					value="회원 가입"
-				/>
-			</div>
-		</form>
-	</div>
+        <input
+          class="btn btn--primary formsubmit-btn"
+          type="submit"
+          value="회원 가입"
+        />
+      </div>
+    </form>
+  </div>
 
-	<p class="login-register-switchpagetext">
-		이미 계정이 있으신가요? <a href="{% url 'matchingMatch:login' %}">로그인</a>
-	</p>
+  <p class="login-register-switchpagetext">
+    이미 계정이 있으신가요? <a href="{% url 'matchingMatch:login' %}">로그인</a>
+  </p>
 </div>
 
 {% else %}
 <div class="login-register--container section">
-	<h1 class="form-field--title">로그인</h1>
+  <h1 class="form-field--title">로그인</h1>
 
-	<form method="POST" action="{% url 'matchingMatch:login' %}">
-		{% csrf_token %}
+  <form method="POST" action="{% url 'matchingMatch:login' %}">
+    {% csrf_token %}
 
-		<!-- <div>
+    <!-- <div>
                     <label>User:</label>
                     <input type="text" name="username"/>
                 </div> -->
 
-		<div class="form-field--wrapper">
-			<label>유저네임</label>
-			<input
-				class="form-field--input"
-				id="id_username"
-				type="username"
-				name="username"
-			/>
-		</div>
+    <div class="form-field--wrapper">
+      <label>유저네임</label>
+      <input
+        class="form-field--input"
+        id="id_username"
+        type="username"
+        name="username"
+      />
+    </div>
 
-		<div class="form-field--wrapper">
-			<label>비밀번호</label>
-			<input
-				class="form-field--input"
-				id="id_password1"
-				type="password"
-				name="password"
-			/>
-		</div>
+    <div class="form-field--wrapper">
+      <label>비밀번호</label>
+      <input
+        class="form-field--input"
+        id="id_password1"
+        type="password"
+        name="password"
+      />
+    </div>
 
-		<div class="form-field--wrapper">
-			<input
-				class="btn btn--primary formsubmit-btn"
-				type="submit"
-				value="로그인"
-			/>
-		</div>
+    <div class="form-field--wrapper">
+      <input
+        class="btn btn--primary formsubmit-btn"
+        type="submit"
+        value="로그인"
+      />
+    </div>
 
-		<p class="login-register-switchpagetext">
-			아직 회원가입을 하지 않으셨나요?
-			<a href="{% url 'matchingMatch:register' %}">회원 가입</a>
-		</p>
-	</form>
+    <p class="login-register-switchpagetext">
+      아직 회원가입을 하지 않으셨나요?
+      <a href="{% url 'matchingMatch:register' %}">회원 가입</a>
+    </p>
+  </form>
 </div>
 
 {% endif %} {% endblock content %}

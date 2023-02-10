@@ -14,10 +14,7 @@ import json
 # Create your views here.
 
 
-
-
-
-def match_detail(request, pk): # pk = 매치 아이디
+def match_detail(request, pk):  # pk = 매치 아이디
 
   team = request.user
   match = get_object_or_404(MatchInfo, pk = pk)
@@ -39,8 +36,7 @@ def match_detail(request, pk): # pk = 매치 아이디
   return render(request, "matchingMatch/match_detail.html", context=context)
 
 
-
-def team_detail(request, pk): # pk = 팀 아이디
+def team_detail(request, pk):  # pk = 팀 아이디
 
   user = request.user
 
@@ -160,7 +156,7 @@ def match_resolve(request, pk): # pk = 매치 아이디
     match.save()
     return redirect("matchingMatch:match_detail", pk = match.pk)
 
-  return render(request, "html")
+    return render(request, "html")
 
 
 # def match_delete(request, pk): 매치 자체를 없애기
@@ -177,12 +173,6 @@ def main(request, *args, **kwargs):
     
     alarm = Alarm.objects.filter(team_id=request.user.pk)
     return render(request, "matchingMatch/main.html", {'alarm': alarm})
-
-
-
-
-def endOfGame(request, *args, **kwargs):
-    return render(request, "matchingMatch/endOfGame.html")
 
 
 # def check_endOfGame():
@@ -210,6 +200,14 @@ def endOfGame(request, *args, **kwargs):
 #                     match_id=match
 #                 )
 
+
+
+
+def endOfGame(request, *args, **kwargs):
+    return render(request, "matchingMatch/endOfGame.html")
+
+
+
 def login_page(request):
     page = 'login'
 
@@ -217,7 +215,7 @@ def login_page(request):
         user = authenticate(
             username=request.POST['username'],
             password=request.POST['password']
-            )
+        )
 
         if user is not None:
             login(request, user)
@@ -244,15 +242,16 @@ def register_page(request):
         else:
             messages.error(request, '회원가입 도중에 문제가 발생하였습니다.')
 
-
     page = 'register'
-    context = {'page':page, 'form':form}
+    context = {'page': page, 'form': form}
     return render(request, 'matchingMatch/login_register.html', context)
+
 
 def logout_user(request):
     logout(request)
     messages.info(request, '로그아웃 상태입니다.')
-    return redirect('login')
+    return redirect('matchingMatch:login')
+
 
 @login_required(login_url='/login')
 def account_page(request):
@@ -262,10 +261,38 @@ def account_page(request):
     # img = Image.open(user.avatar)
     # newsize = (10, 10)
     # img = img.resize(newsize)
-  
+
     # user.avatar = img
     # user.save()
     # user.save()
 
-    context = {'user':user}
-    return render(request, 'matchingMatch/account.html', context)
+    context = {'user': user}
+    return render(request, 'account.html', context)
+
+
+# 해당 pk에 해당하는 유저가 로그인 했을 때만 이 페이지가 보이게끔 만들어야됨.
+@login_required(login_url='/login')
+def my_match_list(request, pk):  # pk는 team pk, 마이페이지에서 pk를 받아옴.
+    my_not_matched_matches = MatchInfo.objects.filter(
+        is_matched=False, host_id=pk)
+    context = {
+        'my_not_matched_matches': my_not_matched_matches
+    }
+    return render(request, 'matchingMatch/my_matches.html', context=context)
+
+@login_required(login_url='/login')
+def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지(주최자)에서 받아옴
+    if request.method == "POST":
+        team = Team.objects.get(id=request.POST['select_participant'])
+        match = MatchInfo.objects.get(id=pk)
+        match.participant_id = team
+        match.is_matched = True
+        match.save()
+
+    applying_team_list = MatchRequest.objects.filter(match_id=pk)
+    match = MatchInfo.objects.get(id=pk)
+    context = {
+        'applying_team_list' : applying_team_list,
+        'match' : match
+    }
+    return render(request, 'matchingMatch/applying_team_list.html', context=context)
