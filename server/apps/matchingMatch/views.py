@@ -1,39 +1,35 @@
-import re
-import json
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from .forms import CustomUserCreateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 from .forms import MatchRegisterForm
-from .models import Team, MatchInfo, Stadium, Alarm
+from .models import Team, MatchInfo, Stadium, Alarm, MatchRequest
+from .forms import CustomUserCreateForm, UserForm
+import re
 import datetime
+import json
 # Create your views here.
 
 
+def match_detail(request, pk):  # pk = 매치 아이디
 
-
-
-def match_detail(request, pk): # pk = 매치 아이디
-  # Review : 권한 제한 없이 누구나 볼 수 있는 건가요?
-
-  user = request.user
-  match = MatchInfo.objects.get(id=pk)
+  team = request.user
   match = get_object_or_404(MatchInfo, pk = pk)
-  
-  if match.host_id == request.user:
+
+  try:
+    MatchRequest.objects.get(team_id=team)
     context={
-      "user" : user, 
+      "user" : team, 
       "match" : match,
       "status": 1
     }
-    
-  else: 
+  except:
     context={
-      "user" : user, 
+      "user" : team, 
       "match" : match,
       "status": 0
     }
@@ -41,8 +37,7 @@ def match_detail(request, pk): # pk = 매치 아이디
   return render(request, "matchingMatch/match_detail.html", context=context)
 
 
-
-def team_detail(request, pk): # pk = 팀 아이디
+def team_detail(request, pk):  # pk = 팀 아이디
 
   user = request.user
 
@@ -76,14 +71,6 @@ def team_update(request, pk):
     return render(request, "html", context=context)
 
 
-
-
-
-def my_page(request, pk): # pk = 유저 아이디
-  #아직 어떤 기능을 넣을지 미정
-  pass
-
-
 @login_required(login_url='/login')
 def match_register(request):
   
@@ -109,34 +96,35 @@ def match_register(request):
   
     return render(request, "matchingMatch/match_register.html", context=context)
 
-@login_required(login_url='/login')
-def match_select(request, pk): # 매치 신청 ajax로 해보는 게 좋을듯
 
-  if request.method == "POST":
-    match = get_object_or_404(MatchInfo, id = pk)
-    #신청한 리스트에 현재 본인의 것이 존재하는지 여부를 확인
-    if match.is_matched:
-      
-      messages.error(request, '이미 상대가 결정된 경기입니다.')
-      return redirect("/")
-    else:
-      messages.success(request, '경기 신청이 완료되었습니다.')
-      return redirect("/")
 
-@login_required(login_url='/login')
-def match_cancel(request, pk): #매치 신청 취소
-  match = get_object_or_404(MatchInfo, id=pk)
+@csrf_exempt
+def match_cancel(request): #매치 신청 취소
+  body_unicode = request.body.decode('utf-8')
+  
+  req = json.loads(body_unicode) 
+  match_request = get_object_or_404(MatchRequest, team_id = req['team.id'])
 
-  if match.is_matched == False:
-    # 매치 신청목록에서 이미 자신의 것이 있는 경우 돌아가기
-    # 있을 경우 신청 취소
-    return
-  else:
-    #이미 매치가 성사된 경우는 일단 보류
-    ...
+  match_request.delete()
+
+  status = not req['status']
+
+  return JsonResponse({'status' : status})
+
   
 
-# def match_open(request, pk):
+@csrf_exempt
+def match_request(request): #매치 신청
+  body_unicode = request.body.decode('utf-8')
+  
+  req = json.loads(body_unicode)
+  
+  MatchRequest.objects.create(match_id = req['match.id'], team_id = req['team.id'])
+  status = not req['status']
+
+  return JsonResponse({'status' : status})
+
+
 
 @login_required(login_url='/login')
 def match_update(request, pk):
@@ -156,6 +144,8 @@ def match_update(request, pk):
     return render(request, "html", context=context)
 
 
+
+
 #매치 결정
 @login_required(login_url='/login')
 def match_resolve(request, pk): # pk = 매치 아이디
@@ -167,17 +157,23 @@ def match_resolve(request, pk): # pk = 매치 아이디
     match.save()
     return redirect("matchingMatch:match_detail", pk = match.pk)
 
-  return render(request, "html")
+    return render(request, "html")
+
+
+# def match_delete(request, pk): 매치 자체를 없애기
+
+def my_page(request, pk): # pk = 유저 아이디
+  #아직 어떤 기능을 넣을지 미정
+  pass
+
+
+
 
 
 def main(request, *args, **kwargs):
     
     alarm = Alarm.objects.filter(team_id=request.user.pk)
     return render(request, "matchingMatch/main.html", {'alarm': alarm})
-
-
-def endOfGame(request, *args, **kwargs):
-    return render(request, "matchingMatch/endOfGame.html")
 
 
 # def check_endOfGame():
@@ -205,19 +201,27 @@ def endOfGame(request, *args, **kwargs):
 #                     match_id=match
 #                 )
 
+
+
+
+def endOfGame(request, *args, **kwargs):
+    return render(request, "matchingMatch/endOfGame.html")
+
+
+
 def login_page(request):
-    page = 'matchingMatch:login'
+    page = 'login'
 
     if request.method == "POST":
         user = authenticate(
             username=request.POST['username'],
             password=request.POST['password']
-            )
+        )
 
         if user is not None:
             login(request, user)
-            messages.info(request, '성공적으로 로그인 하셨습니다.')
-            return redirect('matchingMatch:home') 
+            messages.error(request, '성공적으로 로그인이 진행됐습니다.')
+            return redirect('matchingMatch:main') 
         else:
             messages.error(request, '이메일 혹은 비밀번호를 다시 확인해주세요.')
             return redirect('matchingMatch:login')
@@ -234,11 +238,10 @@ def register_page(request):
             user = form.save(commit=False)
             user.save()
             login(request, user)
-            messages.success(request, '성공적으로 회원가입이 진행됐습니다.')
-            return redirect('matchingMatch:home')
+            messages.error(request, '성공적으로 회원가입이 진행됐습니다.')
+            return redirect('matchingMatch:main')
         else:
             messages.error(request, '회원가입 도중에 문제가 발생하였습니다.')
-
 
     page = 'register'
     context = {'page':page, 'form':form}
@@ -247,7 +250,7 @@ def register_page(request):
 def logout_user(request):
     logout(request)
     messages.info(request, '로그아웃 상태입니다.')
-    return redirect('login')
+    return redirect('matchingMatch:login')
 
 @login_required(login_url='/login')
 def account_page(request):
@@ -257,12 +260,53 @@ def account_page(request):
     # img = Image.open(user.avatar)
     # newsize = (10, 10)
     # img = img.resize(newsize)
-  
+
     # user.avatar = img
     # user.save()
     # user.save()
 
     context = {'user':user}
+    return render(request, 'matchingMatch/account.html', context)
+
+@login_required(login_url='/login')
+def change_password(request):   
+    if request.method == 'POST':
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+       
+        if password1 == password2:
+             new_pass = make_password(password1)
+             request.user.password = new_pass
+             request.user.save()
+             messages.success(request, '비밀번호를 성공적으로 변경하셨습니다!')
+             return redirect('matchingMatch:account')
+
+    return render(request, 'matchingMatch/change_password.html')
+
+@login_required(login_url='/login')
+def edit_account(request):
+
+    form = UserForm(instance=request.user)
+
+    if request.method == 'POST':
+        #print('ORIGINAL Image', request.FILES.get('avatar'))
+        # img = Image.open(request.FILES.get('avatar'))
+        # newsize = (10, 10)
+        # img = img.resize(newsize)
+        # request.FILES['avatar'] = img
+        # img = Image.open(user.avatar)
+        # newsize = (10, 10)
+        # img = img.resize(newsize)
+        #print('NEW Image', request.FILES.get('avatar'))
+        form = UserForm(request.POST, request.FILES,  instance=request.user)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            return redirect('matchingMatch:account')
+
+    context = {'form':form}
+    return render(request, 'matchingMatch/user_form.html', context)
+    context = {'user': user}
     return render(request, 'account.html', context)
   
   
@@ -274,3 +318,31 @@ def account_page(request):
   
   
   
+
+
+# 해당 pk에 해당하는 유저가 로그인 했을 때만 이 페이지가 보이게끔 만들어야됨.
+@login_required(login_url='/login')
+def my_match_list(request, pk):  # pk는 team pk, 마이페이지에서 pk를 받아옴.
+    my_not_matched_matches = MatchInfo.objects.filter(
+        is_matched=False, host_id=pk)
+    context = {
+        'my_not_matched_matches': my_not_matched_matches
+    }
+    return render(request, 'matchingMatch/my_matches.html', context=context)
+
+@login_required(login_url='/login')
+def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지(주최자)에서 받아옴
+    if request.method == "POST":
+        team = Team.objects.get(id=request.POST['select_participant'])
+        match = MatchInfo.objects.get(id=pk)
+        match.participant_id = team
+        match.is_matched = True
+        match.save()
+
+    applying_team_list = MatchRequest.objects.filter(match_id=pk)
+    match = MatchInfo.objects.get(id=pk)
+    context = {
+        'applying_team_list' : applying_team_list,
+        'match' : match
+    }
+    return render(request, 'matchingMatch/applying_team_list.html', context=context)

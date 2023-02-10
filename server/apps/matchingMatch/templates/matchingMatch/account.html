@@ -1,1 +1,23 @@
-{% extends 'main.html' %} {% block content %} {% endblock content %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+  </head>
+  <body>
+    <div class="team_logo m-5 ">
+      <img class="user--team_logo--lg" src="{{user.team_logo.url}}" />
+    </div>
+    <div id="account--buttons">
+      <a class="btn btn--secondary" href="{% url 'matchingMatch:edit-account' %}">팀 정보 수정</a>
+      <a class="btn btn--secondary" href="{% url 'matchingMatch:change-password' %}"
+        >비밀번호 변경</a
+      >
+    </div>
+  </body>
+</html>
+
+
