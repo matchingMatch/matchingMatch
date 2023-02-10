@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from .forms import MatchRegisterForm
-from .models import Team, MatchInfo, Stadium, Alarm, Applying_teams
+from .models import Team, MatchInfo, Stadium, Alarm, MatchRequest
 import datetime
 # Create your views here.
 
@@ -221,7 +221,7 @@ def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지
         match.is_matched = True
         match.save()
 
-    applying_team_list = Applying_teams.objects.filter(match=pk)
+    applying_team_list = MatchRequest.objects.filter(match_id=pk)
     match = MatchInfo.objects.get(id=pk)
     context = {
         'applying_team_list' : applying_team_list,

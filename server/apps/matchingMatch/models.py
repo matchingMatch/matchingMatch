@@ -55,7 +55,8 @@ class Alarm(models.Model):
     match_id = models.ForeignKey(
         MatchInfo, on_delete=models.CASCADE)
 
-class Applying_teams(models.Model):
-    applying_team = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    match = models.ForeignKey(MatchInfo, on_delete=models.CASCADE)
+class MatchRequest(models.Model):
+    match_id = models.ForeignKey(
+        MatchInfo, on_delete=models.CASCADE, related_name="request_match")
+    team_id = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="request_team")
