@@ -41,11 +41,11 @@ def team_detail(request, pk):  # pk = 팀 아이디
 
   user = request.user
 
-  team = get_object_or_404(Team, pk = pk)
+  team = get_object_or_404(Team, id = pk)
+  match_list = MatchInfo.objects.filter(host_id =team)
+  context = {"user" : user, "team" : team, "match_list" : match_list}
 
-  context = {"user" : user, "team" : team}
-
-  return render(request, "html", context=context)
+  return render(request, "matchingMatch/team_detail.html", context=context)
 
 
 @login_required(login_url='/login')
@@ -152,7 +152,7 @@ def match_delete(request, pk): #매치 자체를 없애기 매치를 없애면 �
     match.delete()
     return redirect("/")
 
-    
+
 
 
 
@@ -171,7 +171,17 @@ def main(request, *args, **kwargs):
     alarm = Alarm.objects.filter(team_id=request.user.pk)
     alarm = alarm.first()
     print(alarm)
-    matches = MatchInfo.objects.filter(is_alarmed=False)
+    match_detail_category = {
+      'gender' : 'gender__in',
+      'region' : 'region__in',
+      'date' : 'date__in'
+    }
+    # html 태그 상의 name  : html 태그 상의 value   
+    filter_set = {match_detail_category.get(key) : value for key, value in dict(request.GET).items()}
+
+    # matches = MatchInfo.objects.filter(is_alarmed=False)
+    matches = MatchInfo.objects.filter(**filter_set)
+    
     context = {
         'alarm': alarm,
         'matches': matches,
