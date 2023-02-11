@@ -23,34 +23,32 @@
 			<br />주소: {{match.stadium.address}}
 		</h3>
 
-    {% if request.user == match.host_id %}
-    <button>
-        마감하기
-    </button>
-    {% endif %}
+		{% if request.user == match.host_id %}
+		<button>마감하기</button>
+		<form action="{% url 'matchingMatch:match_update' match.id %}" method="get">
+			{%csrf_token%}
+			<input type="submit" value="수정" />
+		</form>
+		<form action="{% url 'matchingMatch:match_delete' match.id %}" method="post">
+			{%csrf_token%}
+			<input type="submit" value="삭제" />
+		</form>
+		{% endif %} {% if else %}
+		<button class="enroll">신청하기</button>
+		{% endif %}
+	</body>
+	<script>
+		const changeEnroll = (id) => {
+			const url = "/change_enroll";
 
-    {% if else %}
-    <button  class ="enroll">
-        신청하기
-    </button>
-    {% endif %}
-    
-</body>
-<script>
-    const changeEnroll = (id)=> {
-        const url = "/change_enroll";
+			requestEnroll.open("POST", url, true);
+			requestEnroll.setRequestHeader(
+				"Content-Type",
+				"application/x-www-form-urlencoded"
+			);
+			requestEnroll.send(JSON.stringify({ id: id }));
+		};
 
-        requestEnroll.open("POST", url, true);
-		requestEnroll.setRequestHeader(
-			"Content-Type",
-			"application/x-www-form-urlencoded"
-		);
-		requestEnroll.send(JSON.stringify({id: id }));
-    };
-
-    requestEnroll.onreadystatechange = () =>{
-
-    }
-</script>
-
+		requestEnroll.onreadystatechange = () => {};
+	</script>
 </html>

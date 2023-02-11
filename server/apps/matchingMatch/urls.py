@@ -17,5 +17,6 @@ urlpatterns = [
     path('match_cancel/', views.match_cancel, name = "match_cancel"),
     path('edit-account/', views.edit_account, name="edit-account"),
     path('change-password/', views.change_password, name="change-password"),
-    path('match_update/<int:pk>', views.match_update, name = "match_update")
+    path('match_update/<int:pk>', views.match_update, name = "match_update"),
+    path('match_delete/<int:pk>', views.match_delete, name = "match_delete"),
 ]

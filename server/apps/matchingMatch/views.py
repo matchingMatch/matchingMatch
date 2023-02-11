@@ -107,7 +107,7 @@ def match_request(request): #매치 신청
 def match_update(request, pk):
   match = get_object_or_404(MatchInfo, id=pk)
   if request.method == "POST":
-    
+    print(match.id)
     match_form = MatchRegisterForm(request.POST, instance=match)
     if match_form.is_valid():
       match = match_form.save(commit=False)
@@ -115,7 +115,7 @@ def match_update(request, pk):
       return redirect("matchingMatch:match_detail", pk= pk) # 수정된 페이지로 이동
     
     else:
-      
+      context = {"match_form" : match_form}
       #잘못된 부분 수정 요청
 
       return render(request, "matchingMatch/match_update.html", context) # 다시 작성하기
