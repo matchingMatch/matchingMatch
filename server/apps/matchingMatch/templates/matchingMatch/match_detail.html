@@ -23,13 +23,13 @@
 			<br />주소: {{match.stadium.address}}
 		</h3>
 
-    {% if status == 1 %}
+    {% if request.user == match.host_id %}
     <button>
         마감하기
     </button>
     {% endif %}
 
-    {% if status == 0 %}
+    {% if else %}
     <button  class ="enroll">
         신청하기
     </button>

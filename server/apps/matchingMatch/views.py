@@ -37,9 +37,6 @@ def match_detail(request, pk):  # pk = 매치 아이디
   return render(request, "matchingMatch/match_detail.html", context=context)
 
 
-
-
-
 def team_detail(request, pk):  # pk = 팀 아이디
 
   user = request.user
@@ -49,29 +46,6 @@ def team_detail(request, pk):  # pk = 팀 아이디
   context = {"user" : user, "team" : team}
 
   return render(request, "html", context=context)
-
-
-
-@login_required(login_url='/login')
-def team_update(request, pk):
-
-  team = get_object_or_404(Team, pk = pk)
-  if not (request.user == team.host_id or request.user == team.participant_id):
-    # return redirect("matchingMatch:team_detail", pk = team.pk)
-    return redirect("/")
-
-  if request.method == "POST":
-    team_form = CustomUserCreateForm(request.POST, instance=pk)
-    if team_form.is_valid():
-      team_form.save()
-      return redirect("/")
-    else:
-      return render()
-  else:
-    team_form = CustomUserCreateForm(instance=pk)
-    context = {"team_form" : team_form}
-
-    return render(request, "html", context=context)
 
 
 @login_required(login_url='/login')
@@ -131,25 +105,31 @@ def match_request(request): #매치 신청
 
 @login_required(login_url='/login')
 def match_update(request, pk):
-  
+  match = get_object_or_404(MatchInfo, id=pk)
   if request.method == "POST":
-    match_form = MatchRegisterForm(request.POST, instance=pk)
+    
+    match_form = MatchRegisterForm(request.POST, instance=match)
     if match_form.is_valid():
-      match = match_form.save()
-      return redirect("/") # 수정된 페이지로 이동
+      match = match_form.save(commit=False)
+      match.save()
+      return redirect("matchingMatch:match_detail", pk= pk) # 수정된 페이지로 이동
     
     else:
-      return redirect("/") # 다시 작성하기
+      
+      #잘못된 부분 수정 요청
+
+      return render(request, "matchingMatch/match_update.html", context) # 다시 작성하기
   
   else:
-    match_form = MatchRegisterForm(instance=pk)
+    match_form = MatchRegisterForm(instance=match)
     context = {"match_form" : match_form}
-    return render(request, "html", context=context)
+    return render(request, "matchingMatch/match_update.html", context=context)
 
 
 
 
 #매치 결정
+#알람 보내는 것도 필요할듯
 @login_required(login_url='/login')
 def match_resolve(request, pk): # pk = 매치 아이디
   
@@ -160,12 +140,24 @@ def match_resolve(request, pk): # pk = 매치 아이디
     match.save()
     return redirect("matchingMatch:match_detail", pk = match.pk)
 
-    return render(request, "html")
+  return render(request, "html")
 
-    return render(request, "html")
 
-# def match_delete(request, pk): 매치 자체를 없애기
 
+
+def match_delete(request, pk): #매치 자체를 없애기 매치를 없애면 어떤 게 생기나?
+
+  if request.method == "POST":
+    match = get_object_or_404(MatchInfo, id = pk)
+    match.delete()
+    return redirect("/")
+
+    
+
+
+
+
+# team detail과 다른 점?
 def my_page(request, pk): # pk = 유저 아이디
   #아직 어떤 기능을 넣을지 미정
   pass
@@ -286,14 +278,13 @@ def change_password(request):
     if request.method == 'POST':
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
-       
+      
         if password1 == password2:
-             new_pass = make_password(password1)
-             request.user.password = new_pass
-             request.user.save()
-             messages.success(request, '비밀번호를 성공적으로 변경하셨습니다!')
-             return redirect('matchingMatch:account')
-
+            new_pass = make_password(password1)
+            request.user.password = new_pass
+            request.user.save()
+            messages.success(request, '비밀번호를 성공적으로 변경하셨습니다!')
+            return redirect('matchingMatch:account')
     return render(request, 'matchingMatch/change_password.html')
 
 @login_required(login_url='/login')
@@ -319,8 +310,6 @@ def edit_account(request):
 
     context = {'form':form}
     return render(request, 'matchingMatch/user_form.html', context)
-    context = {'user': user}
-    return render(request, 'account.html', context)
   
   
 # def change_enroll(request):
