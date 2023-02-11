@@ -113,12 +113,3 @@ main {
 	display: flex;
 	justify-content: end;
 }
-.alarm_modal {
-	border: 1px solid black;
-	width: 500px;
-	margin: 0 auto;
-}
-.exit_modal {
-	cursor: pointer;
-	border: 1px solid black;
-}
