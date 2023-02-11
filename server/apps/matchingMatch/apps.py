@@ -7,7 +7,7 @@ class MatchingmatchConfig(AppConfig):
     name = 'matchingMatch'
     name = 'server.apps.matchingMatch'
 
-    def ready(self):
-        if settings.SCHEDULER_DEFAULT:
-            from server.apps.matchingMatch.jobs import updater
-            updater.start()
+    # def ready(self):
+    #     if settings.SCHEDULER_DEFAULT:
+    #         from server.apps.matchingMatch.jobs import updater
+    #         updater.start()

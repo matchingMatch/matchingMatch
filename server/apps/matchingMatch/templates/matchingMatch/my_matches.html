@@ -1,0 +1,5 @@
+<!-- 매칭 대기 목록-->
+매칭 대기 목록 {% for match in my_not_matched_matches %}
+<div>경기장: {{match.stadium.stadium_name}}</div>
+<div>시작시간: {{match.start_time}}</div>
+{% endfor %}

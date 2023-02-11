@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	{% load static %}
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>매치 상세</title>
+	</head>
+	<body>
+		<h1>{{match.stadium}}</h1>
+
+		<h3>날짜: {{match.date}}</h3>
+		<h3>시작시간: {{match.start_time}}</h3>
+		<h3>종료시간: {{match.end_time}}</h3>
+
+		주최자 아이디: {{match.host_id.team_name}} 로고: {{match.host_id.team_logo}}
+		<br />성별: {{match.get_gender_display}} <br />기타사항 : {{match.etc}}
+
+		<h3>
+			지역: {{match.stadium.location}}
+			<br />주소: {{match.stadium.address}}
+		</h3>
+
+    {% if status == 1 %}
+    <button>
+        마감하기
+    </button>
+    {% endif %}
+
+    {% if status == 0 %}
+    <button  class ="enroll">
+        신청하기
+    </button>
+    {% endif %}
+    
+</body>
+<script>
+    const changeEnroll = (id)=> {
+        const url = "/change_enroll";
+
+        requestEnroll.open("POST", url, true);
+		requestEnroll.setRequestHeader(
+			"Content-Type",
+			"application/x-www-form-urlencoded"
+		);
+		requestEnroll.send(JSON.stringify({id: id }));
+    };
+
+    requestEnroll.onreadystatechange = () =>{
+
+    }
+</script>
+
+</html>

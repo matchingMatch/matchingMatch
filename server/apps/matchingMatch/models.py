@@ -6,9 +6,9 @@ from PIL import Image
 from django.contrib.auth.validators import UnicodeUsernameValidator
 # Create your models here.
 
-
+USERNAME_FIELD = 'username'
 class Team(AbstractUser, PermissionsMixin):
-    team_name = models.CharField(null=False, max_length=20, unique = True)
+    team_name = models.CharField(null=False, max_length=20)
     team_logo = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
     team_intro = models.TextField(blank=True)  # 팀소개
     region = models.CharField(max_length=20)
@@ -17,7 +17,7 @@ class Team(AbstractUser, PermissionsMixin):
     level = models.IntegerField(null=True, default=0)
     match_count = models.PositiveIntegerField(default=0)
     pre_proplayer = models.TextField(null=True)
-    USERNAME_FIELD = 'username'
+    
 
 
 class Stadium(models.Model):
@@ -26,15 +26,16 @@ class Stadium(models.Model):
     address = models.CharField(max_length=250)
     is_park = models.BooleanField(default=0, null=True)
     location = models.CharField(max_length=10, null=False)
-
+    def __str__(self):
+        return self.stadium_name
 
 class MatchInfo(models.Model):
     gender_list = (("male", "남성"), ("female", "여성"), ("mixed", "혼성"))
     host_id = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="host_team", unique=True)
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="host_team")
     participant_id = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        null=True,
+        null=True, blank=True,
         on_delete=models.CASCADE,
         related_name="participant_team")
     stadium = models.ForeignKey(
@@ -45,13 +46,23 @@ class MatchInfo(models.Model):
     gender = models.CharField(choices=gender_list, max_length=10, null=False)
     stadium_cost = models.CharField(max_length=200, null=True)
     etc = models.CharField(max_length=200, null=True)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     is_alarmed = models.BooleanField(default=False)
-    USERNAME_FIELD ='host_id' 
+    
+
 
 class Alarm(models.Model):
+    # Review : MatchInfo와 Alarm의 관계가 완벽히 정의된 것 같지 않습니다.
+    # Review : MatchInfo.is_alarmed와 Alarm이 중복되는 것 같습니다.
     team_id = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="team_alarm")
     match_id = models.ForeignKey(
         MatchInfo, on_delete=models.CASCADE, related_name="designated_match")
+
+
+class MatchRequest(models.Model):
+    match_id = models.ForeignKey(
+        MatchInfo, on_delete=models.CASCADE, related_name="request_match")
+    team_id = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="request_team")
