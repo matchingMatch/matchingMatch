@@ -32,7 +32,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'server.apps.matchingMatch',
-    'django_apscheduler',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,10 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'import_export',
 ]
-
-APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default
-
-SCHEDULER_DEFAULT = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

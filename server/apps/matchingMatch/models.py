@@ -59,6 +59,7 @@ class Alarm(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="team_alarm")
     match_id = models.ForeignKey(
         MatchInfo, on_delete=models.CASCADE, related_name="designated_match")
+    created_at = models.TimeField(auto_now_add=True)
 
 
 class MatchRequest(models.Model):
