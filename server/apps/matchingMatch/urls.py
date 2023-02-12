@@ -11,6 +11,7 @@ urlpatterns = [
     path('logout/', views.logout_user, name="logout"),
     path('account/', views.account_page, name="account"),
     path('my_register_matches/<int:pk>', views.my_register_matches, name="my_register_matches"),
+    path('my_apply_matches/<int:pk>', views.my_apply_matches, name="my_apply_matches"),
     path('match_detail/<int:pk>', views.match_detail, name="match_detail"),
     path('applying_team_list/<int:pk>',
          views.applying_team_list, name="applying_team_list"),
