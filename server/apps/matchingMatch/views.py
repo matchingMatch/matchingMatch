@@ -33,8 +33,20 @@ def match_detail(request, pk):  # pk = 매치 아이디
       "match" : match,
       "status": 0
     }
+    
 
   return render(request, "matchingMatch/match_detail.html", context=context)
+
+def change_enroll(request):
+  req = json.loads(request.body)
+  match_id = req['id']
+  enroll_type = req['type']
+  
+  
+  if enroll_type == 'enroll':
+    
+    return JsonResponse({'id' : match_id, 'type':enroll_type})
+
 
 
 def team_detail(request, pk):  # pk = 팀 아이디
@@ -322,11 +334,7 @@ def edit_account(request):
     return render(request, 'matchingMatch/user_form.html', context)
   
   
-# def change_enroll(request):
-#   req = json.loads(request.body)
-  
-  
-#   return JsonResponse({'id' : id})
+
   
   
   

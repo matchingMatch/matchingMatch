@@ -59,16 +59,20 @@
 			<ul class="match_list">
 				{% for match in matches %}
 				<li>
-					<div>{{match.start_time.time}}</div>
+					<div>{{match.start_time}}</div>
 					<div>
-						장소 {{match.stadium.stadium_name}} {{match.get_gender_display}}
-						{{match.host_id.team_name}} {{match.participant_id.team_name}}
+						축구장 : {{match.stadium.stadium_name}} 
+						<br>성별 : {{match.get_gender_display}}
 					</div>
 					<div>
 						{% if match.is_matched %}
+						<div> {{match.host_id.team_name}} vs {{match.participant_id.team_name}}</div>
 						<div>매치성사</div>
+						<br>
 						{% else %}
+						<div>{{match.host_id.team_name}}</div>
 						<div>찾는 중</div>
+						<br>
 						{% endif %}
 					</div>
 				</li>

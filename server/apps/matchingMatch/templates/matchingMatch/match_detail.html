@@ -22,33 +22,56 @@
 			지역: {{match.stadium.location}}
 			<br />주소: {{match.stadium.address}}
 		</h3>
+	
+    {% if user == match.host_id and match.is_matched == False %}
+	<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
+		<button>
+			신청자 목록 확인하기
+		</button>
+	</form>
+		
+	{% elif  match.is_matched == True %}
+	<button class="end">
+		마감되었습니다
+	</button>
 
-		{% if request.user == match.host_id %}
-		<button>마감하기</button>
-		<form action="{% url 'matchingMatch:match_update' match.id %}" method="get">
-			{%csrf_token%}
-			<input type="submit" value="수정" />
-		</form>
-		<form action="{% url 'matchingMatch:match_delete' match.id %}" method="post">
-			{%csrf_token%}
-			<input type="submit" value="삭제" />
-		</form>
-		{% endif %} {% if else %}
-		<button class="enroll">신청하기</button>
-		{% endif %}
-	</body>
-	<script>
-		const changeEnroll = (id) => {
-			const url = "/change_enroll";
+    {% else %}
+    <button  class ="enroll" onclick="changeEnroll({{ match.id}} ,'enroll')">
+        신청하기
+    </button>
+    {% endif %}
+    
+</body>
+<script>
+	const strip = (string) => {
+		return string.replace(/^\s+|\s+$/g, "");
+	};
 
-			requestEnroll.open("POST", url, true);
-			requestEnroll.setRequestHeader(
-				"Content-Type",
-				"application/x-www-form-urlencoded"
-			);
-			requestEnroll.send(JSON.stringify({ id: id }));
-		};
+	const requestEnroll = new XMLHttpRequest();
 
-		requestEnroll.onreadystatechange = () => {};
-	</script>
+    const changeEnroll = async(id, type)=> {
+        const url = "/change_enroll";
+
+        requestEnroll.open("POST", url, true);
+		requestEnroll.setRequestHeader(
+			"Content-Type",
+			"application/x-www-form-urlencoded"
+		);
+		requestEnroll.send(JSON.stringify({id: id, type:type}));
+    };
+
+    requestEnroll.onreadystatechange = () =>{
+		if(requestEnroll.readyState===XMLHttpRequest.DONE){
+			if(requestEnroll.status<400){
+				const{id, type}=JSON.parse(requestEnroll.response);
+				const element = document.querySelector(`.match-id-${id} .enroll`);
+				if (type == 'enroll')
+				{element.innerHTML=`<button class="enroll_done">  신청완료 </button>` }
+				else
+				{element.innerHTML=`<button class="enroll_done">  신청완료 </button>` }
+			}
+		}
+    };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </html>
