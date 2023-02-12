@@ -3,6 +3,7 @@
 	padding: 0;
 	box-sizing: border-box;
 }
+
 a {
 	text-decoration: none;
 	color: black;
@@ -11,16 +12,20 @@ a {
 	padding: 5px;
 	background-color: #cecece;
 }
+
 li {
 	list-style: none;
 }
+
 header {
 	padding: 20px;
 	text-align: center;
 }
+
 main {
 	padding: 20px;
 }
+
 .week_slideshow {
 	width: 700px;
 	height: 100px;
@@ -28,14 +33,17 @@ main {
 	margin: 50px auto;
 	overflow: hidden;
 }
+
 .week {
 	display: flex;
 	position: absolute;
 	left: 0;
 	top: 0;
-	width: 3100px; /* 슬라이드할 사진과 마진 총 넓이 */
+	width: 3100px;
+	/* 슬라이드할 사진과 마진 총 넓이 */
 	transition: left 0.5s ease-out;
 }
+
 /* .date {
   text-align: center;
   border: 1px solid black;
@@ -46,13 +54,14 @@ main {
 .date:first-child {
 	margin-left: 25px;
 }
+
 .date:not(:last-child) {
 	float: left;
 	margin-right: 50px;
 }
 
-.date {
-}
+.date {}
+
 .date div {
 	width: 50px;
 	text-align: center;
@@ -103,21 +112,26 @@ main {
 	flex-direction: column;
 	align-content: center;
 }
+
 .sun {
 	color: red;
 }
+
 .sat {
 	color: blue;
 }
+
 .match_register_btn {
 	display: flex;
 	justify-content: end;
 }
+
 .alarm_modal {
 	border: 1px solid black;
 	width: 500px;
 	margin: 0 auto;
 }
+
 .exit_modal {
 	cursor: pointer;
 	border: 1px solid black;

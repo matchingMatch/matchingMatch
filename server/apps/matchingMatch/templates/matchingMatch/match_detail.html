@@ -22,22 +22,34 @@
 			지역: {{match.stadium.location}}
 			<br />주소: {{match.stadium.address}}
 		</h3>
+	
+    {% if user == match.host_id and match.is_matched == False %}
+	<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
+		<button>
+			신청자 목록 확인하기
+		</button>
+	</form>
+		
+	{% elif  match.is_matched == True %}
+	<button class="end">
+		마감되었습니다
+	</button>
 
-    {% if status == 1 %}
-    <button>
-        마감하기
-    </button>
-    {% endif %}
-
-    {% if status == 0 %}
-    <button  class ="enroll">
+    {% else %}
+    <button  class ="enroll" onclick="changeEnroll({{ match.id}} ,'enroll')">
         신청하기
     </button>
     {% endif %}
     
 </body>
 <script>
-    const changeEnroll = (id)=> {
+	const strip = (string) => {
+		return string.replace(/^\s+|\s+$/g, "");
+	};
+
+	const requestEnroll = new XMLHttpRequest();
+
+    const changeEnroll = async(id, type)=> {
         const url = "/change_enroll";
 
         requestEnroll.open("POST", url, true);
@@ -45,12 +57,21 @@
 			"Content-Type",
 			"application/x-www-form-urlencoded"
 		);
-		requestEnroll.send(JSON.stringify({id: id }));
+		requestEnroll.send(JSON.stringify({id: id, type:type}));
     };
 
     requestEnroll.onreadystatechange = () =>{
-
-    }
+		if(requestEnroll.readyState===XMLHttpRequest.DONE){
+			if(requestEnroll.status<400){
+				const{id, type}=JSON.parse(requestEnroll.response);
+				const element = document.querySelector(`.match-id-${id} .enroll`);
+				if (type == 'enroll')
+				{element.innerHTML=`<button class="enroll_done">  신청완료 </button>` }
+				else
+				{element.innerHTML=`<button class="enroll_done">  신청완료 </button>` }
+			}
+		}
+    };
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </html>
