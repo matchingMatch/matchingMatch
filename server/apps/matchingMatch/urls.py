@@ -19,4 +19,7 @@ urlpatterns = [
     path('change-password/', views.change_password, name="change-password"),
     path('change_enroll/', views.change_enroll, name='change_enroll'),
     path('team_list/', views.team_list, name ='team_list'),
+    path('match_update/<int:pk>', views.match_update, name = "match_update"),
+    path('match_delete/<int:pk>', views.match_delete, name = "match_delete"),
+    path('team_detail/<int:pk>',  views.team_detail, name = "team_detail"),
 ]
