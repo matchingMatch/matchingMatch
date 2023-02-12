@@ -8,6 +8,9 @@
 		<link rel="stylesheet" href="{% static 'css/main.css' %}" />
 	</head>
 	<body>
+    
+    {% include 'matchingMatch/navbar.html' %}
+
 		<div class="section">
       <h1>{{user.team_name}}</h1>
 			<img class="user--team_logo--lg" src="{{user.team_logo.url}}" />

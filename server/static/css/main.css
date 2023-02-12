@@ -5,7 +5,7 @@
 }
 a {
 	text-decoration: none;
-	color: black;
+  color: black;
 	border: 1px solid black;
 	width: fit-content;
 	padding: 5px;
@@ -112,4 +112,30 @@ main {
 .match_register_btn {
 	display: flex;
 	justify-content: end;
+}
+
+#nav{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.5em 2em;
+}
+
+nav a{
+   text-decoration: none;
+   color: black;
+   margin: 0 10px;
+}
+
+
+#logo--text{
+   font-size: 26px;
+   font-weight: 500;
+}
+
+#nav--col3{
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
 }
