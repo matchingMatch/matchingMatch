@@ -1,5 +1,4 @@
-매칭 참여자 목록
-
+매칭 참여자 목록 {% if applying_team_list %}
 <form
   action="{% url 'matchingMatch:applying_team_list' match.pk %}"
   method="post"
@@ -20,3 +19,6 @@
   </div>
 </form>
 <hr />
+{% else %}
+<div>아직 신청한 팀이 없습니다!</div>
+{% endif %}
