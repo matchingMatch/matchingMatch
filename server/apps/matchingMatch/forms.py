@@ -1,0 +1,55 @@
+from django import forms
+from django.forms import ModelForm
+from django.contrib.auth.forms import UserCreationForm
+from server.apps.matchingMatch.models import MatchInfo, Team
+
+
+
+class MatchRegisterForm(forms.ModelForm):
+  
+  class Meta:
+    model = MatchInfo
+    fields = ['stadium','date','gender','stadium_cost','etc','start_time','end_time']
+    labels = {
+        'stadium' : '축구장',
+        'date' : '날짜',
+        'gender' : '설명',
+        'stadium_cost' : '원구장비',
+        'etc' : '기타사항',
+        'start_time' : '시작 시간',
+        'end_time' : '종료 시간',
+    }
+    
+    widgets = {
+            'start_time': forms.TimeInput(attrs={'type': 'time'}, ),
+            'end_time': forms.TimeInput(attrs={'type': 'time'}),
+        }
+
+
+class UserForm(ModelForm):
+    class Meta:
+        model = Team
+        fields = ['username', 'email', 'team_name', 'team_logo', 'team_intro', 'region', 'photo', 'pre_proplayer']
+        labels = {
+            'username': '유저네임',
+            'team_name': '팀 이름',
+            'team_logo': '팀 로고 (이미지 첨부파일)',
+            'team_intro': '팀 소개',
+            'region': '지역',
+            'photo': '팀 사진 (이미지 첨부파일)',
+            'pre_proplayer': '선출 수 (자세하게 적어주세요.)',
+        }
+
+class CustomUserCreateForm(UserCreationForm):
+    class Meta:
+        model = Team
+        fields = ['username', 'email', 'password1', 'password2', 'team_name', 'team_logo', 'team_intro', 'region', 'photo', 'pre_proplayer']
+        labels = {
+            'username': '유저네임',
+            'team_name': '팀 이름',
+            'team_logo': '팀 로고 (이미지 첨부파일)',
+            'team_intro': '팀 소개',
+            'region': '지역',
+            'photo': '팀 사진 (이미지 첨부파일)',
+            'pre_proplayer': '선출 수 (자세하게 적어주세요.)',
+        }
