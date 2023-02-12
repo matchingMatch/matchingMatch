@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from .forms import MatchRegisterForm
 from .models import Team, MatchInfo, Stadium, Alarm, MatchRequest
 from .forms import CustomUserCreateForm, UserForm
+from .decorator import admin_required
 import re
 import datetime
 import json
@@ -50,15 +51,21 @@ def team_detail(request, pk):  # pk = 팀 아이디
 
 def team_list(request):
   order = request.GET.get("order")
+  search = request.GET.get("team_search")
+  
   print(order)
   if order:
     teams = Team.objects.order_by(order)
   else:
     teams = Team.objects.all()
-
+  
+  if search != None:
+    teams = teams.filter(team_name__contains = search)
+  #order와 search가 동시에 존재하는 경우?
   context = {"teams" : teams, 
             "order" : order}
   return render (request, "matchingMatch/team_list.html", context=context)
+
 
 @login_required(login_url='/login')
 def match_register(request):
@@ -390,3 +397,13 @@ def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지
         'match' : match
     }
     return render(request, 'matchingMatch/applying_team_list.html', context=context)
+
+
+@login_required(login_url='/login')
+@admin_required
+#차단 유저 목록 
+def admin_team_block(request):
+  ...
+#삭제 목록
+def admin_match_delete(request):
+  ...
