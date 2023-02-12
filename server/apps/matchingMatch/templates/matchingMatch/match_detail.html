@@ -66,20 +66,7 @@
 		const changeEnroll = (id, type) => {
 			const url = "/change_enroll/";
 			strip(type);
-			console.log(id);
-			console.log(type);
-			requestEnroll.open("POST", url, true);
-			requestEnroll.setRequestHeader(
-				"Content-Type",
-				"application/x-www-form-urlencoded"
-			);
-			requestEnroll.send(JSON.stringify({ id: id, type: type }));
-		};
-		const changeEnroll = (id, type) => {
-			const url = "/change_enroll/";
-			strip(type);
-			console.log(id);
-			console.log(type);
+
 			requestEnroll.open("POST", url, true);
 			requestEnroll.setRequestHeader(
 				"Content-Type",
