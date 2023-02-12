@@ -1,4 +1,7 @@
-import re
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.core import serializers
 from django.shortcuts import render, redirect
 from .forms import CustomUserCreateForm
 from django.contrib.auth import authenticate, login, logout
@@ -7,6 +10,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from .forms import MatchRegisterForm
 from .models import Team, MatchInfo, Stadium, Alarm
+from django.db.models import Q
 import datetime
 # Create your views here.
 
@@ -107,43 +111,43 @@ def match_resolve(request, pk):  # pk = 매치 아이디
 
 
 def main(request, *args, **kwargs):
-    alarm = Alarm.objects.filter(team_id=request.user.pk)
-    alarm = alarm.first()
-    print(alarm)
-    matches = MatchInfo.objects.filter(is_alarmed=False)
+    matches = MatchInfo.objects.filter(is_matched=False)
+    userMatches = (MatchInfo.objects.filter(is_alarmed=False) & MatchInfo.objects.filter(
+        Q(host_id=request.user.pk) | Q(participant_id=request.user.pk)))
     context = {
-        'alarm': alarm,
         'matches': matches,
+        'userMatches': userMatches,
 
     }
     return render(request, "matchingMatch/main.html", context=context)
 
 
-def check_endOfGame():
+@csrf_exempt
+def check_endedmatch(request):
     # 날짜 셋팅
     now = datetime.datetime.now()
+    # 알람이 생성되지 않은 매치: 경기가 끝나지 않은 매치들
 
-    MatchInfos = MatchInfo.objects.filter(
-        is_alarmed=False)  # 알람이 생성되지 않은 매치: 경기가 끝나지 않은 매치들
-
-    if len(MatchInfos) != 0:
-        for match in MatchInfos:
-            print(match.participant_id)
+    userMatches = (MatchInfo.objects.filter(is_alarmed=False) & MatchInfo.objects.filter(
+        Q(host_id=request.user.pk) | Q(participant_id=request.user.pk)))
+    print(userMatches.values())
+    userMatches_json = []
+    if len(userMatches) != 0:
+        for match in userMatches:
             matchTime = match.end_time.replace(tzinfo=None)
             if matchTime < now:
                 match.is_alarmed = True
-                match.host_id.match_count += 1
-                match.participant_id.match_count += 1
-                Alarm.objects.create(
-                    team_id=match.host_id,
-                    match_id=match
-                )
-
-                Alarm.objects.create(
-                    team_id=match.participant_id,
-                    match_id=match
-                )
-                match.save()
+                userMatches_json.append({
+                    'match_id': match.id,
+                    'host_teamname': match.host_id.team_name,
+                    'participant_teamname': match.participant_id.team_name,
+                    'end_time': match.end_time
+                })
+        # userMatches_json = json.loads(serializers.serialize(
+        #     'json', userMatches))
+        # userMatches_json = serializers.serialize(
+        #     'json', userMatches_json)
+    return JsonResponse({'userMatches': userMatches_json})
 
 
 def login_page(request):
@@ -213,12 +217,19 @@ def account_page(request):
     return render(request, 'account.html', context)
 
 
-def rate(request, participant_id):
+def rate(request, pk):
     if request.method == "POST":
-        participant = Team.objects.get(id=participant_id)
+        host = Team.objects.get(id=request.user.id)
+        match = MatchInfo.objects.get(id=pk)
+        participant = Team.objects.get(id=match.participant_id.id)
+        host.match_count += 1
+        participant.match_count += 1
         participant.level = (participant.level +
-                             int(request.POST['level']))/participant.match_count
+                             float(request.POST['level']))/participant.match_count
         participant.manner = (participant.manner +
-                              int(request.POST['manner']))/participant.match_count
+                              float(request.POST['manner']))/participant.match_count
+        match.delete()
+        match.save()
+        host.save()
         participant.save()
         return redirect('/')

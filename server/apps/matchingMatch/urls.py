@@ -9,5 +9,6 @@ urlpatterns = [
     path('register/', views.register_page, name="register"),
     path('logout/', views.logout_user, name="logout"),
     path('account/', views.account_page, name="account"),
-    path('rate/<int:participant_id>', views.rate, name="rate"),
+    path('rate/<int:pk>', views.rate, name="rate"),
+    path('match/ended/', views.check_endedmatch, name="check_endedmatch"),
 ]

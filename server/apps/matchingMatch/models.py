@@ -46,7 +46,7 @@ class MatchInfo(models.Model):
     etc = models.CharField(max_length=200, null=True)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    is_alarmed = models.BooleanField(default=False)
+    is_alarmed = models.BooleanField(default=False)  # 알림이 온 매치인지 아닌지
     USERNAME_FIELD = 'host_id'
 
 
@@ -55,3 +55,4 @@ class Alarm(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="team_alarm")
     match_id = models.ForeignKey(
         MatchInfo, on_delete=models.CASCADE, related_name="designated_match")
+    created_at = models.TimeField(auto_now_add=True)
