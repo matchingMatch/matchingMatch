@@ -31,13 +31,6 @@
 		{% elif user == match.host_id and match.is_matched == True %}
 		<button class="end">마감되었습니다</button>
 
-		{% if user == match.host_id and match.is_matched == False %}
-		<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
-			<button>신청자 목록 확인하기</button>
-		</form>
-
-		{% elif user == match.host_id and match.is_matched == True %}
-		<button class="end">마감되었습니다</button>
 
 		{% elif match.host_id != user and status == 0 %}
 		<div id="enroll-btn">
@@ -49,8 +42,7 @@
 		<div id="enroll">
 			<button
 				class="enroll-btn"
-				onclick="changeEnroll({{ match.id}}, 'enroll-cancel')"
-			>
+				onclick="changeEnroll({{ match.id}}, 'enroll-cancel')">
 				신청취소
 			</button>
 		</div>
@@ -63,6 +55,7 @@
 
 		const requestEnroll = new XMLHttpRequest();
 
+		
 		const changeEnroll = (id, type) => {
 			const url = "/change_enroll/";
 			strip(type);

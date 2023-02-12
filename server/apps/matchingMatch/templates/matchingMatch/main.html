@@ -59,7 +59,7 @@
 			<ul class="match_list">
 				{% for match in matches %}
 				<li>
-					<div>{{match.start_time}}</div>
+					<div>{{match.start_time}} ~ {{match.start_time}}</div>
 					<div>
 						축구장 : {{match.stadium.stadium_name}} 
 						<br>성별 : {{match.get_gender_display}}
@@ -76,7 +76,6 @@
 						{% endif %}
 					</div>
 				</li>
-
 				{% endfor %}
 			</ul>
 			<div class="match_register_btn">

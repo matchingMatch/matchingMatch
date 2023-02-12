@@ -12,6 +12,7 @@ from .forms import CustomUserCreateForm, UserForm
 import re
 import datetime
 import json
+
 # Create your views here.
 
 
@@ -38,7 +39,6 @@ def match_detail(request, pk):  # pk = 매치 아이디
 
 
 def team_detail(request, pk):  # pk = 팀 아이디
-
   user = request.user
 
   team = get_object_or_404(Team, id = pk)
@@ -47,6 +47,18 @@ def team_detail(request, pk):  # pk = 팀 아이디
 
   return render(request, "matchingMatch/team_detail.html", context=context)
 
+
+def team_list(request):
+  order = request.GET.get("order")
+  print(order)
+  if order:
+    teams = Team.objects.order_by(order)
+  else:
+    teams = Team.objects.all()
+
+  context = {"teams" : teams, 
+            "order" : order}
+  return render (request, "matchingMatch/team_list.html", context=context)
 
 @login_required(login_url='/login')
 def match_register(request):
