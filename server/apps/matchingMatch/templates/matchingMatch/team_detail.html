@@ -1,17 +1,18 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" />
 </head>
 <body>
   <div class = "team-detail-top">
     <div class = "team-name">
-      <h2>{{team.team_name}}</h2>
+      <h1>{{team.team_name}}</h1>
     </div>
-    d
+
     <div class="team-logo">
       <img src="" alt="">
     </div>
@@ -19,16 +20,16 @@
 
   <div class = "team-detail-mid">
     <div class="team-intro">
-      <h3>팀소개</h3>
-      <h3>{{team.team_intro}}</h3>
+      <h3>팀 소개</h3>
+      <h5>{{team.team_intro}}</h5>
     </div>
     <div class = "team-info">
       <h3>실력: {{team.level}}</h3>
       <h3>매너: {{team.manner}}</h3>
-      <h3>선출 여부: {{team.proplayer}}</h3>
+      <h3>선출 여부: {{team.pre_proplayer}}</h3>
     </div>
   </div class = "team-detail-bottom">
-    <h1>{{team.team_name}}에서 현재 모집 중인 매치</h1>
+    <h3>{{team.team_name}}팀이 현재 모집 중인 매치:</h3>
     {% for match in match_list %}
       <div>
         <a href="{% url 'matchingMatch:match_detail' match.pk%}">{{match.stadium}}</a>
