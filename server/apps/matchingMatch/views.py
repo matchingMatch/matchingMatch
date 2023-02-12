@@ -220,16 +220,16 @@ def main(request, *args, **kwargs):
 def check_endedmatch(request):
     # 날짜 셋팅
     now = datetime.datetime.now().time()
+    today = datetime.date.today()
     # 알람이 생성되지 않은 매치: 경기가 끝나지 않은 매치들
 
     userMatches = (MatchInfo.objects.filter(is_alarmed=False) & MatchInfo.objects.filter(
         Q(host_id=request.user.pk) | Q(participant_id=request.user.pk)))
-    print(userMatches.values())
     userMatches_json = []
     if len(userMatches) != 0:
         for match in userMatches:
             matchTime = match.end_time.replace(tzinfo=None)
-            if matchTime < now:
+            if matchTime < now and match.date <= today:
                 userMatches_json.append({
                     'match_id': match.id,
                     'host_teamname': match.host_id.team_name,
@@ -240,11 +240,8 @@ def check_endedmatch(request):
         #     'json', userMatches))
         # userMatches_json = serializers.serialize(
         #     'json', userMatches_json)
+    print(userMatches_json)
     return JsonResponse({'userMatches': userMatches_json})
-
-
-def endOfGame(request, *args, **kwargs):
-    return render(request, "matchingMatch/endOfGame.html")
 
 
 def login_page(request):
@@ -440,13 +437,16 @@ def rate(request, pk):
         participant = Team.objects.get(id=match.participant_id.id)
         host.match_count += 1
         participant.match_count += 1
-        participant.level = (participant.level +
-                             float(request.POST['level']))/participant.match_count
-        participant.manner = (participant.manner +
-                              float(request.POST['manner']))/participant.match_count
-        match.save()
-        host.save()
-        participant.save()
+        try:
+            participant.level = (participant.level +
+                                 float(request.POST['level']))/participant.match_count
+            participant.manner = (participant.manner +
+                                  float(request.POST['manner']))/participant.match_count
+            match.save()
+            host.save()
+            participant.save()
+        except:
+            pass
         return redirect('/')
 
 
