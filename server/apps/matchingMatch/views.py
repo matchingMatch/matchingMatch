@@ -188,7 +188,10 @@ def main(request, *args, **kwargs):
     }
     # html 태그 상의 name  : html 태그 상의 value   
     filter_set = {match_detail_category.get(key) : value for key, value in dict(request.GET).items()}
-
+    
+    #매치 상세설정
+    
+    
     # matches = MatchInfo.objects.filter(is_alarmed=False)
     matches = MatchInfo.objects.filter(**filter_set)
     
