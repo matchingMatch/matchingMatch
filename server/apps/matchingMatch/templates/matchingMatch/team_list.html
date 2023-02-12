@@ -22,8 +22,12 @@
             </option>
             
         </select>
+        <div id="team-search">
+            <input name="team_search" type="text">
+            <button class="btn btn-primary" type="submit">검색</button>
+        </div>
     </form>
-    
+
     {% for team in teams %}
     <a href="{% url 'matchingMatch:team_detail' team.pk %} ">
         팀 이름 : {{team.team_name}}
