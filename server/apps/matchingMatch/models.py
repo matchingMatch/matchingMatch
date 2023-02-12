@@ -40,7 +40,7 @@ class MatchInfo(models.Model):
         related_name="participant_team")
     stadium = models.ForeignKey(
         Stadium, on_delete=models.CASCADE, related_name="stadium")
-    date = models.DateField(null=True, blank=True)
+    date = models.DateField(null=False, blank=False)
     is_matched = models.BooleanField(
         default=False, null=False)  # 매치성사여부(매치종료여부는 아님)
     gender = models.CharField(choices=gender_list, max_length=10, null=False)

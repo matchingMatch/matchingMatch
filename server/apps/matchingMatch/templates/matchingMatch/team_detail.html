@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class = "team-detail-top">
+    <div class = "team-name">
+      <h2>{{team.team_name}}</h2>
+    </div>
+    d
+    <div class="team-logo">
+      <img src="" alt="">
+    </div>
+  </div>
+
+  <div class = "team-detail-mid">
+    <div class="team-intro">
+      <h3>팀소개</h3>
+      <h3>{{team.team_intro}}</h3>
+    </div>
+    <div class = "team-info">
+      <h3>실력: {{team.level}}</h3>
+      <h3>매너: {{team.manner}}</h3>
+      <h3>선출 여부: {{team.proplayer}}</h3>
+    </div>
+  </div class = "team-detail-bottom">
+    <h1>{{team.team_name}}에서 현재 모집 중인 매치</h1>
+    {% for match in match_list %}
+      <div>
+        <a href="{% url 'matchingMatch:match_detail' match.pk%}">{{match.stadium}}</a>
+      </div>
+    {%endfor%}
+    <!-- 페이지 네이션으로 처리 나중에 하기 -->
+
+  <div>
+
+  </div>
+</body>
+</html>
