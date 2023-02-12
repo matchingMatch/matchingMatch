@@ -136,7 +136,6 @@ def check_endedmatch(request):
         for match in userMatches:
             matchTime = match.end_time.replace(tzinfo=None)
             if matchTime < now:
-                match.is_alarmed = True
                 userMatches_json.append({
                     'match_id': match.id,
                     'host_teamname': match.host_id.team_name,
@@ -216,11 +215,14 @@ def account_page(request):
     context = {'user': user}
     return render(request, 'account.html', context)
 
+# 매치 상대방 평가하기
+
 
 def rate(request, pk):
     if request.method == "POST":
         host = Team.objects.get(id=request.user.id)
         match = MatchInfo.objects.get(id=pk)
+        match.is_alarmed = True
         participant = Team.objects.get(id=match.participant_id.id)
         host.match_count += 1
         participant.match_count += 1
@@ -228,7 +230,6 @@ def rate(request, pk):
                              float(request.POST['level']))/participant.match_count
         participant.manner = (participant.manner +
                               float(request.POST['manner']))/participant.match_count
-        match.delete()
         match.save()
         host.save()
         participant.save()
