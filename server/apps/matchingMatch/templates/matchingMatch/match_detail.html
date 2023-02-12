@@ -15,7 +15,15 @@
 		<h3>시작시간: {{match.start_time}}</h3>
 		<h3>종료시간: {{match.end_time}}</h3>
 
-		주최자 아이디: {{match.host_id.team_name}} 로고: {{match.host_id.team_logo}}
+		주최자 아이디: 
+		<a href="{% url 'matchingMatch:team_detail' match.host_id.pk %}">
+			{{match.host_id.team_name}}
+		</a>
+		{% if match.is_matched == True %}
+		VS {{match.participant_id.team_name}}
+		{% endif %}
+		<br>로고: {{match.host_id.team_logo}}
+		
 		<br />성별: {{match.get_gender_display}} <br />기타사항 : {{match.etc}}
 
 		<h3>
@@ -28,7 +36,7 @@
 			<button>신청자 목록 확인하기</button>
 		</form>
 
-		{% elif user == match.host_id and match.is_matched == True %}
+		{% elif match.is_matched == True %}
 		<button class="end">마감되었습니다</button>
 
 
