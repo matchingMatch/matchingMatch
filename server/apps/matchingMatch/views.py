@@ -1,3 +1,7 @@
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.core import serializers
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -11,11 +15,14 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .forms import MatchRegisterForm
+from .models import Team, MatchInfo, Stadium, Alarm
+from django.db.models import Q
 from .models import Team, MatchInfo, Stadium, Alarm, MatchRequest
 from .forms import CustomUserCreateForm, UserForm
 import re
 import datetime
 import json
+
 # Create your views here.
 
 
@@ -42,7 +49,6 @@ def match_detail(request, pk):  # pk = 매치 아이디
 
 
 def team_detail(request, pk):  # pk = 팀 아이디
-
   user = request.user
 
   team = get_object_or_404(Team, id = pk)
@@ -51,6 +57,18 @@ def team_detail(request, pk):  # pk = 팀 아이디
 
   return render(request, "matchingMatch/team_detail.html", context=context)
 
+
+def team_list(request):
+  order = request.GET.get("order")
+  print(order)
+  if order:
+    teams = Team.objects.order_by(order)
+  else:
+    teams = Team.objects.all()
+
+  context = {"teams" : teams, 
+            "order" : order}
+  return render (request, "matchingMatch/team_list.html", context=context)
 
 @login_required(login_url='/login')
 def match_register(request):
@@ -159,8 +177,6 @@ def match_delete(request, pk): #매치 자체를 없애기 매치를 없애면 �
 
 
 
-
-
 # team detail과 다른 점?
 def my_page(request, pk): # pk = 유저 아이디
   #아직 어떤 기능을 넣을지 미정
@@ -171,6 +187,9 @@ def my_page(request, pk): # pk = 유저 아이디
 
 
 def main(request, *args, **kwargs):
+    matches = MatchInfo.objects.filter(is_matched=False)
+    userMatches = (MatchInfo.objects.filter(is_alarmed=False) & MatchInfo.objects.filter(
+        Q(host_id=request.user.pk) | Q(participant_id=request.user.pk)))
     
     alarm = Alarm.objects.filter(team_id=request.user.pk)
     alarm = alarm.first()
@@ -182,13 +201,16 @@ def main(request, *args, **kwargs):
     }
     # html 태그 상의 name  : html 태그 상의 value   
     filter_set = {match_detail_category.get(key) : value for key, value in dict(request.GET).items()}
-
+    
+    #매치 상세설정
+    
+    
     # matches = MatchInfo.objects.filter(is_alarmed=False)
     matches = MatchInfo.objects.filter(**filter_set)
     
     context = {
-        'alarm': alarm,
         'matches': matches,
+        'userMatches': userMatches,
 
     }
     return render(request, "matchingMatch/main.html", context=context)
@@ -199,24 +221,31 @@ def main(request, *args, **kwargs):
 #     # Review : 참고해보세요! https://dongsik93.github.io/til/2019/07/31/til-etc-fcm/
 #     now = datetime.datetime.now()
 
-#     MatchInfos = MatchInfo.objects.filter(
-#         is_alarmed=False)  # 알람이 생성되지 않은 매치: 경기가 끝나지 않은 매치들
+@csrf_exempt
+def check_endedmatch(request):
+    # 날짜 셋팅
+    now = datetime.datetime.now()
+    # 알람이 생성되지 않은 매치: 경기가 끝나지 않은 매치들
 
-#     if len(MatchInfos) != 0:
-#         for match in MatchInfos:
-#             matchTime = match.end_time.replace(tzinfo=None)
-#             if matchTime < now:
-#                 match.is_alarmed = True
-#                 match.save()
-#                 Alarm.objects.create(
-#                     team_id=match.host_id,
-#                     match_id=match
-#                 )
-
-#                 Alarm.objects.create(
-#                     team_id=match.participant_id,
-#                     match_id=match
-#                 )
+    userMatches = (MatchInfo.objects.filter(is_alarmed=False) & MatchInfo.objects.filter(
+        Q(host_id=request.user.pk) | Q(participant_id=request.user.pk)))
+    print(userMatches.values())
+    userMatches_json = []
+    if len(userMatches) != 0:
+        for match in userMatches:
+            matchTime = match.end_time.replace(tzinfo=None)
+            if matchTime < now:
+                userMatches_json.append({
+                    'match_id': match.id,
+                    'host_teamname': match.host_id.team_name,
+                    'participant_teamname': match.participant_id.team_name,
+                    'end_time': match.end_time
+                })
+        # userMatches_json = json.loads(serializers.serialize(
+        #     'json', userMatches))
+        # userMatches_json = serializers.serialize(
+        #     'json', userMatches_json)
+    return JsonResponse({'userMatches': userMatches_json})
 
 
 
@@ -300,6 +329,7 @@ def change_password(request):
             messages.success(request, '비밀번호를 성공적으로 변경하셨습니다!')
             return redirect('matchingMatch:account')
     return render(request, 'matchingMatch/change_password.html')
+# 매치 상대방 평가하기
 
 @login_required(login_url='/login')
 def edit_account(request):
@@ -332,11 +362,33 @@ class delete_account(SuccessMessageMixin, generic.DeleteView):
   success_url = reverse_lazy('matchingMatch:main')
 
   
-# def change_enroll(request):
-#   req = json.loads(request.body)
+@csrf_exempt
+def change_enroll(request):
+  
+  body_unicode = request.body.decode('utf-8')
+  print(body_unicode)
+  req = json.loads(body_unicode)
+  
+  match_id = int(req['id'])
+  type =  req['type']
   
   
-#   return JsonResponse({'id' : id})
+  #matchrequest 접근하는 방법
+  # 1. 역참조
+  # 2. get
+  if type == "enroll-cancel":
+    match_request = MatchRequest.objects.filter(match_id = match_id) & MatchRequest.objects.filter(team_id = request.user.pk)
+    match_request.delete()
+    type = "enroll"
+  elif type == "enroll":
+    type = "enroll-cancel"
+    match = get_object_or_404(MatchInfo, id = match_id)
+    MatchRequest.objects.create(team_id = request.user, match_id = match)
+  else:
+    # 잘못된 입력 예외처리
+    ...
+  
+  return JsonResponse({'id' : match_id, "type" : type})
   
   
   
@@ -344,23 +396,47 @@ class delete_account(SuccessMessageMixin, generic.DeleteView):
 
 # 해당 pk에 해당하는 유저가 로그인 했을 때만 이 페이지가 보이게끔 만들어야됨.
 @login_required(login_url='/login')
-def my_match_list(request, pk):  # pk는 team pk, 마이페이지에서 pk를 받아옴.
+def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk를 받아옴.
     my_not_matched_matches = MatchInfo.objects.filter(
         is_matched=False, host_id=pk)
+
+    my_matched_matches = MatchInfo.objects.filter(is_matched=True, host_id=pk)
     context = {
-        'my_not_matched_matches': my_not_matched_matches
+        'my_not_matched_matches': my_not_matched_matches,
+        'my_matched_matches' : my_matched_matches
     }
-    return render(request, 'matchingMatch/my_matches.html', context=context)
+    return render(request, 'matchingMatch/my_register_matches.html', context=context)
+
+@login_required()
+def my_apply_matches(request, pk):
+    my_matched_matches = MatchInfo.objects.filter(is_matched=True, participant_id=pk)
+    my_match_requests = MatchRequest.objects.filter(team_id=pk)
+
+    context = {
+        'my_matched_matches' : my_matched_matches,
+        'my_match_requests' :  my_match_requests,
+    }
+    return render(request, 'matchingMatch/my_apply_matches.html', context=context) 
 
 @login_required(login_url='/login')
 def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지(주최자)에서 받아옴
+
+def rate(request, pk):
     if request.method == "POST":
-        team = Team.objects.get(id=request.POST['select_participant'])
+        host = Team.objects.get(id=request.user.id)
         match = MatchInfo.objects.get(id=pk)
-        match.participant_id = team
-        match.is_matched = True
+        match.is_alarmed = True
+        participant = Team.objects.get(id=match.participant_id.id)
+        host.match_count += 1
+        participant.match_count += 1
+        participant.level = (participant.level +
+                             float(request.POST['level']))/participant.match_count
+        participant.manner = (participant.manner +
+                              float(request.POST['manner']))/participant.match_count
         match.save()
-        return redirect("/")
+        host.save()
+        participant.save()
+        return redirect('/')
 
     applying_team_list = MatchRequest.objects.filter(match_id=pk)
     match = MatchInfo.objects.get(id=pk)

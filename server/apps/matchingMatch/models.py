@@ -5,7 +5,7 @@ from django.conf import settings
 from PIL import Image
 from django.contrib.auth.validators import UnicodeUsernameValidator
 # Create your models here.
-
+# Team 모델에 modes.Model이 없어서 역참조가 안됨
 USERNAME_FIELD = 'username'
 class Team(AbstractUser, PermissionsMixin):
     team_name = models.CharField(null=False, max_length=20)
@@ -59,6 +59,7 @@ class Alarm(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="team_alarm")
     match_id = models.ForeignKey(
         MatchInfo, on_delete=models.CASCADE, related_name="designated_match")
+    created_at = models.TimeField(auto_now_add=True)
 
 
 class MatchRequest(models.Model):

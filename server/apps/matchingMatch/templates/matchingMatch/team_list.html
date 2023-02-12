@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>팀 목록</title>
+</head>
+<body>
+    팀 목록
+    <form action = "{% url 'matchingMatch:team_list' %}" method="get" >
+        <select name="order" id="order" onChange = "form.submit();">
+            <option  value="" {%if order == "" %} selected {% endif %}></option>
+            <option value="team_name"  {%if order == "team_name" %} selected {% endif %}>
+                이름순
+            </option>
+            <option value="-level" {%if order == "-level" %} selected {% endif %}>
+                실력순
+            </option>
+            <option value="-manner" {%if order == "-manner" %} selected {% endif %}>
+                매너순
+            </option>
+            
+        </select>
+    </form>
+    
+    {% for team in teams %}
+    <a href="{% url 'matchingMatch:team_detail' team.pk %} ">
+        팀 이름 : {{team.team_name}}
+        지역: {{team.region}}
+        매너 점수 : {{team.manner}}
+        실력 점수 : {{team.level}}
+        <br>
+    </a>
+    {% endfor %}
+
+</body>
+</html>
