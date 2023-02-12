@@ -8,9 +8,11 @@
 		<link rel="stylesheet" href="{% static 'css/main.css' %}" />
 	</head>
 	<body>
-		<div class="team_logo m-5">
-			<img class="user--team_logo--lg" src="" />
+		<div class="section">
+      <h1>{{user.team_name}}</h1>
+			<img class="user--team_logo--lg" src="{{user.team_logo.url}}" />
 		</div>
+
 		<div id="account--buttons">
 			<a
 				class="btn btn--secondary"
@@ -22,6 +24,33 @@
 				href="{% url 'matchingMatch:change-password' %}"
 				>비밀번호 변경</a
 			>
+      <a
+				class="btn btn--secondary"
+				href=""
+				>팀 프로필 조회</a
+			> 
+      <a
+				class="btn btn--secondary"
+				href="{% url 'matchingMatch:delete-account' user.pk %}"
+				>팀 계정 탈퇴</a
+			> 
 		</div>
+
+
+    <div class="section">
+      <h2>우리 팀 매치 목록</h2>
+      <a
+				class="btn btn--secondary"
+				href=""
+				>우리 팀이 주최한 매치 목록 조회하기</a
+			> 
+      <a
+				class="btn btn--secondary"
+				href=""
+				>우리 팀이 신청한 매치 목록 조회하기</a
+			> 
+    </div>
+
+
 	</body>
 </html>
