@@ -4,7 +4,7 @@
 {% if request.match_id.is_matched == False %}
 <div>경기장: {{request.match_id.stadium.stadium_name}}</div>
 <div>시작시간: {{request.match_id.start_time}}</div>
-<div>상대방: {{request.match_id.host_id.team_name}}</div>
+<div>상대팀: {{request.match_id.host_id.team_name}}</div>
 <div>-------------------------------------------------</div>
 {% endif %}
 {% endfor %}
