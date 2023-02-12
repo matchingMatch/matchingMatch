@@ -416,17 +416,32 @@ def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk
 
 @login_required()
 def my_apply_matches(request, pk):
-    my_matched_matches = MatchInfo.objects.filter(is_matched=True, participant_id=pk)
-    my_match_requests = MatchRequest.objects.filter(team_id=pk)
+  if request.method == "POST":
+    team = Team.objects.get(id=request.POST['select_participant'])
+    match = MatchInfo.objects.get(id=pk)
+    match.participant_id = team
+    match.is_matched = True
+    match.save()
+    return redirect("/")
 
-    context = {
-        'my_matched_matches' : my_matched_matches,
-        'my_match_requests' :  my_match_requests,
-    }
-    return render(request, 'matchingMatch/my_apply_matches.html', context=context) 
+
+  my_matched_matches = MatchInfo.objects.filter(is_matched=True,participant_id=pk)
+  my_match_requests = MatchRequest.objects.filter(team_id=pk)
+  context = {
+      'my_matched_matches' : my_matched_matches,
+      'my_match_requests' :  my_match_requests,
+  }
+  return render(request, 'matchingMatch/my_apply_matches.html', context=context) 
 
 @login_required(login_url='/login')
 def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지(주최자)에서 받아옴
+    applying_team_list = MatchRequest.objects.filter(match_id=pk)
+    match = MatchInfo.objects.get(id=pk)
+    context = {
+        'applying_team_list' : applying_team_list,
+        'match' : match
+    }
+    return render(request, 'matchingMatch/applying_team_list.html', context=context)
 
 def rate(request, pk):
     if request.method == "POST":
@@ -445,13 +460,7 @@ def rate(request, pk):
         participant.save()
         return redirect('/')
 
-    applying_team_list = MatchRequest.objects.filter(match_id=pk)
-    match = MatchInfo.objects.get(id=pk)
-    context = {
-        'applying_team_list' : applying_team_list,
-        'match' : match
-    }
-    return render(request, 'matchingMatch/applying_team_list.html', context=context)
+
 
 
 @login_required(login_url='/login')
