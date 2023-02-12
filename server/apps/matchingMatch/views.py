@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
+from django.views import generic
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -333,6 +337,13 @@ def edit_account(request):
 
     context = {'form':form}
     return render(request, 'matchingMatch/user_form.html', context)
+
+class delete_account(SuccessMessageMixin, generic.DeleteView):
+  model = Team
+  template_name = 'matchingMatch/delete_account_confirm.html'
+  success_message = "유저가 성공적으로 삭제됐습니다."
+  success_url = reverse_lazy('matchingMatch:main')
+
   
 @csrf_exempt
 def change_enroll(request):
