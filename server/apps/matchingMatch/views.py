@@ -416,13 +416,7 @@ def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk
 
 @login_required()
 def my_apply_matches(request, pk):
-  if request.method == "POST":
-    team = Team.objects.get(id=request.POST['select_participant'])
-    match = MatchInfo.objects.get(id=pk)
-    match.participant_id = team
-    match.is_matched = True
-    match.save()
-    return redirect("/")
+
 
 
   my_matched_matches = MatchInfo.objects.filter(is_matched=True,participant_id=pk)
@@ -435,6 +429,13 @@ def my_apply_matches(request, pk):
 
 @login_required(login_url='/login')
 def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지(주최자)에서 받아옴
+    if request.method == "POST":
+      team = Team.objects.get(id=request.POST['select_participant'])
+      match = MatchInfo.objects.get(id=pk)
+      match.participant_id = team
+      match.is_matched = True
+      match.save()
+      return redirect("/")
     applying_team_list = MatchRequest.objects.filter(match_id=pk)
     match = MatchInfo.objects.get(id=pk)
     context = {

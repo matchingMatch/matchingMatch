@@ -9,6 +9,7 @@
   <title>매칭매치</title>
 </head>
 <body>
+  {% include 'matchingMatch/navbar.html' %}
   <header>
     <h1>Matching Match</h1>
     <h1>매칭매치</h1>
@@ -40,94 +41,75 @@
       
         <!-- &lang: 왼쪽 방향 화살표
         &rang: 오른쪽 방향 화살표 -->
-					<span class="prev">&lang;</span>
-					<span class="next">&rang;</span>
-				</p>
-			</div>
+               <span class="prev">&lang;</span>
+               <span class="next">&rang;</span>
+            </p>
+         </div>
 
-			<div class="match_filter container">
-				<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#matchFilter" aria-expanded="true" aria-controls="matchFilter">
-					상세설정
-				</button>
-				<div id="matchFilter" class="collapse">
-					<div class="gender">
-						<b>성별</b>
-						<button name="gender" data-toggle="true" data value data-type="all">전체</button>
-						<button name="gender" data-toggle="false" data value data-type="male">남성</button>
-						<button name="gender" data-toggle="false" data value data-type="female">여성</button>
-						<button name="gender" data-toggle="false" data value data-type="mixed">혼성</button>
-					</div>
-					<div class="region">
-						<b>지역</b>
-						<button name="gender" data-toggle="true" data value data-type="all">전체</button>
-						<button name="gender" data-toggle="false" data value data-type="westnorth">서북권</button>
-						<button name="gender" data-toggle="false" data value data-type="middlenorth">도심권</button>
-						<button name="gender" data-toggle="false" data value data-type="eastnorth">동북권</button>
-						<button name="gender" data-toggle="false" data value data-type="westsouth">서남권</button>
-						<button name="gender" data-toggle="false" data value data-type="eastsouth">동남권</button>
-					</div>
-					<div class="is_matched">
-						<b>마감 여부</b>
-						<button name="gender" data-toggle="true" data value data-type="all">전체</button>
-						<button name="gender" data-toggle="false" data value data-type="is_not_matched">마감 안됨</button>
-					</div>
-					<div class="time">
-						<b>시간</b>
-						<button name="time" data-toggle="true" data value data-type="all">전체</button>
-						<button name="time" data-toggle="false" data value data-type="beforenoon">오전</button>
-						<button name="time" data-toggle="false" data value data-type="afternoon">오후 12시~6시</button>
-						<button name="time" data-toggle="false" data value data-type="night">오후 6시 이후</button>
-					</div>
-				</div>
-			</div>
-			
-			<ul class="match_list">
-				{% for match in matches %}
-				<a href="{% url 'matchingMatch:match_detail' match.pk%}">
-					<div>{{match.start_time}} ~ {{match.end_time}}</div>
-					<div>
-						축구장 : {{match.stadium.stadium_name}} 
-						<br>성별 : {{match.get_gender_display}}
-					</div>
-					<div>
-						{% if match.is_matched %}
-						<div> {{match.host_id.team_name}} vs {{match.participant_id.team_name}}</div>
-						<div>매치성사</div>
-						<br>
-						{% else %}
-						<div>{{match.host_id.team_name}}</div>
-						<div>찾는 중</div>
-						<br>
-						{% endif %}
-					</div>
-				</a>
-				{% endfor %}
-			</ul>
-			<div class="match_register_btn">
-				<a href="{% url 'matchingMatch:match_register'%}">매치 등록하기</a>
-			</div>
-		</main>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-	</body>
-	<script>
-		window.onload = function () {
-			let date = new Date();
-			console.log(date);
-			const thisYear = date.getFullYear();
-			const thisMonth = date.getMonth();
-			const thisDate = date.getDate();
-			const thisDay = date.getDay();
-			const lastDate = new Date(thisYear, thisMonth + 1, 0).getDate();
-			daysKorean = ["일", "월", "화", "수", "목", "금", "토"];
-			days = [];
-			dates = [];
-
-      {% endfor %}
-    </ul>
-    <div class="match_register_btn">
-      <a href="{% url 'matchingMatch:match_register'%}">매치 등록하기</a>
-    </div>
-  </main>
+         <div class="match_filter container">
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#matchFilter" aria-expanded="true" aria-controls="matchFilter">
+               상세설정
+            </button>
+            <div id="matchFilter" class="collapse">
+               <div class="gender">
+                  <b>성별</b>
+                  <button name="gender" data-toggle="true" data value data-type="all">전체</button>
+                  <button name="gender" data-toggle="false" data value data-type="male">남성</button>
+                  <button name="gender" data-toggle="false" data value data-type="female">여성</button>
+                  <button name="gender" data-toggle="false" data value data-type="mixed">혼성</button>
+               </div>
+               <div class="region">
+                  <b>지역</b>
+                  <button name="gender" data-toggle="true" data value data-type="all">전체</button>
+                  <button name="gender" data-toggle="false" data value data-type="westnorth">서북권</button>
+                  <button name="gender" data-toggle="false" data value data-type="middlenorth">도심권</button>
+                  <button name="gender" data-toggle="false" data value data-type="eastnorth">동북권</button>
+                  <button name="gender" data-toggle="false" data value data-type="westsouth">서남권</button>
+                  <button name="gender" data-toggle="false" data value data-type="eastsouth">동남권</button>
+               </div>
+               <div class="is_matched">
+                  <b>마감 여부</b>
+                  <button name="gender" data-toggle="true" data value data-type="all">전체</button>
+                  <button name="gender" data-toggle="false" data value data-type="is_not_matched">마감 안됨</button>
+               </div>
+               <div class="time">
+                  <b>시간</b>
+                  <button name="time" data-toggle="true" data value data-type="all">전체</button>
+                  <button name="time" data-toggle="false" data value data-type="beforenoon">오전</button>
+                  <button name="time" data-toggle="false" data value data-type="afternoon">오후 12시~6시</button>
+                  <button name="time" data-toggle="false" data value data-type="night">오후 6시 이후</button>
+               </div>
+            </div>
+         </div>
+         
+         <ul class="match_list">
+            {% for match in matches %}
+            <a href="{% url 'matchingMatch:match_detail' match.pk%}">
+               <div>{{match.start_time}} ~ {{match.end_time}}</div>
+               <div>
+                  축구장 : {{match.stadium.stadium_name}} 
+                  <br>성별 : {{match.get_gender_display}}
+               </div>
+               <div>
+                  {% if match.is_matched %}
+                  <div> {{match.host_id.team_name}} vs {{match.participant_id.team_name}}</div>
+                  <div>매치성사</div>
+                  <br>
+                  {% else %}
+                  <div>{{match.host_id.team_name}}</div>
+                  <div>찾는 중</div>
+                  <br>
+                  {% endif %}
+               </div>
+            </a>
+            {% endfor %}
+         </ul>
+         <div class="match_register_btn">
+            <a href="{% url 'matchingMatch:match_register'%}">매치 등록하기</a>
+         </div>
+      </main>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+   </body>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script>
     let date = new Date()
