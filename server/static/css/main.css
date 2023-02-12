@@ -6,7 +6,7 @@
 
 a {
 	text-decoration: none;
-  color: black;
+	color: black;
 	border: 1px solid black;
 	width: fit-content;
 	padding: 5px;
@@ -130,33 +130,46 @@ main {
 	border: 1px solid black;
 	width: 500px;
 	margin: 0 auto;
+}
 
-#nav{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 0.5em 2em;
+
+.user—team_logo—lg {
+	height: 150px;
+	width: 150px;
+	object-fit: cover;
+	border-radius: 15px;
+	margin: 0;
+	padding: 0;
+	line-height: 0;
+}
+
+#nav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	padding: 0.5em 2em;
 }
 
 .exit_modal {
 	cursor: pointer;
 	border: 1px solid black;
+}
 
-nav a{
-   text-decoration: none;
-   color: black;
-   margin: 0 10px;
+nav a {
+	text-decoration: none;
+	color: black;
+	margin: 0 10px;
 }
 
 
-#logo--text{
-   font-size: 26px;
-   font-weight: 500;
+#logo--text {
+	font-size: 26px;
+	font-weight: 500;
 }
 
-#nav--col3{
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
+#nav--col3 {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
