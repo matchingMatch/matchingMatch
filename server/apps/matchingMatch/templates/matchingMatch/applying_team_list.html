@@ -1,0 +1,24 @@
+매칭 참여자 목록 {% if applying_team_list %}
+<form
+  action="{% url 'matchingMatch:applying_team_list' match.pk %}"
+  method="post"
+>
+  {% for list in applying_team_list %} {% csrf_token %}
+  <div>
+    <label
+      ><input
+        type="radio"
+        name="select_participant"
+        value="{{list.team_id.id}}"
+      />{{list.team_id.team_name}}</label
+    >
+  </div>
+  {% endfor %}
+  <div>
+    <input type="submit" value="마감하기" />
+  </div>
+</form>
+<hr />
+{% else %}
+<div>아직 신청한 팀이 없습니다!</div>
+{% endif %}
