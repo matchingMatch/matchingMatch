@@ -1,15 +1,16 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, PermissionsMixin
+from django.contrib.auth.models import AbstractUser, PermissionsMixin, ResizedImageField
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from PIL import Image
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from djang_resized import ResizedImageField
 # Create your models here.
 # Team 모델에 modes.Model이 없어서 역참조가 안됨
 USERNAME_FIELD = 'username'
 class Team(AbstractUser, PermissionsMixin):
     team_name = models.CharField(null=False, max_length=20)
-    team_logo = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
+    team_logo = models.ResizedImageField(size=[300,300], blank=True, null=True, upload_to='posts/%Y%m%d')
     team_intro = models.TextField(blank=True)  # 팀소개
     region = models.CharField(max_length=20)
     photo = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
@@ -17,7 +18,7 @@ class Team(AbstractUser, PermissionsMixin):
     level = models.IntegerField(null=True, default=0)
     match_count = models.PositiveIntegerField(default=0)
     pre_proplayer = models.TextField(null=True)
-    
+
 
 
 class Stadium(models.Model):

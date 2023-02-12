@@ -162,14 +162,12 @@ nav a {
 	margin: 0 10px;
 }
 
-
-#logo--text {
-	font-size: 26px;
-	font-weight: 500;
-}
-
-#nav--col3 {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
+.user--team_logo--lg{
+  height: 150px;
+  width: 150px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
 }
