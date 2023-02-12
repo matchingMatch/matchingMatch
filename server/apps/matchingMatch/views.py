@@ -33,20 +33,8 @@ def match_detail(request, pk):  # pk = 매치 아이디
       "match" : match,
       "status": 0
     }
-    
 
   return render(request, "matchingMatch/match_detail.html", context=context)
-
-def change_enroll(request):
-  req = json.loads(request.body)
-  match_id = req['id']
-  enroll_type = req['type']
-  
-  
-  if enroll_type == 'enroll':
-    
-    return JsonResponse({'id' : match_id, 'type':enroll_type})
-
 
 
 def team_detail(request, pk):  # pk = 팀 아이디
@@ -163,8 +151,6 @@ def match_delete(request, pk): #매치 자체를 없애기 매치를 없애면 �
     match = get_object_or_404(MatchInfo, id = pk)
     match.delete()
     return redirect("/")
-
-
 
 
 
@@ -333,8 +319,33 @@ def edit_account(request):
     context = {'form':form}
     return render(request, 'matchingMatch/user_form.html', context)
   
+@csrf_exempt
+def change_enroll(request):
   
-
+  body_unicode = request.body.decode('utf-8')
+  print(body_unicode)
+  req = json.loads(body_unicode)
+  
+  match_id = int(req['id'])
+  type =  req['type']
+  
+  
+  #matchrequest 접근하는 방법
+  # 1. 역참조
+  # 2. get
+  if type == "enroll-cancel":
+    match_request = MatchRequest.objects.filter(match_id = match_id) & MatchRequest.objects.filter(team_id = request.user.pk)
+    match_request.delete()
+    type = "enroll"
+  elif type == "enroll":
+    type = "enroll-cancel"
+    match = get_object_or_404(MatchInfo, id = match_id)
+    MatchRequest.objects.create(team_id = request.user, match_id = match)
+  else:
+    # 잘못된 입력 예외처리
+    ...
+  
+  return JsonResponse({'id' : match_id, "type" : type})
   
   
   
