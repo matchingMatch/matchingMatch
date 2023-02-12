@@ -25,4 +25,6 @@ urlpatterns = [
     path('match_update/<int:pk>', views.match_update, name = "match_update"),
     path('match_delete/<int:pk>', views.match_delete, name = "match_delete"),
     path('team_detail/<int:pk>',  views.team_detail, name = "team_detail"),
+    path('rate/<int:pk>', views.rate, name="rate"),
+    path('match/ended/', views.check_endedmatch, name="check_endedmatch"),
 ]
