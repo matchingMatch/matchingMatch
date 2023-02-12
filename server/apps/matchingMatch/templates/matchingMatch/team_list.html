@@ -25,9 +25,9 @@
     </form>
     
     {% for team in teams %}
-    <a >
+    <a href="{% url 'matchingMatch:team_detail' team.pk %} ">
         팀 이름 : {{team.team_name}}
-        {{team.region}}
+        지역: {{team.region}}
         매너 점수 : {{team.manner}}
         실력 점수 : {{team.level}}
         <br>
