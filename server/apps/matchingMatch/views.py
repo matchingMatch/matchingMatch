@@ -12,6 +12,7 @@ from .forms import CustomUserCreateForm, UserForm
 import re
 import datetime
 import json
+
 # Create your views here.
 
 
@@ -50,16 +51,22 @@ def change_enroll(request):
 
 
 def team_detail(request, pk):  # pk = 팀 아이디
-
   user = request.user
-
   team = get_object_or_404(Team, pk = pk)
-
   context = {"user" : user, "team" : team}
-
   return render(request, "html", context=context)
 
+def team_list(request):
+  order = request.GET.get("order")
+  print(order)
+  if order:
+    teams = Team.objects.order_by(order)
+  else:
+    teams = Team.objects.all()
 
+  context = {"teams" : teams, 
+            "order" : order}
+  return render (request, "matchingMatch/team_list.html", context=context)
 
 @login_required(login_url='/login')
 def team_update(request, pk):
