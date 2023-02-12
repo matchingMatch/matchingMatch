@@ -31,6 +31,14 @@
 		{% elif user == match.host_id and match.is_matched == True %}
 		<button class="end">마감되었습니다</button>
 
+		{% if user == match.host_id and match.is_matched == False %}
+		<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
+			<button>신청자 목록 확인하기</button>
+		</form>
+
+		{% elif user == match.host_id and match.is_matched == True %}
+		<button class="end">마감되었습니다</button>
+
 		{% elif match.host_id != user and status == 0 %}
 		<div id="enroll-btn">
 			<button class="enroll" onclick="changeEnroll({{ match.id}}, 'enroll')">
@@ -55,6 +63,18 @@
 
 		const requestEnroll = new XMLHttpRequest();
 
+		const changeEnroll = (id, type) => {
+			const url = "/change_enroll/";
+			strip(type);
+			console.log(id);
+			console.log(type);
+			requestEnroll.open("POST", url, true);
+			requestEnroll.setRequestHeader(
+				"Content-Type",
+				"application/x-www-form-urlencoded"
+			);
+			requestEnroll.send(JSON.stringify({ id: id, type: type }));
+		};
 		const changeEnroll = (id, type) => {
 			const url = "/change_enroll/";
 			strip(type);
