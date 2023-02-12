@@ -204,13 +204,16 @@ def account_page(request):
 
 # 해당 pk에 해당하는 유저가 로그인 했을 때만 이 페이지가 보이게끔 만들어야됨.
 @login_required(login_url='/login')
-def my_match_list(request, pk):  # pk는 team pk, 마이페이지에서 pk를 받아옴.
+def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk를 받아옴.
     my_not_matched_matches = MatchInfo.objects.filter(
         is_matched=False, host_id=pk)
+
+    my_matched_matches = MatchInfo.objects.filter(is_matched=True, host_id=pk)
     context = {
-        'my_not_matched_matches': my_not_matched_matches
+        'my_not_matched_matches': my_not_matched_matches,
+        'my_matched_matches' : my_matched_matches
     }
-    return render(request, 'matchingMatch/my_matches.html', context=context)
+    return render(request, 'matchingMatch/my_register_matches.html', context=context)
 
 @login_required(login_url='/login')
 def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지(주최자)에서 받아옴

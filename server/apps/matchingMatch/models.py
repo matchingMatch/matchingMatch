@@ -60,3 +60,5 @@ class MatchRequest(models.Model):
         MatchInfo, on_delete=models.CASCADE, related_name="request_match")
     team_id = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="request_team")
+
+

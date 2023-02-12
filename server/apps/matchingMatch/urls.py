@@ -10,7 +10,8 @@ urlpatterns = [
     path('register/', views.register_page, name="register"),
     path('logout/', views.logout_user, name="logout"),
     path('account/', views.account_page, name="account"),
-    path('my_match_list/<int:pk>', views.my_match_list, name="my_match_list"),
+    path('my_register_matches/<int:pk>', views.my_register_matches, name="my_register_matches"),
+    path('match_detail/<int:pk>', views.match_detail, name="match_detail"),
     path('applying_team_list/<int:pk>',
          views.applying_team_list, name="applying_team_list"),
 ]
