@@ -5,7 +5,7 @@ from django.conf import settings
 from PIL import Image
 from django.contrib.auth.validators import UnicodeUsernameValidator
 # Create your models here.
-
+# Team 모델에 modes.Model이 없어서 역참조가 안됨
 USERNAME_FIELD = 'username'
 class Team(AbstractUser, PermissionsMixin):
     team_name = models.CharField(null=False, max_length=20)

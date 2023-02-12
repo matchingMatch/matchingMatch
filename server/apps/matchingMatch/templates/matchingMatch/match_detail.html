@@ -22,56 +22,65 @@
 			지역: {{match.stadium.location}}
 			<br />주소: {{match.stadium.address}}
 		</h3>
-	
-    {% if user == match.host_id and match.is_matched == False %}
-	<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
-		<button>
-			신청자 목록 확인하기
-		</button>
-	</form>
-		
-	{% elif  match.is_matched == True %}
-	<button class="end">
-		마감되었습니다
-	</button>
 
-    {% else %}
-    <button  class ="enroll" onclick="changeEnroll({{ match.id}} ,'enroll')">
-        신청하기
-    </button>
-    {% endif %}
-    
-</body>
-<script>
-	const strip = (string) => {
-		return string.replace(/^\s+|\s+$/g, "");
-	};
+		{% if user == match.host_id and match.is_matched == False %}
+		<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
+			<button>신청자 목록 확인하기</button>
+		</form>
 
-	const requestEnroll = new XMLHttpRequest();
+		{% elif user == match.host_id and match.is_matched == True %}
+		<button class="end">마감되었습니다</button>
 
-    const changeEnroll = async(id, type)=> {
-        const url = "/change_enroll";
+		{% elif match.host_id != user and status == 0 %}
+		<div id="enroll-btn">
+			<button class="enroll" onclick="changeEnroll({{ match.id}}, 'enroll')">
+				신청하기
+			</button>
+		</div>
+		{% elif match.host_id != user and status == 1 %}
+		<div id="enroll-btn">
+			<button
+				class="enroll-cancel"
+				onclick="changeEnroll({{ match.id}}, 'enroll-cancel')"
+			>
+				신청취소
+			</button>
+		</div>
+		{% endif %}
+	</body>
+	<script>
+		const strip = (string) => {
+			return string.replace(/^\s+|\s+$/g, "");
+		};
 
-        requestEnroll.open("POST", url, true);
-		requestEnroll.setRequestHeader(
-			"Content-Type",
-			"application/x-www-form-urlencoded"
-		);
-		requestEnroll.send(JSON.stringify({id: id, type:type}));
-    };
+		const requestEnroll = new XMLHttpRequest();
 
-    requestEnroll.onreadystatechange = () =>{
-		if(requestEnroll.readyState===XMLHttpRequest.DONE){
-			if(requestEnroll.status<400){
-				const{id, type}=JSON.parse(requestEnroll.response);
-				const element = document.querySelector(`.match-id-${id} .enroll`);
-				if (type == 'enroll')
-				{element.innerHTML=`<button class="enroll_done">  신청완료 </button>` }
-				else
-				{element.innerHTML=`<button class="enroll_done">  신청완료 </button>` }
+		const changeEnroll = (id, type) => {
+			const url = "/change_enroll/";
+			strip(type);
+			console.log(id);
+			console.log(type);
+			requestEnroll.open("POST", url, true);
+			requestEnroll.setRequestHeader(
+				"Content-Type",
+				"application/x-www-form-urlencoded"
+			);
+			requestEnroll.send(JSON.stringify({ id: id, type: type }));
+		};
+
+		requestEnroll.onreadystatechange = () => {
+			if (requestEnroll.readyState === XMLHttpRequest.DONE) {
+				if (requestEnroll.status < 400) {
+					const { id, type } = JSON.parse(requestEnroll.response);
+					const element = document.getElementById("enroll-btn");
+					if (type == "enroll-cancel") {
+						element.innerHTML = `<button class="enroll-cancel" onclick="changeEnroll(${id}, '${type}')">  신청취소 </button>`;
+					} else {
+						element.innerHTML = `<button class="enroll" onclick="changeEnroll(${id}, '${type}')">  신청하기 </button>`;
+					}
+				}
 			}
-		}
-    };
-</script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+		};
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </html>
