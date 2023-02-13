@@ -1,0 +1,24 @@
+<div>
+	{% for blocked_team in blocked_teams %}
+	<div>
+		<h3>{{blocked_team.username}}</h3>
+		<h3>{{blocked_team.team_name}}</h3>
+		<form
+			action="{%url 'matchingMatch:admin_team_block' blocked_team.id %}"
+			method="post"
+		>
+			{%csrf_token%}
+			<input type="hidden" name="next" value="{{ request.path }}" />
+			<input type="submit" value="차단 해제" />
+		</form>
+		<form
+			action="{%url 'matchingMatch:admin_team_delete' blocked_team.id %}"
+			method="post"
+		>
+			{%csrf_token%}
+			<input type="hidden" name="next" value="{{ request.path }}" />
+			<input type="submit" value="삭제" />
+		</form>
+	</div>
+	{% endfor %}
+</div>

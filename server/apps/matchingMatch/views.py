@@ -180,7 +180,8 @@ def main(request, *args, **kwargs):
     match_detail_category = {
         'gender': 'gender__in',
         'region': 'region__in',
-        'date': 'date__in'
+        'date': 'date__in',
+        
     }
     # html 태그 상의 name  : html 태그 상의 value
     filter_set = {match_detail_category.get(
@@ -441,13 +442,39 @@ def rate(request, pk):
 
 @login_required(login_url='/login')
 @admin_required
-# 차단 유저 목록
-def admin_team_block(request):
+# 차단 유저 목록 시간 복잡도 개선을 위해 추후에 blocked_team 모델을 만들어보는 게 좋을듯
+def admin_team_block(request, pk): # 상세 정보 페이지 내의 pk
+    if request.method == "POST":
+        
+        blocked_user = get_object_or_404(Team, id = pk)
+        
+        if blocked_user.is_active == False:
+            blocked_user.is_active = True
+
+        else:
+            blocked_user.is_active = False
+
+        blocked_user.save()
+        next = request.POST.get('next', '/')
+        return redirect(next)
+
+@login_required(login_url='/login')
+@admin_required
+def admin_block_list(request):
+
     blocked_teams = Team.objects.filter(is_active = False)
+    context = {"blocked_teams" : blocked_teams}
+    return render(request, "matchingMatch/admin_block_list.html", context)
+
+#확인 메세지 decorator 만들기
+@login_required(login_url='/login')
+@admin_required
+def admin_team_delete(request, pk):
+    if request.method == "POST":
+        blocked_user = get_object_or_404(id = pk)
+        
+        blocked_user.delete()
+
     
-    return render("admin_block")
-# 삭제 목록
+    redirect("matchingMatch:admin_block_list")
 
-
-def admin_match_delete(request):
-    ...
