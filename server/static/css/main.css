@@ -26,6 +26,7 @@ main {
 	padding: 20px;
 }
 
+/*슬라이드쇼*/
 .week_slideshow {
 	width: 700px;
 	height: 100px;
@@ -51,18 +52,16 @@ main {
   padding: 10px;
   cursor: pointer;
 } */
-.date:first-child {
-	margin-left: 25px;
+.week_slideshow .date:first-child {
 }
 
-.date:not(:last-child) {
+.week_slideshow .date:not(:last-child) {
 	float: left;
 	margin-right: 50px;
 }
 
-.date {}
 
-.date div {
+.week_slideshow .date div {
 	width: 50px;
 	text-align: center;
 }
@@ -172,4 +171,104 @@ nav a {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+}
+
+
+
+
+/* 캘린더 */
+.calendar_container {
+	height: 300px;
+	width: 1000px;
+	margin: 0 auto;
+	display: none;
+}
+.calendar_header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.year_month {
+	font-size: 35px;
+	margin-right: 20px;
+}
+
+.nav {
+	display: flex;
+	border: 1px solid #2e2e2e;
+	border-radius: 5px;
+}
+
+.nav_btn {
+	width: 28px;
+	height: 30px;
+	border: none;
+	font-size: 16px;
+	background-color: transparent;
+	cursor: pointer;
+}
+
+.go_today {
+	width: 75px;
+	border-left: 1px solid #2e2e2e;
+	border-right: 1px solid #2e2e2e;
+}
+
+.calendar .days {
+	display: flex;
+	margin: 25px 0 10px;
+}
+
+.calendar .day {
+	width: calc(100% / 7);
+	text-align: center;
+}
+
+.calendar .dates {
+	display: flex;
+	flex-flow: row wrap;  /*flex-direction, flex-wrap*/
+	border-top: 1px solid #2e2e2e;
+	border-right: 1px solid #2e2e2e;
+}
+
+.calendar .date {
+	width: calc(100% / 7);
+	padding: 15px;
+	text-align: right;
+	border-bottom: 1px solid #2e2e2e;
+	border-left: 1px solid #2e2e2e;
+}
+
+/* 일요일은 빨간색, 토요일은 파란색으로 */
+.calendar .day:nth-child(7n + 1),
+.calendar .date:nth-child(7n + 1) {
+color: #ff3838;
+}
+
+.calendar .day:nth-child(7n),
+.calendar .date:nth-child(7n) {
+color: #3374ff;
+}
+
+.other {
+opacity: 0.3;
+}
+
+.today {
+position: relative;
+color: #FFFFFF;
+}
+
+.today::before {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+z-index: -1;
+width: 30px;
+height: 30px;
+display: block;
+background-color: #FF0000;
+border-radius: 50%;
+content: '';
 }
