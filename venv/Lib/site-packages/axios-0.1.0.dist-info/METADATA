@@ -1,0 +1,65 @@
+Metadata-Version: 2.1
+Name: axios
+Version: 0.1.0
+Summary: Command line utility to access https://family.axioscloud.it
+Home-page: https://github.com/zmoog/axios
+Author: Maurizio Branca
+License: Apache License, Version 2.0
+Project-URL: Issues, https://github.com/zmoog/axios/issues
+Project-URL: CI, https://github.com/zmoog/axios/actions
+Project-URL: Changelog, https://github.com/zmoog/axios/releases
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+Requires-Dist: click
+Requires-Dist: lxml
+Requires-Dist: requests
+Requires-Dist: rich
+Provides-Extra: test
+Requires-Dist: black ; extra == 'test'
+Requires-Dist: flake8 ; extra == 'test'
+Requires-Dist: isort ; extra == 'test'
+Requires-Dist: pytest ; extra == 'test'
+Requires-Dist: pytest-recording ; extra == 'test'
+
+# axios
+
+Python library and CLI to access the school electronic register from Axios
+
+[![PyPI](https://img.shields.io/pypi/v/axios.svg)](https://pypi.org/project/axios/)
+[![Changelog](https://img.shields.io/github/v/release/zmoog/axios?include_prereleases&label=changelog)](https://github.com/zmoog/axios/releases)
+[![Tests](https://github.com/zmoog/axios/workflows/Test/badge.svg)](https://github.com/zmoog/axios/actions?query=workflow%3ATest)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/zmoog/axios/blob/master/LICENSE)
+
+Command line utility to access https://family.axioscloud.it
+
+## Installation
+
+Install this tool using `pip`:
+
+    pip install axios
+
+## Usage
+
+For help, run:
+
+    axios --help
+
+You can also use:
+
+    python -m axios --help
+
+## Development
+
+To contribute to this tool, first checkout the code. Then create a new virtual environment:
+
+    cd axios
+    python -m venv venv
+    source venv/bin/activate
+
+Now install the dependencies and test dependencies:
+
+    pip install -e '.[test]'
+
+To run the tests:
+
+    pytest
