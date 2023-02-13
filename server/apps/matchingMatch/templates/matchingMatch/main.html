@@ -14,22 +14,6 @@
     <h1>Matching Match</h1>
     <h1>매칭매치</h1>
     <div class="alarm_modal_list">
-      {% for match in userMatches %}
-      <!-- <div class="alarm_modal">
-        <div class="exit_modal">X</div>
-        <div>{{match.host_id.team_name}} VS {{match.participant_id.team_name}}</div>
-        <div>경기 종료 시간: {{match.end_time}}</div>
-        <div>즐거운 경기 되셨나요? 수고한 상대팀에게 좋은 점수 부탁드려요!</div>
-        <form action="{% url 'matchingMatch:rate' match.participant_id.pk %}" method="post">
-          {% csrf_token %}
-          <label>실력: <input name="level" type="number" max="10"></label>
-          <label>매너: <input name="manner" type="number" max="10"></label>
-          <div class="rate_save">
-            <input type="submit" value="완료">
-          </div>
-        </form>
-      </div> -->
-      {% endfor %}
     </div>
   </header>
   <main>

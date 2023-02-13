@@ -50,18 +50,6 @@ class MatchInfo(models.Model):
     end_time = models.TimeField()
     is_alarmed = models.BooleanField(default=False)
     
-
-
-class Alarm(models.Model):
-    # Review : MatchInfo와 Alarm의 관계가 완벽히 정의된 것 같지 않습니다.
-    # Review : MatchInfo.is_alarmed와 Alarm이 중복되는 것 같습니다.
-    team_id = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="team_alarm")
-    match_id = models.ForeignKey(
-        MatchInfo, on_delete=models.CASCADE, related_name="designated_match")
-    created_at = models.TimeField(auto_now_add=True)
-
-
 class MatchRequest(models.Model):
     match_id = models.ForeignKey(
         MatchInfo, on_delete=models.CASCADE, related_name="request_match")

@@ -15,9 +15,9 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .forms import MatchRegisterForm
-from .models import Team, MatchInfo, Stadium, Alarm
+from .models import Team, MatchInfo, Stadium
 from django.db.models import Q
-from .models import Team, MatchInfo, Stadium, Alarm, MatchRequest
+from .models import Team, MatchInfo, Stadium, MatchRequest
 from .forms import CustomUserCreateForm, UserForm
 from .decorator import admin_required
 import re
@@ -157,21 +157,6 @@ def match_update(request, pk):
 
 
 
-#매치 결정
-#알람 보내는 것도 필요할듯
-@login_required(login_url='/login')
-def match_resolve(request, pk): # pk = 매치 아이디
-  
-  if request.method == "POST":
-    match = get_object_or_404(MatchInfo, id = pk)
-    match.participant_id = request.user
-    match.is_matched = True
-    match.save()
-    return redirect("matchingMatch:match_detail", pk = match.pk)
-
-  return render(request, "html")
-
-
 
 
 def match_delete(request, pk): #매치 자체를 없애기 매치를 없애면 어떤 게 생기나?
@@ -198,9 +183,6 @@ def main(request, *args, **kwargs):
     userMatches = (MatchInfo.objects.filter(is_alarmed=False) & MatchInfo.objects.filter(
         Q(host_id=request.user.pk) | Q(participant_id=request.user.pk)))
     
-    alarm = Alarm.objects.filter(team_id=request.user.pk)
-    alarm = alarm.first()
-    print(alarm)
     match_detail_category = {
       'gender' : 'gender__in',
       'region' : 'region__in',
@@ -231,7 +213,7 @@ def main(request, *args, **kwargs):
 @csrf_exempt
 def check_endedmatch(request):
     # 날짜 셋팅
-    now = datetime.datetime.now()
+    now = datetime.datetime.now().time()
     # 알람이 생성되지 않은 매치: 경기가 끝나지 않은 매치들
 
     userMatches = (MatchInfo.objects.filter(is_alarmed=False) & MatchInfo.objects.filter(
