@@ -6,6 +6,7 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7f58373b79c6884f5e709b8c842e347e"></script>
 		<title>매치 상세</title>
 	</head>
 	<body>
@@ -15,7 +16,15 @@
 		<h3>시작시간: {{match.start_time}}</h3>
 		<h3>종료시간: {{match.end_time}}</h3>
 
-		주최자 아이디: {{match.host_id.team_name}} 로고: {{match.host_id.team_logo}}
+		주최자 아이디: 
+		<a href="{% url 'matchingMatch:team_detail' match.host_id.pk %}">
+			{{match.host_id.team_name}}
+		</a>
+		{% if match.is_matched == True %}
+		VS {{match.participant_id.team_name}}
+		{% endif %}
+		<br>로고: {{match.host_id.team_logo}}
+		
 		<br />성별: {{match.get_gender_display}} <br />기타사항 : {{match.etc}}
 
 		<h3>
@@ -23,34 +32,120 @@
 			<br />주소: {{match.stadium.address}}
 		</h3>
 
-    {% if status == 1 %}
-    <button>
-        마감하기
-    </button>
-    {% endif %}
 
-    {% if status == 0 %}
-    <button  class ="enroll">
-        신청하기
-    </button>
-    {% endif %}
-    
-</body>
-<!-- <script>
-    const changeEnroll = (id)=> {
-        const url = "/change_enroll";
+		<!-- 카카오맵 api -->
+		<div id="map" style="width:500px;height:400px;"></div>
+		<p>
+			<button onclick="zoomIn()">지도레벨 - 1</button>
+			<button onclick="zoomOut()">지도레벨 + 1</button>
+			<span id="maplevel"></span>
+		</p>
+		<script>
+			var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+			var options = { //지도를 생성할 때 필요한 기본 옵션
+				center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
+				level: 7 //지도의 레벨(확대, 축소 정도)
+			};
 
-        requestEnroll.open("POST", url, true);
-		requestEnroll.setRequestHeader(
-			"Content-Type",
-			"application/x-www-form-urlencoded"
-		);
-		requestEnroll.send(JSON.stringify({id: id }));
-    };
+			var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 
-    requestEnroll.onreadystatechange = () =>{
+			// 지도 레벨을 표시합니다
+			displayLevel();
+			
+			// 지도 레벨은 지도의 확대 수준을 의미합니다
+			// 지도 레벨은 1부터 14레벨이 있으며 숫자가 작을수록 지도 확대 수준이 높습니다
+			function zoomIn() {        
+				// 현재 지도의 레벨을 얻어옵니다
+				var level = map.getLevel();
+				
+				// 지도를 1레벨 내립니다 (지도가 확대됩니다)
+				map.setLevel(level - 1);
+				
+				// 지도 레벨을 표시합니다
+				displayLevel();
+		}    
+		
+		function zoomOut() {    
+				// 현재 지도의 레벨을 얻어옵니다
+				var level = map.getLevel(); 
+				
+				// 지도를 1레벨 올립니다 (지도가 축소됩니다)
+				map.setLevel(level + 1);
+				
+				// 지도 레벨을 표시합니다
+				displayLevel(); 
+		}    
+		 
+		function displayLevel(){
+				var levelEl = document.getElementById('maplevel');
+				levelEl.innerHTML = '현재 지도 레벨은 ' + map.getLevel() + ' 레벨 입니다.';
+		}
+		</script>
 
-    }
-</script> -->
 
+
+
+
+
+
+		{% if user == match.host_id and match.is_matched == False %}
+		<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
+			<button>신청자 목록 확인하기</button>
+		</form>
+
+		{% elif match.is_matched == True %}
+		<button class="end">마감되었습니다</button>
+
+
+		{% elif match.host_id != user and status == 0 %}
+		<div id="enroll-btn">
+			<button class="enroll" onclick="changeEnroll({{ match.id}}, 'enroll')">
+				신청하기
+			</button>
+		</div>
+		{% elif match.host_id != user and status == 1 %}
+		<div id="enroll">
+			<button
+				class="enroll-btn"
+				onclick="changeEnroll({{ match.id}}, 'enroll-cancel')">
+				신청취소
+			</button>
+		</div>
+		{% endif %}
+	</body>
+	<script>
+		const strip = (string) => {
+			return string.replace(/^\s+|\s+$/g, "");
+		};
+
+		const requestEnroll = new XMLHttpRequest();
+
+		
+		const changeEnroll = (id, type) => {
+			const url = "/change_enroll/";
+			strip(type);
+
+			requestEnroll.open("POST", url, true);
+			requestEnroll.setRequestHeader(
+				"Content-Type",
+				"application/x-www-form-urlencoded"
+			);
+			requestEnroll.send(JSON.stringify({ id: id, type: type }));
+		};
+
+		requestEnroll.onreadystatechange = () => {
+			if (requestEnroll.readyState === XMLHttpRequest.DONE) {
+				if (requestEnroll.status < 400) {
+					const { id, type } = JSON.parse(requestEnroll.response);
+					const element = document.getElementById("enroll-btn");
+					if (type == "enroll-cancel") {
+						element.innerHTML = `<button class="enroll" onclick="changeEnroll(${id}, '${type}')">  신청취소 </button>`;
+					} else {
+						element.innerHTML = `<button class="enroll" onclick="changeEnroll(${id}, '${type}')">  신청하기 </button>`;
+					}
+				}
+			}
+		};
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </html>

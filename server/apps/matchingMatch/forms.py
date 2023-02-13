@@ -10,19 +10,21 @@ class MatchRegisterForm(forms.ModelForm):
   class Meta:
     model = MatchInfo
     fields = ['stadium','date','gender','stadium_cost','etc','start_time','end_time']
-    
+    labels = {
+        'stadium' : '축구장',
+        'date' : '날짜',
+        'gender' : '설명',
+        'stadium_cost' : '원구장비',
+        'etc' : '기타사항',
+        'start_time' : '시작 시간',
+        'end_time' : '종료 시간',
+    }
     
     widgets = {
             'start_time': forms.TimeInput(attrs={'type': 'time'}, ),
             'end_time': forms.TimeInput(attrs={'type': 'time'}),
         }
 
-# 수정할 때만 사용되는 폼
-# class TeamRegisterForm(UserCreationForm):
-  
-#   class Meta:
-#     model = Team
-#     fiedl = []
 
 class UserForm(ModelForm):
     class Meta:
