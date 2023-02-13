@@ -400,14 +400,6 @@ def my_apply_matches(request, pk):
     return render(request, 'matchingMatch/my_apply_matches.html', context=context)
 
 
-  my_matched_matches = MatchInfo.objects.filter(is_matched=True,participant_id=pk)
-  my_match_requests = MatchRequest.objects.filter(team_id=pk)
-  context = {
-      'my_matched_matches' : my_matched_matches,
-      'my_match_requests' :  my_match_requests,
-  }
-  return render(request, 'matchingMatch/my_apply_matches.html', context=context) 
-
 @login_required(login_url='/login')
 def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지(주최자)에서 받아옴
     if request.method == "POST":
