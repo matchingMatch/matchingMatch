@@ -16,8 +16,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .forms import MatchRegisterForm
 from django.db.models import Q
-from .models import Team, MatchInfo, Stadium, MatchRequest
-from .forms import CustomUserCreateForm, UserForm
+from .models import Team, MatchInfo, Stadium, MatchRequest, Notice
+from .forms import CustomUserCreateForm, UserForm, NoticeForm
 from .decorator import admin_required
 import re
 import datetime
@@ -164,6 +164,10 @@ def match_update(request, pk):
         match_form = MatchRegisterForm(instance=match)
         context = {"match_form": match_form}
         return render(request, "matchingMatch/match_update.html", context=context)
+
+
+
+
 
 
 def match_delete(request, pk):  # 매치 자체를 없애기 매치를 없애면 어떤 게 생기나?
@@ -394,9 +398,8 @@ def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk
     return render(request, 'matchingMatch/my_register_matches.html', context=context)
 
 
-@login_required()
+@login_required(login_url='/login')
 def my_apply_matches(request, pk):
-
     my_matched_matches = MatchInfo.objects.filter(
         is_matched=True, participant_id=pk)
     my_match_requests = MatchRequest.objects.filter(team_id=pk)
@@ -424,7 +427,6 @@ def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지
     }
     return render(request, 'matchingMatch/applying_team_list.html', context=context)
 
-
 def rate(request, pk):
     if request.method == "POST":
         host = Team.objects.get(id=request.user.id)
@@ -446,3 +448,74 @@ def rate(request, pk):
         return redirect('/')
 
 
+@login_required(login_url='/login')
+@admin_required
+# 차단 유저 목록
+def admin_team_block(request):
+    blocked_teams = Team.objects.filter(is_active = False)
+    
+    return render("admin_block")
+# 삭제 목록
+
+
+def admin_match_delete(request):
+    ...
+
+def notice_list(request):
+    notices = Notice.objects.all()
+    context = {
+        'notices' : notices,
+    }
+    return render(request, "matchingMatch/notice_list.html", context=context)
+
+def notice_detail(request,pk):
+    notice = get_object_or_404(Notice, id=pk)
+    context = {
+        'notice' : notice,
+    }
+    return render(request, "matchingMatch/notice_detail.html", context=context)
+
+@login_required(login_url='/login')
+@admin_required
+def notice_create(request):
+    form = NoticeForm()
+    
+    if request.method == "POST":
+        form = NoticeForm(request.POST)
+        if form.is_valid:
+            form.save()
+            return redirect("matchingMatch:notice_list")
+    context = {
+        'form' : form,
+    }
+    return render(request, "matchingMatch/notice_create.html", context=context)
+
+@login_required(login_url='/login')
+@admin_required
+def notice_update(request, pk):
+    notice = Notice.objects.get(id=pk)
+    
+    if request.method == "POST":
+        form = NoticeForm(request.POST, instance=notice)
+        if form.is_valid:
+            notice = form.save(commit=False)
+            notice.writer = request.POST['writer']
+            notice.title = request.POST['title']
+            notice.content = request.POST['content']
+            notice.save()
+            return redirect(f"/notice_detail/{pk}")
+    
+    form = NoticeForm(instance=notice)
+    context = {
+        'form' : form,
+        'notice' : notice
+    }
+    return render(request, "matchingMatch/notice_update.html", context=context)
+
+@login_required(login_url='/login')
+@admin_required
+def notice_delete(request,pk):
+    if request.method == "POST":
+        notice = Notice.objects.get(id=pk)
+        notice.delete()
+        return redirect("matchingMatch:notice_list")
