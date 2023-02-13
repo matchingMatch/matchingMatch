@@ -7,9 +7,12 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 # Create your models here.
 # Team 모델에 modes.Model이 없어서 역참조가 안됨
 USERNAME_FIELD = 'username'
+
+
 class Team(AbstractUser, PermissionsMixin):
     team_name = models.CharField(null=False, max_length=20)
-    team_logo = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
+    team_logo = models.ImageField(
+        blank=True, null=True, upload_to='posts/%Y%m%d')
     team_intro = models.TextField(blank=True)  # 팀소개
     region = models.CharField(max_length=20)
     photo = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
@@ -17,7 +20,6 @@ class Team(AbstractUser, PermissionsMixin):
     level = models.IntegerField(null=True, default=0)
     match_count = models.PositiveIntegerField(default=0)
     pre_proplayer = models.TextField(null=True)
-    
 
 
 class Stadium(models.Model):
@@ -26,8 +28,10 @@ class Stadium(models.Model):
     address = models.CharField(max_length=250)
     is_park = models.BooleanField(default=0, null=True)
     location = models.CharField(max_length=10, null=False)
+
     def __str__(self):
         return self.stadium_name
+
 
 class MatchInfo(models.Model):
     gender_list = (("male", "남성"), ("female", "여성"), ("mixed", "혼성"))
