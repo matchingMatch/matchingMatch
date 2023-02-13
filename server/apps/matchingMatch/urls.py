@@ -27,4 +27,10 @@ urlpatterns = [
     path('team_detail/<int:pk>',  views.team_detail, name = "team_detail"),
     path('rate/<int:pk>', views.rate, name="rate"),
     path('match/ended/', views.check_endedmatch, name="check_endedmatch"),
+    path('notice_list/', views.notice_list, name="notice_list"),
+    path('notice_create/', views.notice_create, name="notice_create"),
+    path('notice_detail/<int:pk>', views.notice_detail, name="notice_detail"),
+    path('notice_detail/<int:pk>/update', views.notice_update, name="notice_update"),
+    path('notice_detail/<int:pk>/delete', views.notice_delete, name="notice_delete"),
+    
 ]

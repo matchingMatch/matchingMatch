@@ -9,7 +9,7 @@
 <div>신청팀이 아직 없습니다</div>
 {% endif %}
 <a href="{% url 'matchingMatch:match_detail' match.pk%}">마감하러 가기</a>
-<a href="">매치 삭제하기</a>
+<a href="{% url 'matchingMatch:match_delete' match.pk%}">매치 삭제하기</a>
 <hr />
 {% endfor %}
 <hr />

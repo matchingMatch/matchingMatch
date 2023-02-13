@@ -1,0 +1,8 @@
+공지사항 생성 
+<div>
+    <form action="{% url 'matchingMatch:notice_create' %}" method="post">
+    {% csrf_token %}    
+        {{form.as_p}}
+        <input type="submit" value="저장">
+    </form>
+</div>

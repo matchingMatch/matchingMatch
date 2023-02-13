@@ -12,10 +12,11 @@
 			integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
 			crossorigin="anonymous"
 		/>
+		<script src="https://www.google.com/recaptcha/api.js"></script>
 	</head>
 	<body>
-		{{ match_form.errors }} {{ match_form.non_field_errors }}
-		{% include 'matchingMatch/navbar.html' %}
+		{% include 'matchingMatch/navbar.html' %} {{ match_form.errors }}
+		{{match_form.non_field_errors }}
 		<header>Header</header>
 		<main>
 			<form
@@ -55,7 +56,10 @@
 
 				<label for="etc"> 기타사항 </label>
 				<input name="etc" type="text" id="etc" placeholder="기타사항" />
-
+				<div
+					class="g-recaptcha"
+					data-sitekey="6LerqngkAAAAAB3wEJV0hNQnBn3RWtlv5pkoL-7v"
+				></div>
 				<input type="submit" , value="저장하기" />
 			</form>
 		</main>

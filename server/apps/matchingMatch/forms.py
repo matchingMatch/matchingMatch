@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
-from server.apps.matchingMatch.models import MatchInfo, Team
+from server.apps.matchingMatch.models import MatchInfo, Team, Notice
 
 
 
@@ -52,4 +52,14 @@ class CustomUserCreateForm(UserCreationForm):
             'region': '지역',
             'photo': '팀 사진 (이미지 첨부파일)',
             'pre_proplayer': '선출 수 (자세하게 적어주세요.)',
+        }
+
+class NoticeForm(forms.ModelForm):
+    class Meta:
+        model = Notice
+        fields = ['title', 'writer', 'content']
+        labels = {
+            'title' : '제목',
+            'writer' : '작성자',
+            'content' : '내용',
         }
