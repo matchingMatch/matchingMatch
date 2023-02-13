@@ -18,9 +18,6 @@ def admin_required(function):
 
 
 
-
-
-
 def check_recaptcha(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
