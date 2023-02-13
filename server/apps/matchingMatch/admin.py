@@ -19,7 +19,7 @@ class PostAdmin(ImportExportModelAdmin):
 
 class TeamAdmin(admin.ModelAdmin):
     list_display = ['id', 'team_name', 'is_active']
-    list_filter = ["is_active"]
+    list_filter = ['is_active']
     actions = ['block', 'block_cancel']
     
     @admin.action(description='유저를 차단합니다.')

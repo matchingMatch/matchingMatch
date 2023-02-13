@@ -31,18 +31,29 @@ def match_detail(request, pk):  # pk = 매치 아이디
     team = request.user
     match = get_object_or_404(MatchInfo, pk=pk)
 
-    try:
-        MatchRequest.objects.get(team_id=team)
-        context = {
-            "user": team,
-            "match": match,
-            "status": 1
-        }
-    except:
-        context = {
+    #매치 주최자가 현재 로그인 한 유저가 아닌 경우
+    if team != match.host_id:
+        #역참조
+
+        match_requests = MatchRequest.objects.filter(match_id = pk, team_id = team)
+
+        if len(match_requests) == 0:
+            context = {
             "user": team,
             "match": match,
             "status": 0
+            }
+        else:
+            context = {
+            "user": team,
+            "match": match,
+            "status": 1
+            }
+    else:
+        context = {
+            "user": team,
+            "match":match,
+            "status" : 0
         }
 
     return render(request, "matchingMatch/match_detail.html", context=context)
