@@ -8,9 +8,12 @@ from djang_resized import ResizedImageField
 # Create your models here.
 # Team 모델에 modes.Model이 없어서 역참조가 안됨
 USERNAME_FIELD = 'username'
+
+
 class Team(AbstractUser, PermissionsMixin):
     team_name = models.CharField(null=False, max_length=20)
-    team_logo = models.ResizedImageField(size=[300,300], blank=True, null=True, upload_to='posts/%Y%m%d')
+    team_logo = models.ImageField(
+        blank=True, null=True, upload_to='posts/%Y%m%d')
     team_intro = models.TextField(blank=True)  # 팀소개
     region = models.CharField(max_length=20)
     photo = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
@@ -27,8 +30,10 @@ class Stadium(models.Model):
     address = models.CharField(max_length=250)
     is_park = models.BooleanField(default=0, null=True)
     location = models.CharField(max_length=10, null=False)
+
     def __str__(self):
         return self.stadium_name
+
 
 class MatchInfo(models.Model):
     gender_list = (("male", "남성"), ("female", "여성"), ("mixed", "혼성"))
@@ -51,18 +56,6 @@ class MatchInfo(models.Model):
     end_time = models.TimeField()
     is_alarmed = models.BooleanField(default=False)
     
-
-
-class Alarm(models.Model):
-    # Review : MatchInfo와 Alarm의 관계가 완벽히 정의된 것 같지 않습니다.
-    # Review : MatchInfo.is_alarmed와 Alarm이 중복되는 것 같습니다.
-    team_id = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="team_alarm")
-    match_id = models.ForeignKey(
-        MatchInfo, on_delete=models.CASCADE, related_name="designated_match")
-    created_at = models.TimeField(auto_now_add=True)
-
-
 class MatchRequest(models.Model):
     match_id = models.ForeignKey(
         MatchInfo, on_delete=models.CASCADE, related_name="request_match")
