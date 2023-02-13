@@ -15,14 +15,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .forms import MatchRegisterForm
 from django.db.models import Q
-from .models import Team, MatchInfo, Stadium, MatchRequest, Notice
-from .forms import CustomUserCreateForm, UserForm, NoticeForm
+from .models import Team, MatchInfo, Stadium, MatchRequest, Notice, Report
+from .forms import CustomUserCreateForm, UserForm, NoticeForm, ReportForm
 from .decorator import admin_required, check_recaptcha
 from django.conf import settings
 import re
 import datetime
 import json
-import requests
 
 # Create your views here.
 
@@ -520,3 +519,58 @@ def notice_delete(request,pk):
         notice = Notice.objects.get(id=pk)
         notice.delete()
         return redirect("matchingMatch:notice_list")
+
+def report_list(request):
+    reports = Report.objects.all()
+    context = {
+        'reports' : reports,
+    }
+    return render(request, "matchingMatch/report_list.html", context=context)
+
+@login_required(login_url='/login')
+def report_create(request):
+    form = ReportForm()
+    
+    if request.method == "POST":
+        form = ReportForm(request.POST, request.FILES)
+        if form.is_valid:
+            form.save()
+            return redirect("matchingMatch:report_list")
+    context = {
+        'form' : form,
+    }
+    return render(request, "matchingMatch/report_create.html", context=context)
+
+def report_detail(request,pk):
+    report = get_object_or_404(Report, id=pk)
+    context = {
+        'report' : report,
+    }
+    return render(request, "matchingMatch/report_detail.html", context=context)
+
+@login_required(login_url='/login')
+def report_update(request, pk):
+    report = Report.objects.get(id=pk)
+    
+    if request.method == "POST":
+        form = ReportForm(request.POST, request.FILES, instance=report)
+        if form.is_valid():
+            # image_path = form.image.path
+            # if os.path.exists(image_path):
+            #     os.remove(image_path)
+            form.save()
+            return redirect(f"/report_detail/{pk}")
+    
+    form = ReportForm(instance=report)
+    context = {
+        'form' : form,
+        'report' : report
+    }
+    return render(request, "matchingMatch/report_update.html", context=context)
+
+@login_required(login_url='/login')
+def report_delete(request,pk):
+    if request.method == "POST":
+        report = Report.objects.get(id=pk)
+        report.delete()
+        return redirect("matchingMatch:report_list")
