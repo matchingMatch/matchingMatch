@@ -454,7 +454,9 @@ def rate(request, pk):
 @admin_required
 # 차단 유저 목록
 def admin_team_block(request):
-    ...
+    blocked_teams = Team.objects.filter(is_active = False)
+    
+    return render("admin_block")
 # 삭제 목록
 
 
