@@ -59,3 +59,13 @@ class MatchRequest(models.Model):
         MatchInfo, on_delete=models.CASCADE, related_name="request_match")
     team_id = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="request_team")
+
+class Notice(models.Model):
+     title = models.CharField(max_length=128)
+     writer = models.CharField(max_length=32)
+     content = models.TextField()
+     hits = models.PositiveIntegerField(default=0) # 조회수 
+     created_at = models.DateTimeField(auto_now_add=True)
+     updated_at = models.DateTimeField(auto_now=True)
+
+

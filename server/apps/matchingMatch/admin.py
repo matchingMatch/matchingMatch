@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Team, Stadium, MatchInfo, MatchRequest
+from .models import Team, Stadium, MatchInfo, MatchRequest, Notice
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
@@ -35,3 +35,4 @@ admin.site.register(Team, TeamAdmin)
 admin.site.register(Stadium, PostAdmin)
 admin.site.register(MatchInfo)
 admin.site.register(MatchRequest)
+admin.site.register(Notice)
