@@ -1,4 +1,3 @@
-import json
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.core import serializers
@@ -18,10 +17,12 @@ from .forms import MatchRegisterForm
 from django.db.models import Q
 from .models import Team, MatchInfo, Stadium, MatchRequest, Notice
 from .forms import CustomUserCreateForm, UserForm, NoticeForm
-from .decorator import admin_required
+from .decorator import admin_required, check_recaptcha
+from django.conf import settings
 import re
 import datetime
 import json
+import requests
 
 # Create your views here.
 
@@ -86,14 +87,14 @@ def team_list(request):
                "order": order}
     return render(request, "matchingMatch/team_list.html", context=context)
 
-
+@check_recaptcha
 @login_required(login_url='/login')
 def match_register(request):
 
     if request.method == "POST":
         match_form = MatchRegisterForm(request.POST)
 
-        if match_form.is_valid():
+        if match_form.is_valid() and request.recaptcha_is_valid:
             match = match_form.save(commit=False)
             match.host_id = request.user
             match.save()
@@ -264,13 +265,13 @@ def login_page(request):
     context = {'page': page}
     return render(request, 'matchingMatch/login_register.html', context)
 
-
+@check_recaptcha
 def register_page(request):
     form = CustomUserCreateForm()
 
     if request.method == 'POST':
         form = CustomUserCreateForm(request.POST, request.FILES,)
-        if form.is_valid():
+        if form.is_valid() and request.recaptcha_is_valid:
             user = form.save(commit=False)
             user.save()
             login(request, user)
