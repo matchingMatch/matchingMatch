@@ -155,10 +155,6 @@ def match_update(request, pk):
         return render(request, "matchingMatch/match_update.html", context=context)
 
 
-
-
-
-
 def match_delete(request, pk):  # 매치 자체를 없애기 매치를 없애면 어떤 게 생기나?
 
     if request.method == "POST":
@@ -174,7 +170,7 @@ def my_page(request, pk):  # pk = 유저 아이디
 
 
 def main(request, *args, **kwargs):
-    matches = MatchInfo.objects.filter(is_matched=False)
+    matches = MatchInfo.objects.filter(is_alarmed=False)
     userMatches = (MatchInfo.objects.filter(is_alarmed=False) & MatchInfo.objects.filter(
         Q(host_id=request.user.pk) | Q(participant_id=request.user.pk)))
     match_detail_category = {
@@ -184,13 +180,12 @@ def main(request, *args, **kwargs):
         
     }
     # html 태그 상의 name  : html 태그 상의 value
-    filter_set = {match_detail_category.get(
-        key): value for key, value in dict(request.GET).items()}
+    # filter_set = {match_detail_category.get(
+    #     key): value for key, value in dict(request.GET).items()}
 
     # 매치 상세설정
 
-    # matches = MatchInfo.objects.filter(is_alarmed=False)
-    matches = MatchInfo.objects.filter(**filter_set)
+    # matches = MatchInfo.objects.filter(**filter_set)
 
     context = {
         'matches': matches,
@@ -404,12 +399,12 @@ def my_apply_matches(request, pk):
 @login_required(login_url='/login')
 def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지(주최자)에서 받아옴
     if request.method == "POST":
-      team = Team.objects.get(id=request.POST['select_participant'])
-      match = MatchInfo.objects.get(id=pk)
-      match.participant_id = team
-      match.is_matched = True
-      match.save()
-      return redirect("/")
+        team = Team.objects.get(id=request.POST['select_participant'])
+        match = MatchInfo.objects.get(id=pk)
+        match.participant_id = team
+        match.is_matched = True
+        match.save()
+        return redirect("/")
     applying_team_list = MatchRequest.objects.filter(match_id=pk)
     match = MatchInfo.objects.get(id=pk)
     context = {
@@ -439,42 +434,4 @@ def rate(request, pk):
             pass
         return redirect('/')
 
-
-@login_required(login_url='/login')
-@admin_required
-# 차단 유저 목록 시간 복잡도 개선을 위해 추후에 blocked_team 모델을 만들어보는 게 좋을듯
-def admin_team_block(request, pk): # 상세 정보 페이지 내의 pk
-    if request.method == "POST":
-        
-        blocked_user = get_object_or_404(Team, id = pk)
-        
-        if blocked_user.is_active == False:
-            blocked_user.is_active = True
-
-        else:
-            blocked_user.is_active = False
-
-        blocked_user.save()
-        next = request.POST.get('next', '/')
-        return redirect(next)
-
-@login_required(login_url='/login')
-@admin_required
-def admin_block_list(request):
-
-    blocked_teams = Team.objects.filter(is_active = False)
-    context = {"blocked_teams" : blocked_teams}
-    return render(request, "matchingMatch/admin_block_list.html", context)
-
-#확인 메세지 decorator 만들기
-@login_required(login_url='/login')
-@admin_required
-def admin_team_delete(request, pk):
-    if request.method == "POST":
-        blocked_user = get_object_or_404(id = pk)
-        
-        blocked_user.delete()
-
-    
-    redirect("matchingMatch:admin_block_list")
 
