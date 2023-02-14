@@ -61,17 +61,22 @@ class MatchRequest(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="request_team")
 
 class Notice(models.Model):
-     title = models.CharField(max_length=128)
-     writer = models.CharField(max_length=32)
-     content = models.TextField()
-     hits = models.PositiveIntegerField(default=0) # 조회수 
-     created_at = models.DateTimeField(auto_now_add=True)
-     updated_at = models.DateTimeField(auto_now=True)
+    title = models.CharField(max_length=128)
+    writer = models.CharField(max_length=32)
+    content = models.TextField()
+    hits = models.PositiveIntegerField(default=0) # 조회수 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def hits_counter(self):
+        self.hits = self.hits + 1
+        self.save()
 
 class Report(models.Model):
-     title = models.CharField(max_length=128)
-     writer = models.CharField(max_length=32)
-     content = models.TextField()
-     image = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
-     created_at = models.DateTimeField(auto_now_add=True)
-     updated_at = models.DateTimeField(auto_now=True)
+    title = models.CharField(max_length=128)
+    writer = models.CharField(max_length=32)
+    content = models.TextField()
+    image = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
