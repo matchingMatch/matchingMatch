@@ -26,6 +26,7 @@
 			<h1>매칭매치</h1>
 			<div class="alarm_modal_list"></div>
 		</header>
+
 		<main>
       <div class="plans_mode">
         <label>슬라이드 <input type="radio" value="week_slideshow" name="mode" id="slide" checked></label>
@@ -82,10 +83,32 @@
 				>
 					상세설정
 				</button>
-				<form action="" method="get"></form>
-				{{filter_form}}
+				<form action="" method="get">
 				<div id="matchFilter" class="collapse">
-					<div class="gender">
+					<div class="container">
+						<p>지역</p>
+						<div class = "row">
+			
+							{%for region in filter_form.region%}
+							<div class = "col-2">{{region}}</div>
+							{%endfor%}
+						</div>
+						<div>
+							<b>마감 여부</b>
+						<select name="is_matched" >
+							{% for option in filter_form.is_matched%}
+							{{option}}
+							{%endfor%}
+						</select>
+						</div>
+						<div>
+							<b>성별</b>
+							{{filter_form.gender}}
+						</div>
+						<input class = "btn btn-primary" type="submit" value = "확인">
+					</div>
+				</form>
+					<!-- <div class="gender">
 						<b>성별</b>
 						<button name="gender" data-toggle="true" data value data-type="all">
 							전체
@@ -217,7 +240,7 @@
 							오후 6시 이후
 						</button>
 					</div>
-				</div>
+				</div> -->
 			</div>
 
 			<ul class="match_list">

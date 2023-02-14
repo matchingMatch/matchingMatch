@@ -16,7 +16,7 @@ from django.http import JsonResponse
 from .forms import MatchRegisterForm
 from django.db.models import Q
 from .models import Team, MatchInfo, Stadium, MatchRequest, Notice, Report
-from .forms import CustomUserCreateForm, UserForm, NoticeForm, ReportForm
+from .forms import CustomUserCreateForm, UserForm, NoticeForm, ReportForm, MatchFilterForm
 from .decorator import admin_required, check_recaptcha
 from django.conf import settings
 import re
@@ -187,28 +187,31 @@ def my_page(request, pk):  # pk = 유저 아이디
 
 def main(request, *args, **kwargs):
 
-
+    
     # matches = MatchInfo.objects.filter(is_alarmed=False)
     userMatches = (MatchInfo.objects.filter(is_alarmed=False) & MatchInfo.objects.filter(
         Q(host_id=request.user.pk) | Q(participant_id=request.user.pk)))
     match_detail_category = {
         'gender': 'gender__in',
-        'region': 'region__in',
-        'date': 'date__in',
-        
+        'is_matched': 'is_matched__in',
+        'region' : 'stadium__location__in'
     }
-    # html 태그 상의 name  : html 태그 상의 value
     filter_set = {match_detail_category.get(
-        key): value for key, value in dict(request.GET).items()}
-
-    # 매치 상세설정
-
-    matches = MatchInfo.objects.filter(**filter_set)
-
+    key): value for key, value in dict(request.GET).items()}
+    filter_form = MatchFilterForm()
+    # html 태그 상의 name  : html 태그 상의 value
+    if filter_set:
+        print(request.GET)
+        filter_form = MatchFilterForm(request.GET)
+        matches = MatchInfo.objects.filter(**filter_set)
+    else:
+        
+        matches = MatchInfo.objects.all()
     context = {
         'matches': matches,
         'userMatches': userMatches,
-    }
+        'filter_form' : filter_form
+        }
     return render(request, "matchingMatch/main.html", context=context)
 
 # def check_endOfGame():
@@ -305,7 +308,7 @@ def register_success(request):
 
 
 def logout_user(request):
-    if request.user.authenticated:
+    if request.user.is_authenticated:
         
         logout(request)
     return redirect('matchingMatch:main')

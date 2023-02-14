@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
-from server.apps.matchingMatch.models import MatchInfo, Team, Notice, Report
+from server.apps.matchingMatch.models import MatchInfo, Team, Notice, Report, Stadium
 
 
 
@@ -74,3 +74,19 @@ class ReportForm(forms.ModelForm):
             'content' : '내용',
             'image' : '첨부 이미지',
         }
+
+
+is_matched_list = [(True and False, "전체"), (False, "모집중"), (True, "마감됨")]
+
+class MatchFilterForm(forms.ModelForm):
+    region = forms.ModelChoiceField(Stadium.objects.values_list('location', flat=True).distinct(), empty_label=None, widget=forms.CheckboxSelectMultiple)
+    is_matched = forms.ChoiceField(choices=is_matched_list)
+    class Meta:
+        model = MatchInfo
+        fields = ['is_matched', 'region', 'gender']
+        labels = {
+        "region" : "지역",
+        'is_matched' : '마감여부',
+        'gender' : '성별',
+        }
+        
