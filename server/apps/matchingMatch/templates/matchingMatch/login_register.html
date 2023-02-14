@@ -57,7 +57,11 @@
 	{% else %}
 	<div class="login-register--container section">
 		<h1 class="form-field--title">로그인</h1>
-
+		{%if messages%} {%for message in messages%}
+		<script>
+			alert("{{message}}");
+		</script>
+		{%endfor%} {%endif%}
 		<form method="POST" action="{% url 'matchingMatch:login' %}">
 			{% csrf_token %}
 
