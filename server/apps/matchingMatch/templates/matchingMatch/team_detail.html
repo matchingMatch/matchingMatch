@@ -15,8 +15,9 @@
     <div class = "team-name">
       <h1>{{team.team_name}}</h1>
     </div>
-
+    {% if user.team_logo %}
     <img class="user--team_logo--lg" src="{{user.team_logo.url}}" />
+    {% endif %}
   </div>
 
   <div class = "team-detail-mid">

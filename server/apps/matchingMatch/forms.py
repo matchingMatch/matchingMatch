@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
-from server.apps.matchingMatch.models import MatchInfo, Team, Notice
+from server.apps.matchingMatch.models import MatchInfo, Team, Notice, Report
 
 
 
@@ -64,3 +64,13 @@ class NoticeForm(forms.ModelForm):
             'content' : '내용',
         }
 
+class ReportForm(forms.ModelForm):
+    class Meta:
+        model = Report
+        fields = ['title', 'writer', 'content','image']
+        labels = {
+            'title' : '제목',
+            'writer' : '작성자',
+            'content' : '내용',
+            'image' : '첨부 이미지',
+        }
