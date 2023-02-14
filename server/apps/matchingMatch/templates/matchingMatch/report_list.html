@@ -1,0 +1,10 @@
+신고글 목록 <a href="{% url 'matchingMatch:report_create' %}">글 작성</a>
+{% for report in reports %}
+<hr>
+<div>작성자: {{report.writer}}</div><br>
+<a href="/report_detail/{{report.pk}}"><div>제목: {{report.title}}</div></a><br>
+<div>내용: {{report.content}}</div><br>
+<div>최초 작성일: {{report.created_at}}</div>
+<div>최근 수정일: {{report.updated_at}}</div>
+<hr>
+{% endfor%}

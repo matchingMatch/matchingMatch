@@ -68,4 +68,10 @@ class Notice(models.Model):
      created_at = models.DateTimeField(auto_now_add=True)
      updated_at = models.DateTimeField(auto_now=True)
 
-
+class Report(models.Model):
+     title = models.CharField(max_length=128)
+     writer = models.CharField(max_length=32)
+     content = models.TextField()
+     image = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
+     created_at = models.DateTimeField(auto_now_add=True)
+     updated_at = models.DateTimeField(auto_now=True)
