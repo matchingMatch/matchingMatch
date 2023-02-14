@@ -305,8 +305,9 @@ def register_success(request):
 
 
 def logout_user(request):
-    
-    logout(request)
+    if request.user.authenticated:
+        
+        logout(request)
     return redirect('matchingMatch:main')
 
 
