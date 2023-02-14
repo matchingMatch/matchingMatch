@@ -1,4 +1,3 @@
-import json
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.core import serializers
@@ -16,9 +15,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .forms import MatchRegisterForm
 from django.db.models import Q
-from .models import Team, MatchInfo, Stadium, MatchRequest, Notice
-from .forms import CustomUserCreateForm, UserForm, NoticeForm
-from .decorator import admin_required
+from .models import Team, MatchInfo, Stadium, MatchRequest, Notice, Report
+from .forms import CustomUserCreateForm, UserForm, NoticeForm, ReportForm
+from .decorator import admin_required, check_recaptcha
+from django.conf import settings
 import re
 import datetime
 import json
@@ -86,14 +86,14 @@ def team_list(request):
                "order": order}
     return render(request, "matchingMatch/team_list.html", context=context)
 
-
+@check_recaptcha
 @login_required(login_url='/login')
 def match_register(request):
 
     if request.method == "POST":
         match_form = MatchRegisterForm(request.POST)
 
-        if match_form.is_valid():
+        if match_form.is_valid() and request.recaptcha_is_valid:
             match = match_form.save(commit=False)
             match.host_id = request.user
             match.save()
@@ -260,13 +260,13 @@ def login_page(request):
     context = {'page': page}
     return render(request, 'matchingMatch/login_register.html', context)
 
-
+@check_recaptcha
 def register_page(request):
     form = CustomUserCreateForm()
 
     if request.method == 'POST':
         form = CustomUserCreateForm(request.POST, request.FILES,)
-        if form.is_valid():
+        if form.is_valid() and request.recaptcha_is_valid:
             user = form.save(commit=False)
             user.save()
             login(request, user)
@@ -520,3 +520,58 @@ def notice_delete(request, pk):
         notice = Notice.objects.get(id=pk)
         notice.delete()
         return redirect("matchingMatch:notice_list")
+
+def report_list(request):
+    reports = Report.objects.all()
+    context = {
+        'reports' : reports,
+    }
+    return render(request, "matchingMatch/report_list.html", context=context)
+
+@login_required(login_url='/login')
+def report_create(request):
+    form = ReportForm()
+    
+    if request.method == "POST":
+        form = ReportForm(request.POST, request.FILES)
+        if form.is_valid:
+            form.save()
+            return redirect("matchingMatch:report_list")
+    context = {
+        'form' : form,
+    }
+    return render(request, "matchingMatch/report_create.html", context=context)
+
+def report_detail(request,pk):
+    report = get_object_or_404(Report, id=pk)
+    context = {
+        'report' : report,
+    }
+    return render(request, "matchingMatch/report_detail.html", context=context)
+
+@login_required(login_url='/login')
+def report_update(request, pk):
+    report = Report.objects.get(id=pk)
+    
+    if request.method == "POST":
+        form = ReportForm(request.POST, request.FILES, instance=report)
+        if form.is_valid():
+            # image_path = form.image.path
+            # if os.path.exists(image_path):
+            #     os.remove(image_path)
+            form.save()
+            return redirect(f"/report_detail/{pk}")
+    
+    form = ReportForm(instance=report)
+    context = {
+        'form' : form,
+        'report' : report
+    }
+    return render(request, "matchingMatch/report_update.html", context=context)
+
+@login_required(login_url='/login')
+def report_delete(request,pk):
+    if request.method == "POST":
+        report = Report.objects.get(id=pk)
+        report.delete()
+        return redirect("matchingMatch:report_list")
