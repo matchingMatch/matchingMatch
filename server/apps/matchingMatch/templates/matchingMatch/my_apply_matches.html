@@ -13,7 +13,7 @@
 <br /><br />
 성사 ------------------------- {% for match in my_matched_matches%}
 <div>경기장: {{match.stadium.stadium_name}}</div>
-<div>경기일자: {{request.match_id.date}}</div>
+<div>경기일자: {{match.date}}</div>
 <div>시작시간: {{match.start_time}}</div>
 <div>상대팀: {{match.host_id.team_name}}</div>
 <div>-------------------------------------------------</div>
