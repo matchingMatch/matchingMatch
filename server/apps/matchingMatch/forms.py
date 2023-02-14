@@ -6,7 +6,7 @@ from server.apps.matchingMatch.models import MatchInfo, Team, Notice
 
 
 class MatchRegisterForm(forms.ModelForm):
-  
+
   class Meta:
     model = MatchInfo
     fields = ['stadium','date','gender','stadium_cost','etc','start_time','end_time']
@@ -63,3 +63,4 @@ class NoticeForm(forms.ModelForm):
             'writer' : '작성자',
             'content' : '내용',
         }
+

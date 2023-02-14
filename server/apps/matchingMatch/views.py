@@ -186,7 +186,9 @@ def my_page(request, pk):  # pk = 유저 아이디
 
 
 def main(request, *args, **kwargs):
-    matches = MatchInfo.objects.filter(is_alarmed=False)
+
+
+    # matches = MatchInfo.objects.filter(is_alarmed=False)
     userMatches = (MatchInfo.objects.filter(is_alarmed=False) & MatchInfo.objects.filter(
         Q(host_id=request.user.pk) | Q(participant_id=request.user.pk)))
     match_detail_category = {
@@ -196,17 +198,16 @@ def main(request, *args, **kwargs):
         
     }
     # html 태그 상의 name  : html 태그 상의 value
-    # filter_set = {match_detail_category.get(
-    #     key): value for key, value in dict(request.GET).items()}
+    filter_set = {match_detail_category.get(
+        key): value for key, value in dict(request.GET).items()}
 
     # 매치 상세설정
 
-    # matches = MatchInfo.objects.filter(**filter_set)
+    matches = MatchInfo.objects.filter(**filter_set)
 
     context = {
         'matches': matches,
         'userMatches': userMatches,
-
     }
     return render(request, "matchingMatch/main.html", context=context)
 
