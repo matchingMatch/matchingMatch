@@ -2,15 +2,14 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+
 }
 
 a {
 	text-decoration: none;
 	color: black;
-	border: 1px solid black;
 	width: fit-content;
 	padding: 5px;
-	background-color: #cecece;
 }
 
 li {
@@ -28,11 +27,13 @@ main {
 
 /*슬라이드쇼*/
 .week_slideshow {
+	background-color: white;
 	width: 700px;
 	height: 100px;
 	position: relative;
 	margin: 50px auto;
 	overflow: hidden;
+
 }
 
 .week {
@@ -45,13 +46,16 @@ main {
 	transition: left 0.5s ease-out;
 	padding: 0;
 }
+
 .week .date {
 	padding: 10px;
 }
+
 .week .date:hover {
 	cursor: pointer;
 	background-color: #cecece;
 }
+
 .week_slideshow .date:first-child {
 	margin-left: 15px;
 }
@@ -96,10 +100,7 @@ main {
 .match_list {
 	height: 500px;
 	overflow: scroll;
-	display: flex;
-	flex-wrap: wrap;
-	flex-direction: column;
-	align-content: center;
+	font-size: 12px;
 }
 
 .sun {
@@ -173,11 +174,13 @@ nav a {
 	margin: 0 auto;
 	display: none;
 }
+
 .calendar_header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
+
 .year_month {
 	font-size: 35px;
 	margin-right: 20px;
@@ -216,7 +219,8 @@ nav a {
 
 .calendar .dates {
 	display: flex;
-	flex-flow: row wrap;  /*flex-direction, flex-wrap*/
+	flex-flow: row wrap;
+	/*flex-direction, flex-wrap*/
 	border-top: 1px solid #2e2e2e;
 	border-right: 1px solid #2e2e2e;
 }
@@ -233,33 +237,44 @@ nav a {
 /* 일요일은 빨간색, 토요일은 파란색으로 */
 .calendar .day:nth-child(7n + 1),
 .calendar .date:nth-child(7n + 1) {
-color: #ff3838;
+	color: #ff3838;
 }
 
 .calendar .day:nth-child(7n),
 .calendar .date:nth-child(7n) {
-color: #3374ff;
+	color: #3374ff;
 }
 
 .other {
-opacity: 0.3;
+	opacity: 0.3;
 }
 
 .today {
-position: relative;
-color: #FFFFFF;
+	position: relative;
+	color: #FFFFFF;
 }
 
 .today::before {
-position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-z-index: -1;
-width: 30px;
-height: 30px;
-display: block;
-background-color: #FF0000;
-border-radius: 50%;
-content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: -1;
+	width: 30px;
+	height: 30px;
+	display: block;
+	background-color: #FF0000;
+	border-radius: 50%;
+	content: '';
+}
+
+@font-face {
+	font-family: 'Cafe24Ssurround';
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+body {
+	font-family: 'Cafe24Ssurround' !important;
 }
