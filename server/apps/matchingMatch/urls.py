@@ -7,6 +7,7 @@ urlpatterns = [
     path("", views.main, name="main"),
     path('login/', views.login_page, name="login"),
     path('register/', views.register_page, name="register"),
+    path('register/success', views.register_success, name = "register_success"),
     path('logout/', views.logout_user, name="logout"),
     path('account/', views.account_page, name="account"),
     path('my_register_matches/<int:pk>', views.my_register_matches, name="my_register_matches"),
@@ -27,4 +28,15 @@ urlpatterns = [
     path('team_detail/<int:pk>',  views.team_detail, name = "team_detail"),
     path('rate/<int:pk>', views.rate, name="rate"),
     path('match/ended/', views.check_endedmatch, name="check_endedmatch"),
+    path('notice_list/', views.notice_list, name="notice_list"),
+    path('notice_create/', views.notice_create, name="notice_create"),
+    path('notice_detail/<int:pk>', views.notice_detail, name="notice_detail"),
+    path('notice_detail/<int:pk>/update', views.notice_update, name="notice_update"),
+    path('notice_detail/<int:pk>/delete', views.notice_delete, name="notice_delete"),
+    path('report_list/', views.report_list, name="report_list"),
+    path('report_create/', views.report_create, name="report_create"),
+    path('report_detail/<int:pk>', views.report_detail, name="report_detail"),
+    path('report_detail/<int:pk>/update', views.report_update, name="report_update"),
+    path('report_detail/<int:pk>/delete', views.report_delete, name="report_delete"),
+    
 ]
