@@ -7,10 +7,9 @@
 a {
 	text-decoration: none;
 	color: black;
-	border: 1px solid black;
 	width: fit-content;
 	padding: 5px;
-	background-color: #cecece;
+	transition: all 0.3s;
 }
 
 li {
@@ -128,6 +127,7 @@ main {
 	line-height: 0;
 }
 
+/* navbar */
 #nav {
 	display: flex;
 	justify-content: space-between;
@@ -147,14 +147,23 @@ nav a {
 	margin: 0 10px;
 }
 
-#logo--text {
-	font-size: 26px;
-	font-weight: 500;
+  line-height: 0;
+  
+.user--team_logo--lg{
+  height: 150px;
+  width: 150px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
 }
+
+
 
 #nav--col3 {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-end;
 	align-items: center;
 }
 
@@ -165,35 +174,19 @@ nav a {
 	margin: 0 auto;
 	display: none;
 }
-.calendar_header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-.year_month {
-	font-size: 35px;
-	margin-right: 20px;
+
+.success{
+    color: #31a62b;
 }
 
-.nav {
-	display: flex;
-	border: 1px solid #2e2e2e;
-	border-radius: 5px;
+.info{
+    color: #3aabd4;
 }
 
-.nav_btn {
-	width: 28px;
-	height: 30px;
-	border: none;
-	font-size: 16px;
-	background-color: transparent;
-	cursor: pointer;
-}
-
-.go_today {
-	width: 75px;
-	border-left: 1px solid #2e2e2e;
-	border-right: 1px solid #2e2e2e;
+.container--main{
+    width: 1200px;
+    margin: 0 auto;
+    padding:0 1em ;
 }
 
 .calendar .days {

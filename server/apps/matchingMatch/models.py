@@ -4,12 +4,14 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from PIL import Image
 from django.contrib.auth.validators import UnicodeUsernameValidator
+
 # Create your models here.
 # Team 모델에 modes.Model이 없어서 역참조가 안됨
 USERNAME_FIELD = 'username'
 
 
 class Team(AbstractUser, PermissionsMixin):
+    gender_list = (("male", "남성"), ("female", "여성"), ("mixed", "혼성"))
     team_name = models.CharField(null=False, max_length=20)
     team_logo = models.ImageField(
         blank=True, null=True, upload_to='posts/%Y%m%d')
@@ -19,7 +21,9 @@ class Team(AbstractUser, PermissionsMixin):
     manner = models.IntegerField(null=True, default=0)  # 지금까지 받은 매너 점수의 합
     level = models.IntegerField(null=True, default=0)
     match_count = models.PositiveIntegerField(default=0)
+    gender = models.CharField(choices=gender_list, max_length=10, null=False)
     pre_proplayer = models.TextField(null=True)
+
 
 
 class Stadium(models.Model):

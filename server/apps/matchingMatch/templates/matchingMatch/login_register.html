@@ -1,19 +1,9 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="ko">
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="stylesheet" href="{% static 'css/main.css' %}" />
+{% extends 'matchingMatch/base.html' %}
 
-		<script src="https://www.google.com/recaptcha/api.js"></script>
-	</head>
+{% block content %}
 	{% if page == 'register' %}
 
 	<body>
-		{% include 'matchingMatch/navbar.html' %}
-
 		<div class="login-register--container">
 			<h1 class="form-field--title">회원가입</h1>
 			<div>
@@ -55,6 +45,7 @@
 	</body>
 
 	{% else %}
+  {% include 'matchingMatch/navbar.html' %}
 	<div class="login-register--container section">
 		<h1 class="form-field--title">로그인</h1>
 		{%if messages%} {%for message in messages%}
@@ -105,4 +96,4 @@
 		</form>
 	</div>
 	{% endif %}
-</html>
+{% endblock content %}
