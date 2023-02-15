@@ -1,8 +1,10 @@
+<div class="">{{notice.hits_counter}}</div> <!--css display none 속성 달아야됨 -->
 <div>작성자: {{notice.writer}}</div>
 <div>제목: {{notice.title}}</div>
 <div>내용: {{notice.content}}</div>
 <div>최초 작성일자: {{notice.created_at}}</div>
 <div>최근 수정일자: {{notice.updated_at}}</div>
+<div>조회수: {{notice.hits}}</div>
 <a href="{% url 'matchingMatch:notice_list' %}">목록으로</a>
 <a href="/notice_detail/{{notice.pk}}/update">수정하기</a>
 <form action="/notice_detail/{{notice.pk}}/delete" method="post">
