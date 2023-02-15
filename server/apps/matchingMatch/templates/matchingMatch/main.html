@@ -1,24 +1,6 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="stylesheet" href="{% static 'css/main.css' %}" />
-		<!-- CSS only -->
-		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-			integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-			crossorigin="anonymous"
-		/>
-    <script defer src="{% static 'js/calendar.js' %}"></script>
-    <script defer src="{% static 'js/mainslide.js' %}"></script>
-		<!-- JavaScript Bundle with Popper -->
+{% extends 'matchingMatch/base.html' %}
 
-		<title>매칭매치</title>
-	</head>
+{% block content %}
 	<body>
 		{% include 'matchingMatch/navbar.html' %}
 		
@@ -87,12 +69,15 @@
 				<div id="matchFilter" class="collapse">
 					<div class="container">
 						<p>지역</p>
-						<div class = "row">
+						<div id = "regions" class = "row">
 			
 							{%for region in filter_form.region%}
 							<div class = "col-2">{{region}}</div>
 							{%endfor%}
+
 						</div>
+						<button type = 'button' class = "btn btn-primary" id = "region-all-check">전체 선택</button>
+						<button type = 'button' class = "btn btn-primary" id = "region-all-cancel">전체 선택 해제</button>
 						<div>
 							<b>마감 여부</b>
 						<select name="is_matched" >
@@ -210,5 +195,24 @@
       `;
 			}
 		};
+		
+		const regionAllCheck = document.getElementById("region-all-check")
+		const regionAllCancel = document.getElementById("region-all-cancel")
+		
+		regionAllCheck.addEventListener('click', () => {
+			const checkboxes = document.getElementsByName('region')
+			checkboxes.forEach((checkbox) => {
+				checkbox.checked = true
+			}) 
+		})
+
+		regionAllCancel.addEventListener('click', () => {
+			const checkboxes = document.getElementsByName('region')
+			checkboxes.forEach((checkbox) => {
+				checkbox.checked = false
+			}) 
+		})
+ 
 	</script>
-</html>
+
+{% endblock content %}

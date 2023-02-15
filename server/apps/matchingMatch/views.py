@@ -32,29 +32,30 @@ def match_detail(request, pk):  # pk = 매치 아이디
     team = request.user
     match = get_object_or_404(MatchInfo, pk=pk)
 
-    #매치 주최자가 현재 로그인 한 유저가 아닌 경우
+    # 매치 주최자가 현재 로그인 한 유저가 아닌 경우
     if team != match.host_id:
-        #역참조
+        # 역참조
 
-        match_requests = MatchRequest.objects.filter(match_id = pk, team_id = team.id)
+        match_requests = MatchRequest.objects.filter(
+            match_id=pk, team_id=team.id)
 
         if len(match_requests) == 0:
             context = {
-            "user": team,
-            "match": match,
-            "status": 0
+                "user": team,
+                "match": match,
+                "status": 0
             }
         else:
             context = {
-            "user": team,
-            "match": match,
-            "status": 1
+                "user": team,
+                "match": match,
+                "status": 1
             }
     else:
         context = {
             "user": team,
-            "match":match,
-            "status" : 0
+            "match": match,
+            "status": 0
         }
 
     return render(request, "matchingMatch/match_detail.html", context=context)
@@ -86,6 +87,7 @@ def team_list(request):
     context = {"teams": teams,
                "order": order}
     return render(request, "matchingMatch/team_list.html", context=context)
+
 
 @check_recaptcha
 @login_required(login_url='/login')
@@ -167,10 +169,6 @@ def match_update(request, pk):
         return render(request, "matchingMatch/match_update.html", context=context)
 
 
-
-
-
-
 def match_delete(request, pk):  # 매치 자체를 없애기 매치를 없애면 어떤 게 생기나?
 
     if request.method == "POST":
@@ -187,38 +185,30 @@ def my_page(request, pk):  # pk = 유저 아이디
 
 def main(request, *args, **kwargs):
 
-    
-    # matches = MatchInfo.objects.filter(is_alarmed=False)
-    userMatches = (MatchInfo.objects.filter(is_alarmed=False) & MatchInfo.objects.filter(
-        Q(host_id=request.user.pk) | Q(participant_id=request.user.pk)))
     match_detail_category = {
         'gender': 'gender__in',
         'is_matched': 'is_matched__in',
-        'region' : 'stadium__location__in'
+        'region': 'stadium__location__in'
     }
     filter_set = {match_detail_category.get(
-    key): value for key, value in dict(request.GET).items()}
+        key): value for key, value in dict(request.GET).items()}
     filter_form = MatchFilterForm()
     # html 태그 상의 name  : html 태그 상의 value
     if filter_set:
         print(request.GET)
         filter_form = MatchFilterForm(request.GET)
-        matches = MatchInfo.objects.filter(**filter_set)
+        matches = MatchInfo.objects.filter(**filter_set) 
     else:
-        
+
         matches = MatchInfo.objects.all()
+    now = datetime.datetime.now().time()
+    today = datetime.date.today()
+    matches = matches.filter(date__gte = today, start_time__gte = now)
     context = {
         'matches': matches,
-        'userMatches': userMatches,
         'filter_form' : filter_form
         }
     return render(request, "matchingMatch/main.html", context=context)
-
-# def check_endOfGame():
-#     # 날짜 셋팅
-#     # Review : 알람 기능인 것 같은데, 알람 기능은 조금 복잡합니다.
-#     # Review : 참고해보세요! https://dongsik93.github.io/til/2019/07/31/til-etc-fcm/
-#     now = datetime.datetime.now()
 
 
 @csrf_exempt
@@ -226,10 +216,9 @@ def check_endedmatch(request):
     # 날짜 셋팅
     now = datetime.datetime.now().time()
     today = datetime.date.today()
-    # 알람이 생성되지 않은 매치: 경기가 끝나지 않은 매치들
 
-    userMatches = (MatchInfo.objects.filter(is_alarmed=False) & MatchInfo.objects.filter(
-        Q(host_id=request.user.pk) | Q(participant_id=request.user.pk)))
+    userMatches = MatchInfo.objects.filter(host_id=request.user.id, participant_rated=False) | MatchInfo.objects.filter(
+        participant_id=request.user.id, host_rated=False)
     userMatches_json = []
     if len(userMatches) != 0:
         for match in userMatches:
@@ -263,7 +252,7 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-
+            messages.info(request, '성공적으로 로그인 하셨습니다.')
             return redirect('matchingMatch:main')
         else:
             messages.error(request, '이메일 혹은 비밀번호를 다시 확인해주세요.')
@@ -271,6 +260,7 @@ def login_page(request):
 
     context = {'page': page}
     return render(request, 'matchingMatch/login_register.html', context)
+
 
 @check_recaptcha
 def register_page(request):
@@ -285,8 +275,7 @@ def register_page(request):
             user = form.save(commit=False)
             user.save()
             login(request, user)
-            # messages.error(request, '성공적으로 회원가입이 진행됐습니다.')
-
+            messages.success(request, '성공적으로 회원가입이 진행됐습니다.')
             return redirect('matchingMatch:register_success')
         else:
             messages.error(request, '회원가입 도중에 문제가 발생하였습니다.')
@@ -296,21 +285,19 @@ def register_page(request):
     return render(request, 'matchingMatch/login_register.html', context)
 
 
-
 def register_success(request):
     messages.error(request, '성공적으로 회원가입이 진행됐습니다.')
     sys_messages = list(messages.get_messages(request))
     print(sys_messages)
-    context = {"messages" : sys_messages}
+    context = {"messages": sys_messages}
     return render(request, "matchingMatch/register_success.html", context)
-
-
 
 
 def logout_user(request):
     if request.user.is_authenticated:
-        
+
         logout(request)
+    messages.info(request, '성공적으로 로그아웃 하셨습니다.')
     return redirect('matchingMatch:main')
 
 
@@ -347,7 +334,6 @@ def change_password(request):
 # 매치 상대방 평가하기
 
 
-
 @login_required(login_url='/login')
 def edit_account(request):
 
@@ -378,6 +364,7 @@ class delete_account(SuccessMessageMixin, generic.DeleteView):
     template_name = 'matchingMatch/delete_account_confirm.html'
     success_message = "유저가 성공적으로 삭제됐습니다."
     success_url = reverse_lazy('matchingMatch:main')
+
 
 @login_required(login_url='/login')
 @csrf_exempt
@@ -425,11 +412,27 @@ def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk
 
 @login_required(login_url='/login')
 def my_apply_matches(request, pk):
-    my_matched_matches = MatchInfo.objects.filter(
+    today = datetime.date.today()
+    now = datetime.datetime.now().time()
+
+    my_matched_matches= MatchInfo.objects.filter(
         is_matched=True, participant_id=pk)
+    ended_matches = []
+    ended_yet_matches = []
+
+    for match in my_matched_matches:
+        if match.date < today:
+            ended_matches.append(match)
+        elif match.date > today:
+            ended_yet_matches.append(match)
+        elif match.start_time < now:
+            ended_matches.append(match)
+
     my_match_requests = MatchRequest.objects.filter(team_id=pk)
+
     context = {
-        'my_matched_matches': my_matched_matches,
+        'ended' : ended_matches,
+        'ended_yet' : ended_yet_matches,
         'my_match_requests':  my_match_requests,
     }
     return render(request, 'matchingMatch/my_apply_matches.html', context=context)
@@ -455,22 +458,27 @@ def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지
     }
     return render(request, 'matchingMatch/applying_team_list.html', context=context)
 
+
 def rate(request, pk):
     if request.method == "POST":
-        host = Team.objects.get(id=request.user.id)
+        user = Team.objects.get(id=request.user.id)
         match = MatchInfo.objects.get(id=pk)
-        match.is_alarmed = True
-        participant = Team.objects.get(id=match.participant_id.id)
-        host.match_count += 1
-        participant.match_count += 1
+        opponent = object()
+        if user == match.host_id:
+            opponent = Team.objects.get(id=match.participant_id.id)
+            match.participant_rated = True
+        else:
+            opponent = Team.objects.get(id=match.host_id.id)
+            match.host_rated = True
+
+        user.match_count += 1
+        opponent.match_count += 1
         try:
-            participant.level = (participant.level +
-                                 float(request.POST['level']))/participant.match_count
-            participant.manner = (participant.manner +
-                                  float(request.POST['manner']))/participant.match_count
+            opponent.level = opponent.level + float(request.POST['level'])
+            opponent.manner = opponent.manner + float(request.POST['manner'])
             match.save()
-            host.save()
-            participant.save()
+            user.save()
+            opponent.save()
         except:
             pass
         return redirect('/')
@@ -480,8 +488,8 @@ def rate(request, pk):
 @admin_required
 # 차단 유저 목록
 def admin_team_block(request):
-    blocked_teams = Team.objects.filter(is_active = False)
-    
+    blocked_teams = Team.objects.filter(is_active=False)
+
     return render("admin_block")
 # 삭제 목록
 
@@ -489,40 +497,44 @@ def admin_team_block(request):
 def admin_match_delete(request):
     ...
 
+
 def notice_list(request):
     notices = Notice.objects.all()
     context = {
-        'notices' : notices,
+        'notices': notices,
     }
     return render(request, "matchingMatch/notice_list.html", context=context)
 
-def notice_detail(request,pk):
+
+def notice_detail(request, pk):
     notice = get_object_or_404(Notice, id=pk)
     context = {
-        'notice' : notice,
+        'notice': notice,
     }
     return render(request, "matchingMatch/notice_detail.html", context=context)
+
 
 @login_required(login_url='/login')
 @admin_required
 def notice_create(request):
     form = NoticeForm()
-    
+
     if request.method == "POST":
         form = NoticeForm(request.POST)
         if form.is_valid:
             form.save()
             return redirect("matchingMatch:notice_list")
     context = {
-        'form' : form,
+        'form': form,
     }
     return render(request, "matchingMatch/notice_create.html", context=context)
+
 
 @login_required(login_url='/login')
 @admin_required
 def notice_update(request, pk):
     notice = Notice.objects.get(id=pk)
-    
+
     if request.method == "POST":
         form = NoticeForm(request.POST, instance=notice)
         if form.is_valid:
@@ -532,56 +544,59 @@ def notice_update(request, pk):
             notice.content = request.POST['content']
             notice.save()
             return redirect(f"/notice_detail/{pk}")
-    
+
     form = NoticeForm(instance=notice)
     context = {
-        'form' : form,
-        'notice' : notice
+        'form': form,
+        'notice': notice
     }
     return render(request, "matchingMatch/notice_update.html", context=context)
 
+
 @login_required(login_url='/login')
 @admin_required
-def notice_delete(request,pk):
+def notice_delete(request, pk):
     if request.method == "POST":
         notice = Notice.objects.get(id=pk)
         notice.delete()
         return redirect("matchingMatch:notice_list")
 
 
-
 def report_list(request):
     reports = Report.objects.all()
     context = {
-        'reports' : reports,
+        'reports': reports,
     }
     return render(request, "matchingMatch/report_list.html", context=context)
+
 
 @login_required(login_url='/login')
 def report_create(request):
     form = ReportForm()
-    
+
     if request.method == "POST":
         form = ReportForm(request.POST, request.FILES)
         if form.is_valid:
             form.save()
             return redirect("matchingMatch:report_list")
     context = {
-        'form' : form,
+        'form': form,
     }
     return render(request, "matchingMatch/report_create.html", context=context)
 
-def report_detail(request,pk):
+
+def report_detail(request, pk):
     report = get_object_or_404(Report, id=pk)
     context = {
-        'report' : report,
+        'report': report,
     }
     return render(request, "matchingMatch/report_detail.html", context=context)
+
 
 @login_required(login_url='/login')
 def report_update(request, pk):
     report = Report.objects.get(id=pk)
-    
+
     if request.method == "POST":
         form = ReportForm(request.POST, request.FILES, instance=report)
         if form.is_valid():
@@ -590,19 +605,18 @@ def report_update(request, pk):
             #     os.remove(image_path)
             form.save()
             return redirect(f"/report_detail/{pk}")
-    
+
     form = ReportForm(instance=report)
     context = {
-        'form' : form,
-        'report' : report
+        'form': form,
+        'report': report
     }
     return render(request, "matchingMatch/report_update.html", context=context)
 
+
 @login_required(login_url='/login')
-def report_delete(request,pk):
+def report_delete(request, pk):
     if request.method == "POST":
         report = Report.objects.get(id=pk)
         report.delete()
         return redirect("matchingMatch:report_list")
-
-
