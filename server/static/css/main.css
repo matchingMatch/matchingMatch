@@ -7,10 +7,9 @@
 a {
 	text-decoration: none;
 	color: black;
-	border: 1px solid black;
 	width: fit-content;
 	padding: 5px;
-	background-color: #cecece;
+	transition: all 0.3s;
 }
 
 li {
@@ -26,6 +25,7 @@ main {
 	padding: 20px;
 }
 
+/*슬라이드쇼*/
 .week_slideshow {
 	width: 700px;
 	height: 100px;
@@ -42,67 +42,55 @@ main {
 	width: 3100px;
 	/* 슬라이드할 사진과 마진 총 넓이 */
 	transition: left 0.5s ease-out;
+	padding: 0;
+}
+.week .date {
+	padding: 10px;
+}
+.week .date:hover {
+	cursor: pointer;
+	background-color: #cecece;
+}
+.week_slideshow .date:first-child {
+	margin-left: 15px;
 }
 
-/* .date {
-  text-align: center;
-  border: 1px solid black;
-  height: fit-content;
-  padding: 10px;
-  cursor: pointer;
-} */
-.date:first-child {
-	margin-left: 25px;
-}
-
-.date:not(:last-child) {
+.week_slideshow .date:not(:last-child) {
 	float: left;
-	margin-right: 50px;
+	margin-right: 30px;
 }
 
-.date {}
 
-.date div {
+.week_slideshow .date div {
 	width: 50px;
 	text-align: center;
 }
 
 .controller span {
 	position: absolute;
-	background-color: transparent;
 	color: black;
 	text-align: center;
 	border-radius: 50%;
-	padding: 10px 20px;
+	padding: 15px 20px;
 	font-size: 1.3em;
 	z-index: 10;
+	cursor: pointer;
 }
 
 /* 이전, 다음 화살표에 마우스 커서가 올라가 있을때 */
 .controller span:hover {
-	background-color: rgba(128, 128, 128, 0.11);
-	z-index: 10;
+	color: rgba(128, 128, 128, 0.11);
 }
 
 .prev {
 	left: -20px;
 }
 
-/* 이전 화살표에 마우스 커서가 올라가 있을때 
-이전 화살표가 살짝 왼쪽으로 이동하는 효과*/
-.prev:hover {
-	transform: translateX(-10px);
-}
 
 .next {
 	right: -20px;
 }
 
-/* 다음 화살표에 마우스 커서가 올라가 있을때 
-이전 화살표가 살짝 오른쪽으로 이동하는 효과*/
-.next:hover {
-	transform: translateX(10px);
-}
 
 .match_list {
 	height: 500px;
@@ -143,6 +131,7 @@ main {
 	line-height: 0;
 }
 
+/* navbar */
 #nav {
 	display: flex;
 	justify-content: space-between;
@@ -162,14 +151,37 @@ nav a {
 	margin: 0 10px;
 }
 
-
-#logo--text {
-	font-size: 26px;
-	font-weight: 500;
+.user--team_logo--lg{
+  height: 150px;
+  width: 150px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
 }
 
 #nav--col3 {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-end;
 	align-items: center;
+}
+
+/* base */
+.error{
+    color: #E55D42;
+}
+
+.success{
+    color: #31a62b;
+}
+
+.info{
+    color: #3aabd4;
+}
+
+.container--main{
+    width: 1200px;
+    margin: 0 auto;
+    padding:0 1em ;
 }

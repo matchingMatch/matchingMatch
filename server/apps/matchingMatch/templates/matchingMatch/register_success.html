@@ -1,0 +1,6 @@
+{%for message in messages %}
+<script>
+	alert("{{message}}");
+	location.href = "{% url 'matchingMatch:main' %}";
+</script>
+{%endfor%}

@@ -13,7 +13,9 @@
 
 		<div class="section">
       <h1>{{user.team_name}}</h1>
+			{% if user.team_logo %}
 			<img class="user--team_logo--lg" src="{{user.team_logo.url}}" />
+			{% endif %}
 		</div>
 
 		<div id="account--buttons">
@@ -44,12 +46,12 @@
       <h2>우리 팀 매치 목록</h2>
       <a
 				class="btn btn--secondary"
-				href=""
+				href="{% url 'matchingMatch:my_register_matches' user.pk %}"
 				>우리 팀이 주최한 매치 목록 조회하기</a
 			> 
       <a
 				class="btn btn--secondary"
-				href=""
+				href="{% url 'matchingMatch:my_apply_matches' user.pk %}"
 				>우리 팀이 신청한 매치 목록 조회하기</a
 			> 
     </div>

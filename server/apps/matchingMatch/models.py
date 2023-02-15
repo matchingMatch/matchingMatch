@@ -4,12 +4,14 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from PIL import Image
 from django.contrib.auth.validators import UnicodeUsernameValidator
+
 # Create your models here.
 # Team 모델에 modes.Model이 없어서 역참조가 안됨
 USERNAME_FIELD = 'username'
 
 
 class Team(AbstractUser, PermissionsMixin):
+    gender_list = (("male", "남성"), ("female", "여성"), ("mixed", "혼성"))
     team_name = models.CharField(null=False, max_length=20)
     team_logo = models.ImageField(
         blank=True, null=True, upload_to='posts/%Y%m%d')
@@ -19,7 +21,9 @@ class Team(AbstractUser, PermissionsMixin):
     manner = models.IntegerField(null=True, default=0)  # 지금까지 받은 매너 점수의 합
     level = models.IntegerField(null=True, default=0)
     match_count = models.PositiveIntegerField(default=0)
+    gender = models.CharField(choices=gender_list, max_length=10, null=False)
     pre_proplayer = models.TextField(null=True)
+
 
 
 class Stadium(models.Model):
@@ -59,3 +63,24 @@ class MatchRequest(models.Model):
         MatchInfo, on_delete=models.CASCADE, related_name="request_match")
     team_id = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="request_team")
+
+class Notice(models.Model):
+    title = models.CharField(max_length=128)
+    writer = models.CharField(max_length=32)
+    content = models.TextField()
+    hits = models.PositiveIntegerField(default=0) # 조회수 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def hits_counter(self):
+        self.hits = self.hits + 1
+        self.save()
+
+class Report(models.Model):
+    title = models.CharField(max_length=128)
+    writer = models.CharField(max_length=32)
+    content = models.TextField()
+    image = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
