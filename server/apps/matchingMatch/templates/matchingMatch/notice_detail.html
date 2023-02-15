@@ -6,9 +6,11 @@
 <div>최근 수정일자: {{notice.updated_at}}</div>
 <div>조회수: {{notice.hits}}</div>
 <a href="{% url 'matchingMatch:notice_list' %}">목록으로</a>
+{% if request.user.is_superuser %}
 <a href="/notice_detail/{{notice.pk}}/update">수정하기</a>
 <form action="/notice_detail/{{notice.pk}}/delete" method="post">
     {% csrf_token %}
     <input type="submit" value="삭제하기">
 </form>
+{% endif %}
 

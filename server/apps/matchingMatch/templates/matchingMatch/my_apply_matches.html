@@ -11,10 +11,25 @@
 {% endif %}
 {% endfor %}
 <br /><br />
+<!--
 성사 ------------------------- {% for match in my_matched_matches%}
 <div>경기장: {{match.stadium.stadium_name}}</div>
 <div>경기일자: {{match.date}}</div>
 <div>시작시간: {{match.start_time}}</div>
 <div>상대팀: {{match.host_id.team_name}}</div>
 <div>-------------------------------------------------</div>
+{% endfor %} -->
+
+경기종료된 매치 ------------------ <br>
+{% for match in ended_matches %}
+<div>경기일자: {{match.date}}</div>
+<div>시작시간: {{match.start_time}}</div>
+<div>경기일자: {{match.host_id.team_name}</div>
+{% endfor %}
+
+성사된 매치 ------------------ <br>
+{% for match in ended_yet_matches %}
+<div>경기일자: {{match.date}}</div>
+<div>시작시간: {{match.start_time}}</div>
+<div>경기일자: {{match.host_id.team_name}</div>
 {% endfor %}

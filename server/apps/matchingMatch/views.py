@@ -425,11 +425,25 @@ def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk
 
 @login_required(login_url='/login')
 def my_apply_matches(request, pk):
-    my_matched_matches = MatchInfo.objects.filter(
+    today = datetime.date.today()
+    now = datetime.datetime.now().time()
+
+    my_matched_matches= MatchInfo.objects.filter(
         is_matched=True, participant_id=pk)
+    ended_matches = []
+    ended_yet_matches = []
+
+    for match in my_matched_matches:
+        if match.date <= today and match.end_time < now:
+            ended_matches.append(match)
+        else:
+            ended_yet_matches.append(match)
+
     my_match_requests = MatchRequest.objects.filter(team_id=pk)
+
     context = {
-        'my_matched_matches': my_matched_matches,
+        'ended' : ended_matches,
+        'ended_yet' : ended_yet_matches,
         'my_match_requests':  my_match_requests,
     }
     return render(request, 'matchingMatch/my_apply_matches.html', context=context)
