@@ -422,10 +422,12 @@ def my_apply_matches(request, pk):
     ended_yet_matches = []
 
     for match in my_matched_matches:
-        if match.date <= today and match.end_time < now:
+        if match.date < today:
             ended_matches.append(match)
-        else:
+        elif match.date > today:
             ended_yet_matches.append(match)
+        elif match.start_time < now:
+            ended_matches.append(match)
 
     my_match_requests = MatchRequest.objects.filter(team_id=pk)
 

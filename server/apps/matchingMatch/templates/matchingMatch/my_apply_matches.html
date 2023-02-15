@@ -19,17 +19,17 @@
 <div>상대팀: {{match.host_id.team_name}}</div>
 <div>-------------------------------------------------</div>
 {% endfor %} -->
-
-경기종료된 매치 ------------------ <br>
-{% for match in ended_matches %}
+<hr>
+경기종료된 매치 ------------------ <br><hr>
+{% for match in ended %}
 <div>경기일자: {{match.date}}</div>
 <div>시작시간: {{match.start_time}}</div>
-<div>경기일자: {{match.host_id.team_name}</div>
+<hr>
 {% endfor %}
 
-성사된 매치 ------------------ <br>
-{% for match in ended_yet_matches %}
+매치 성사 됐는데 아직 시작 되기 전 매치 ------------------ <br><hr>
+{% for match in ended_yet %}
 <div>경기일자: {{match.date}}</div>
 <div>시작시간: {{match.start_time}}</div>
-<div>경기일자: {{match.host_id.team_name}</div>
+<hr>
 {% endfor %}
