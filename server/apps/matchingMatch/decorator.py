@@ -12,7 +12,7 @@ def admin_required(function):
         return function(request, *args, **kwargs)
       else:  
         messages.info(request, "접근 권한이 없습니다.")
-        return redirect('/users/main/')
+        return redirect('matchingMatch:main')
   
   return wrap
 
