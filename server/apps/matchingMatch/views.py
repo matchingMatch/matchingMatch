@@ -203,7 +203,6 @@ def main(request, *args, **kwargs):
         matches = MatchInfo.objects.all()
     context = {
         'matches': matches,
-        'userMatches': userMatches,
         'filter_form': filter_form
     }
     return render(request, "matchingMatch/main.html", context=context)
