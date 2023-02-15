@@ -203,15 +203,20 @@ def main(request, *args, **kwargs):
     if filter_set:
         print(request.GET)
         filter_form = MatchFilterForm(request.GET)
-        matches = MatchInfo.objects.filter(**filter_set)
+        matches = MatchInfo.objects.filter(**filter_set) 
     else:
         
         matches = MatchInfo.objects.all()
+    now = datetime.datetime.now().time()
+    today = datetime.date.today()
+    print(type(matches[0].start_time), type(now))
+    matches = matches.filter(date__gte = today, start_time__gte = now)
     context = {
         'matches': matches,
         'userMatches': userMatches,
         'filter_form' : filter_form
-        }
+    }
+    
     return render(request, "matchingMatch/main.html", context=context)
 
 # def check_endOfGame():
