@@ -19,10 +19,18 @@
 <hr />
 <hr />
 <hr />
-매칭 성사 목록<br /><br />
-{% for match in my_matched_matches %}
+---------------------매치 성사--------------------<br>
+-경기 종료- {% for match in ended %}
 <div>경기장: {{match.stadium.stadium_name}}</div>
 <div>경기일자: {{match.date}}</div>
 <div>시작시간: {{match.start_time}}</div>
-<div>상대팀: {{match.participant_id.team_name}}</div>
-{% endfor%}
+<div>상대팀: {{match.participant_id.team_name}} </div>
+<hr>
+{% endfor %}
+-경기 시작전- {% for match in ended_yet %}
+<div>경기장: {{match.stadium.stadium_name}}</div>
+<div>경기일자: {{match.date}}</div>
+<div>시작시간: {{match.start_time}}</div>
+<div>상대팀: {{match.participant_id.team_name}} </div>
+<hr>
+{% endfor %}

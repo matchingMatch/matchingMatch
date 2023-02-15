@@ -1,13 +1,11 @@
-내가 신청한 매치 목록 <br /><br />
-
-대기중 ---------------------- {% for request in my_match_requests %}
+----------------------- 대기중 ---------------------- {% for request in my_match_requests %}
 {% if request.match_id.is_matched == False %}
 <div>경기장: {{request.match_id.stadium.stadium_name}}</div>
 <div>경기일자: {{request.match_id.date}}</div>
 <div>시작시간: {{request.match_id.start_time}}</div>
 <div>상대팀: {{request.match_id.host_id.team_name}}</div>
 <div><a href="{% url 'matchingMatch:match_detail' request.match_id.pk%}">경기정보</a></div>
-<div>-------------------------------------------------</div>
+<hr>
 {% endif %}
 {% endfor %}
 <br /><br />
@@ -19,17 +17,19 @@
 <div>상대팀: {{match.host_id.team_name}}</div>
 <div>-------------------------------------------------</div>
 {% endfor %} -->
-<hr>
-경기종료된 매치 ------------------ <br><hr>
-{% for match in ended %}
+
+---------------------매치 성사--------------------<br>
+-경기 종료- {% for match in ended %}
+<div>경기장: {{match.stadium.stadium_name}}</div>
 <div>경기일자: {{match.date}}</div>
 <div>시작시간: {{match.start_time}}</div>
+<div>상대팀: {{match.host_id.team_name}} </div>
 <hr>
 {% endfor %}
-
-매치 성사 됐는데 아직 시작 되기 전 매치 ------------------ <br><hr>
-{% for match in ended_yet %}
+-경기 시작전- {% for match in ended_yet %}
+<div>경기장: {{match.stadium.stadium_name}}</div>
 <div>경기일자: {{match.date}}</div>
 <div>시작시간: {{match.start_time}}</div>
+<div>상대팀: {{match.host_id.team_name}} </div>
 <hr>
 {% endfor %}

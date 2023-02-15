@@ -203,7 +203,7 @@ def main(request, *args, **kwargs):
         matches = MatchInfo.objects.all()
     now = datetime.datetime.now().time()
     today = datetime.date.today()
-    print(type(matches[0].start_time), type(now))
+
     matches = matches.filter(date__gte = today, start_time__gte = now)
     context = {
         'matches': matches,
@@ -400,13 +400,29 @@ def change_enroll(request):
 # 해당 pk에 해당하는 유저가 로그인 했을 때만 이 페이지가 보이게끔 만들어야됨.
 @login_required(login_url='/login')
 def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk를 받아옴.
+    today = datetime.date.today()
+    now = datetime.datetime.now().time()
+
+    my_matched_matches= MatchInfo.objects.filter(
+        is_matched=True, host_id=pk)
     my_not_matched_matches = MatchInfo.objects.filter(
         is_matched=False, host_id=pk)
+    
+    ended_matches = []
+    ended_yet_matches = []
 
-    my_matched_matches = MatchInfo.objects.filter(is_matched=True, host_id=pk)
+    for match in my_matched_matches:
+        if match.date < today:
+            ended_matches.append(match)
+        elif match.date > today:
+            ended_yet_matches.append(match)
+        elif match.start_time < now:
+            ended_matches.append(match)
+            
     context = {
+        'ended' : ended_matches,
+        'ended_yet' : ended_yet_matches,
         'my_not_matched_matches': my_not_matched_matches,
-        'my_matched_matches': my_matched_matches
     }
     return render(request, 'matchingMatch/my_register_matches.html', context=context)
 
@@ -498,7 +514,7 @@ def admin_team_block(request):
 def admin_match_delete(request):
     ...
 
-
+@login_required
 def notice_list(request):
     notices = Notice.objects.all()
     context = {
@@ -506,7 +522,7 @@ def notice_list(request):
     }
     return render(request, "matchingMatch/notice_list.html", context=context)
 
-
+@login_required
 def notice_detail(request, pk):
     notice = get_object_or_404(Notice, id=pk)
     context = {
@@ -562,62 +578,82 @@ def notice_delete(request, pk):
         notice.delete()
         return redirect("matchingMatch:notice_list")
 
-
-def report_list(request):
-    reports = Report.objects.all()
-    context = {
-        'reports': reports,
-    }
-    return render(request, "matchingMatch/report_list.html", context=context)
-
+@login_required
+def report_list(request,pk): #pk는 team pk
+    if (request.user.id) == pk or (request.user.is_superuser) == True:
+        team = Team.objects.get(id=pk)
+        reports = Report.objects.filter(writer_id=team)
+        context = {
+            'reports': reports,
+            'team' : team,
+        }
+        return render(request, "matchingMatch/report_list.html", context=context)
+    else:
+        return redirect("/")
 
 @login_required(login_url='/login')
-def report_create(request):
-    form = ReportForm()
+def report_create(request, pk): #pk는 team pk
+    if (request.user.id) == pk:
+        form = ReportForm()
 
-    if request.method == "POST":
-        form = ReportForm(request.POST, request.FILES)
-        if form.is_valid:
-            form.save()
-            return redirect("matchingMatch:report_list")
-    context = {
-        'form': form,
-    }
-    return render(request, "matchingMatch/report_create.html", context=context)
+        if request.method == "POST":
+            form = ReportForm(request.POST, request.FILES)
+            team = Team.objects.get(id=pk)
+            if form.is_valid:
+                report = form.save()
+                report.writer_id = team
+                report.save()
+                return redirect(f"/report_list/{pk}")
 
+        team = Team.objects.get(id=pk)
+        context = {
+            'form': form,
+            'team' : team,
+        }
+        return render(request, "matchingMatch/report_create.html", context=context)
+    else:
+        return redirect("/")
 
-def report_detail(request, pk):
+@login_required
+def report_detail(request, pk): #pk는 report pk
     report = get_object_or_404(Report, id=pk)
-    context = {
-        'report': report,
-    }
-    return render(request, "matchingMatch/report_detail.html", context=context)
-
+    if report.writer_id.id == request.user.id or request.user.is_superuser == True:
+        context = {
+            'report': report,
+        }
+        return render(request, "matchingMatch/report_detail.html", context=context)
+    else:
+        return redirect("/")
 
 @login_required(login_url='/login')
-def report_update(request, pk):
+def report_update(request, pk): #pk는 report pk
+
     report = Report.objects.get(id=pk)
+    if report.writer_id.id == request.user.id or request.user.is_superuser == True:
+        if request.method == "POST":
+            form = ReportForm(request.POST, request.FILES, instance=report)
+            if form.is_valid():
+                # image_path = form.image.path
+                # if os.path.exists(image_path):
+                #     os.remove(image_path)
+                form.save()
+                return redirect(f"/report_detail/{pk}")
 
-    if request.method == "POST":
-        form = ReportForm(request.POST, request.FILES, instance=report)
-        if form.is_valid():
-            # image_path = form.image.path
-            # if os.path.exists(image_path):
-            #     os.remove(image_path)
-            form.save()
-            return redirect(f"/report_detail/{pk}")
-
-    form = ReportForm(instance=report)
-    context = {
-        'form': form,
-        'report': report
-    }
-    return render(request, "matchingMatch/report_update.html", context=context)
-
+        form = ReportForm(instance=report)
+        context = {
+            'form': form,
+            'report': report
+        }
+        return render(request, "matchingMatch/report_update.html", context=context)
+    else:
+        return redirect("/")
 
 @login_required(login_url='/login')
-def report_delete(request, pk):
-    if request.method == "POST":
-        report = Report.objects.get(id=pk)
-        report.delete()
-        return redirect("matchingMatch:report_list")
+def report_delete(request, pk): #pk는 report pk 
+    report = Report.objects.get(id=pk)
+    if report.writer_id.id == request.user.id or request.user.is_superuser == True:
+        if request.method == "POST":
+            report.delete()
+            return redirect(f"/report_list/{request.user.id}")
+    else:
+        return redirect("/")
