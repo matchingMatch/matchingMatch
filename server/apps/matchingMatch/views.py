@@ -203,7 +203,7 @@ def main(request, *args, **kwargs):
         matches = MatchInfo.objects.all()
     now = datetime.datetime.now().time()
     today = datetime.date.today()
-    print(type(matches[0].start_time), type(now))
+
     matches = matches.filter(date__gte = today, start_time__gte = now)
     context = {
         'matches': matches,
