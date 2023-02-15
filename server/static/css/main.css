@@ -2,6 +2,7 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+
 }
 
 a {
@@ -9,7 +10,6 @@ a {
 	color: black;
 	width: fit-content;
 	padding: 5px;
-	transition: all 0.3s;
 }
 
 li {
@@ -27,11 +27,13 @@ main {
 
 /*슬라이드쇼*/
 .week_slideshow {
+	background-color: white;
 	width: 700px;
 	height: 100px;
 	position: relative;
 	margin: 50px auto;
 	overflow: hidden;
+
 }
 
 .week {
@@ -44,13 +46,16 @@ main {
 	transition: left 0.5s ease-out;
 	padding: 0;
 }
+
 .week .date {
 	padding: 10px;
 }
+
 .week .date:hover {
 	cursor: pointer;
 	background-color: #cecece;
 }
+
 .week_slideshow .date:first-child {
 	margin-left: 15px;
 }
@@ -92,10 +97,7 @@ main {
 .match_list {
 	height: 500px;
 	overflow: scroll;
-	display: flex;
-	flex-wrap: wrap;
-	flex-direction: column;
-	align-content: center;
+	font-size: 12px;
 }
 
 .sun {
@@ -175,6 +177,17 @@ nav a {
 	display: none;
 }
 
+.calendar_header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.year_month {
+	font-size: 35px;
+	margin-right: 20px;
+}
+
 .success{
     color: #31a62b;
 }
@@ -201,7 +214,8 @@ nav a {
 
 .calendar .dates {
 	display: flex;
-	flex-flow: row wrap; /*flex-direction, flex-wrap*/
+	flex-flow: row wrap;
+	/*flex-direction, flex-wrap*/
 	border-top: 1px solid #2e2e2e;
 	border-right: 1px solid #2e2e2e;
 }
@@ -232,7 +246,7 @@ nav a {
 
 .today {
 	position: relative;
-	color: #ffffff;
+	color: #FFFFFF;
 }
 
 .today::before {
@@ -244,17 +258,18 @@ nav a {
 	width: 30px;
 	height: 30px;
 	display: block;
-	background-color: #ff0000;
+	background-color: #FF0000;
 	border-radius: 50%;
-	content: "";
+	content: '';
 }
 
-input[type="checkbox"]:checked {
-	background: skyblue;
-	border-color: skyblue;
-	color: white;
+@font-face {
+	font-family: 'Cafe24Ssurround';
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
 }
-label {
-	font-size: 0.5rem;
-	white-space: nowrap;
+
+body {
+	font-family: 'Cafe24Ssurround' !important;
 }

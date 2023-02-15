@@ -1,3 +1,6 @@
+{% extends 'matchingMatch/base.html' %}
+
+{% block content %}
 ----------------------- 대기중 ---------------------- {% for request in my_match_requests %}
 {% if request.match_id.is_matched == False %}
 <div>경기장: {{request.match_id.stadium.stadium_name}}</div>

@@ -1,3 +1,4 @@
+import json
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.core import serializers
@@ -23,7 +24,6 @@ import re
 import datetime
 import json
 import requests
-
 # Create your views here.
 
 
@@ -87,7 +87,6 @@ def team_list(request):
     context = {"teams": teams,
                "order": order}
     return render(request, "matchingMatch/team_list.html", context=context)
-
 
 @check_recaptcha
 @login_required(login_url='/login')
@@ -169,6 +168,10 @@ def match_update(request, pk):
         return render(request, "matchingMatch/match_update.html", context=context)
 
 
+
+
+
+
 def match_delete(request, pk):  # 매치 자체를 없애기 매치를 없애면 어떤 게 생기나?
 
     if request.method == "POST":
@@ -190,6 +193,7 @@ def main(request, *args, **kwargs):
         'is_matched': 'is_matched__in',
         'region': 'stadium__location__in'
     }
+    
     filter_set = {match_detail_category.get(
         key): value for key, value in dict(request.GET).items()}
     filter_form = MatchFilterForm()
@@ -199,12 +203,10 @@ def main(request, *args, **kwargs):
         filter_form = MatchFilterForm(request.GET)
         matches = MatchInfo.objects.filter(**filter_set) 
     else:
-
         matches = MatchInfo.objects.all()
-    now = datetime.datetime.now().time()
-    today = datetime.date.today()
-
-    matches = matches.filter(date__gte = today, start_time__gte = now)
+        now = datetime.datetime.now().time()
+        today = datetime.date.today()
+        matches = matches.filter(date__gte = today, start_time__gte = now)
     context = {
         'matches': matches,
         'filter_form' : filter_form
@@ -217,6 +219,7 @@ def check_endedmatch(request):
     # 날짜 셋팅
     now = datetime.datetime.now().time()
     today = datetime.date.today()
+    # 알람이 생성되지 않은 매치: 경기가 끝나지 않은 매치들
 
     userMatches = MatchInfo.objects.filter(host_id=request.user.id, participant_rated=False) | MatchInfo.objects.filter(
         participant_id=request.user.id, host_rated=False)
@@ -241,10 +244,9 @@ def check_endedmatch(request):
 
 def login_page(request):
     page = 'login'
-
+    
     if request.user.is_authenticated:
         return redirect("/")
-
     if request.method == "POST":
         user = authenticate(
             username=request.POST['username'],
@@ -262,14 +264,11 @@ def login_page(request):
     context = {'page': page}
     return render(request, 'matchingMatch/login_register.html', context)
 
-
 @check_recaptcha
 def register_page(request):
     form = CustomUserCreateForm()
-
     if request.user.is_authenticated:
         return redirect("/")
-
     if request.method == 'POST':
         form = CustomUserCreateForm(request.POST, request.FILES,)
         if form.is_valid() and request.recaptcha_is_valid:
@@ -285,15 +284,12 @@ def register_page(request):
     context = {'page': page, 'form': form}
     return render(request, 'matchingMatch/login_register.html', context)
 
-
 def register_success(request):
     messages.error(request, '성공적으로 회원가입이 진행됐습니다.')
     sys_messages = list(messages.get_messages(request))
     print(sys_messages)
     context = {"messages": sys_messages}
     return render(request, "matchingMatch/register_success.html", context)
-
-
 def logout_user(request):
     if request.user.is_authenticated:
 
@@ -365,7 +361,6 @@ class delete_account(SuccessMessageMixin, generic.DeleteView):
     template_name = 'matchingMatch/delete_account_confirm.html'
     success_message = "유저가 성공적으로 삭제됐습니다."
     success_url = reverse_lazy('matchingMatch:main')
-
 
 @login_required(login_url='/login')
 @csrf_exempt
@@ -444,9 +439,7 @@ def my_apply_matches(request, pk):
             ended_yet_matches.append(match)
         elif match.start_time < now:
             ended_matches.append(match)
-
     my_match_requests = MatchRequest.objects.filter(team_id=pk)
-
     context = {
         'ended' : ended_matches,
         'ended_yet' : ended_yet_matches,
