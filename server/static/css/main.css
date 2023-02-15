@@ -7,10 +7,9 @@
 a {
 	text-decoration: none;
 	color: black;
-	border: 1px solid black;
 	width: fit-content;
 	padding: 5px;
-	background-color: #cecece;
+	transition: all 0.3s;
 }
 
 li {
@@ -132,6 +131,7 @@ main {
 	line-height: 0;
 }
 
+/* navbar */
 #nav {
 	display: flex;
 	justify-content: space-between;
@@ -163,6 +163,25 @@ nav a {
 
 #nav--col3 {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-end;
 	align-items: center;
+}
+
+/* base */
+.error{
+    color: #E55D42;
+}
+
+.success{
+    color: #31a62b;
+}
+
+.info{
+    color: #3aabd4;
+}
+
+.container--main{
+    width: 1200px;
+    margin: 0 auto;
+    padding:0 1em ;
 }

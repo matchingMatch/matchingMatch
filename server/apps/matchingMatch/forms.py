@@ -29,7 +29,7 @@ class MatchRegisterForm(forms.ModelForm):
 class UserForm(ModelForm):
     class Meta:
         model = Team
-        fields = ['username', 'email', 'team_name', 'team_logo', 'team_intro', 'region', 'photo', 'pre_proplayer']
+        fields = ['username', 'email', 'team_name', 'team_logo', 'team_intro', 'region', 'photo', 'gender', 'pre_proplayer']
         labels = {
             'username': '유저네임',
             'team_name': '팀 이름',
@@ -37,6 +37,7 @@ class UserForm(ModelForm):
             'team_intro': '팀 소개',
             'region': '지역',
             'photo': '팀 사진 (이미지 첨부파일)',
+            'gender': '팀 성별',
             'pre_proplayer': '선출 수 (자세하게 적어주세요.)',
         }
 
