@@ -61,7 +61,6 @@ main {
 	margin-right: 30px;
 }
 
-
 .week_slideshow .date div {
 	width: 50px;
 	text-align: center;
@@ -87,11 +86,9 @@ main {
 	left: -20px;
 }
 
-
 .next {
 	right: -20px;
 }
-
 
 .match_list {
 	height: 500px;
@@ -120,7 +117,6 @@ main {
 	width: 500px;
 	margin: 0 auto;
 }
-
 
 .user—team_logo—lg {
 	height: 150px;
@@ -151,7 +147,6 @@ nav a {
 	margin: 0 10px;
 }
 
-
 #logo--text {
 	font-size: 26px;
 	font-weight: 500;
@@ -162,9 +157,6 @@ nav a {
 	justify-content: space-between;
 	align-items: center;
 }
-
-
-
 
 /* 캘린더 */
 .calendar_container {
@@ -216,7 +208,7 @@ nav a {
 
 .calendar .dates {
 	display: flex;
-	flex-flow: row wrap;  /*flex-direction, flex-wrap*/
+	flex-flow: row wrap; /*flex-direction, flex-wrap*/
 	border-top: 1px solid #2e2e2e;
 	border-right: 1px solid #2e2e2e;
 }
@@ -233,33 +225,43 @@ nav a {
 /* 일요일은 빨간색, 토요일은 파란색으로 */
 .calendar .day:nth-child(7n + 1),
 .calendar .date:nth-child(7n + 1) {
-color: #ff3838;
+	color: #ff3838;
 }
 
 .calendar .day:nth-child(7n),
 .calendar .date:nth-child(7n) {
-color: #3374ff;
+	color: #3374ff;
 }
 
 .other {
-opacity: 0.3;
+	opacity: 0.3;
 }
 
 .today {
-position: relative;
-color: #FFFFFF;
+	position: relative;
+	color: #ffffff;
 }
 
 .today::before {
-position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-z-index: -1;
-width: 30px;
-height: 30px;
-display: block;
-background-color: #FF0000;
-border-radius: 50%;
-content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: -1;
+	width: 30px;
+	height: 30px;
+	display: block;
+	background-color: #ff0000;
+	border-radius: 50%;
+	content: "";
+}
+
+input[type="checkbox"]:checked {
+	background: skyblue;
+	border-color: skyblue;
+	color: white;
+}
+label {
+	font-size: 0.5rem;
+	white-space: nowrap;
 }
