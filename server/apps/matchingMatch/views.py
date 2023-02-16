@@ -1,3 +1,4 @@
+import json
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.core import serializers
@@ -23,7 +24,6 @@ import re
 import datetime
 import json
 import requests
-
 # Create your views here.
 
 
@@ -87,7 +87,6 @@ def team_list(request):
     context = {"teams": teams,
                "order": order}
     return render(request, "matchingMatch/team_list.html", context=context)
-
 
 @check_recaptcha
 @login_required(login_url='/login')
@@ -169,6 +168,10 @@ def match_update(request, pk):
         return render(request, "matchingMatch/match_update.html", context=context)
 
 
+
+
+
+
 def match_delete(request, pk):  # 매치 자체를 없애기 매치를 없애면 어떤 게 생기나?
 
     if request.method == "POST":
@@ -190,6 +193,7 @@ def main(request, *args, **kwargs):
         'is_matched': 'is_matched__in',
         'region': 'stadium__location__in'
     }
+    
     filter_set = {match_detail_category.get(
         key): value for key, value in dict(request.GET).items()}
     filter_form = MatchFilterForm()
@@ -199,7 +203,6 @@ def main(request, *args, **kwargs):
         filter_form = MatchFilterForm(request.GET)
         matches = MatchInfo.objects.filter(**filter_set) 
     else:
-
         matches = MatchInfo.objects.all()
     now = datetime.datetime.now().time()
     today = datetime.date.today()
@@ -217,6 +220,7 @@ def check_endedmatch(request):
     # 날짜 셋팅
     now = datetime.datetime.now().time()
     today = datetime.date.today()
+    # 알람이 생성되지 않은 매치: 경기가 끝나지 않은 매치들
 
     userMatches = MatchInfo.objects.filter(host_id=request.user.id, participant_rated=False) | MatchInfo.objects.filter(
         participant_id=request.user.id, host_rated=False)
@@ -241,10 +245,9 @@ def check_endedmatch(request):
 
 def login_page(request):
     page = 'login'
-
+    
     if request.user.is_authenticated:
         return redirect("/")
-
     if request.method == "POST":
         user = authenticate(
             username=request.POST['username'],
@@ -262,14 +265,11 @@ def login_page(request):
     context = {'page': page}
     return render(request, 'matchingMatch/login_register.html', context)
 
-
 @check_recaptcha
 def register_page(request):
     form = CustomUserCreateForm()
-
     if request.user.is_authenticated:
         return redirect("/")
-
     if request.method == 'POST':
         form = CustomUserCreateForm(request.POST, request.FILES,)
         if form.is_valid() and request.recaptcha_is_valid:
@@ -285,15 +285,12 @@ def register_page(request):
     context = {'page': page, 'form': form}
     return render(request, 'matchingMatch/login_register.html', context)
 
-
 def register_success(request):
     messages.error(request, '성공적으로 회원가입이 진행됐습니다.')
     sys_messages = list(messages.get_messages(request))
     print(sys_messages)
     context = {"messages": sys_messages}
     return render(request, "matchingMatch/register_success.html", context)
-
-
 def logout_user(request):
     if request.user.is_authenticated:
 
@@ -366,7 +363,6 @@ class delete_account(SuccessMessageMixin, generic.DeleteView):
     success_message = "유저가 성공적으로 삭제됐습니다."
     success_url = reverse_lazy('matchingMatch:main')
 
-
 @login_required(login_url='/login')
 @csrf_exempt
 def change_enroll(request):
@@ -400,13 +396,29 @@ def change_enroll(request):
 # 해당 pk에 해당하는 유저가 로그인 했을 때만 이 페이지가 보이게끔 만들어야됨.
 @login_required(login_url='/login')
 def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk를 받아옴.
+    today = datetime.date.today()
+    now = datetime.datetime.now().time()
+
+    my_matched_matches= MatchInfo.objects.filter(
+        is_matched=True, host_id=pk)
     my_not_matched_matches = MatchInfo.objects.filter(
         is_matched=False, host_id=pk)
+    
+    ended_matches = []
+    ended_yet_matches = []
 
-    my_matched_matches = MatchInfo.objects.filter(is_matched=True, host_id=pk)
+    for match in my_matched_matches:
+        if match.date < today:
+            ended_matches.append(match)
+        elif match.date > today:
+            ended_yet_matches.append(match)
+        elif match.start_time < now:
+            ended_matches.append(match)
+            
     context = {
+        'ended' : ended_matches,
+        'ended_yet' : ended_yet_matches,
         'my_not_matched_matches': my_not_matched_matches,
-        'my_matched_matches': my_matched_matches
     }
     return render(request, 'matchingMatch/my_register_matches.html', context=context)
 
@@ -428,9 +440,7 @@ def my_apply_matches(request, pk):
             ended_yet_matches.append(match)
         elif match.start_time < now:
             ended_matches.append(match)
-
     my_match_requests = MatchRequest.objects.filter(team_id=pk)
-
     context = {
         'ended' : ended_matches,
         'ended_yet' : ended_yet_matches,
@@ -498,7 +508,7 @@ def admin_team_block(request):
 def admin_match_delete(request):
     ...
 
-
+@login_required
 def notice_list(request):
     notices = Notice.objects.all()
     context = {
@@ -506,7 +516,7 @@ def notice_list(request):
     }
     return render(request, "matchingMatch/notice_list.html", context=context)
 
-
+@login_required
 def notice_detail(request, pk):
     notice = get_object_or_404(Notice, id=pk)
     context = {
@@ -562,62 +572,82 @@ def notice_delete(request, pk):
         notice.delete()
         return redirect("matchingMatch:notice_list")
 
-
-def report_list(request):
-    reports = Report.objects.all()
-    context = {
-        'reports': reports,
-    }
-    return render(request, "matchingMatch/report_list.html", context=context)
-
+@login_required
+def report_list(request,pk): #pk는 team pk
+    if (request.user.id) == pk or (request.user.is_superuser) == True:
+        team = Team.objects.get(id=pk)
+        reports = Report.objects.filter(writer_id=team)
+        context = {
+            'reports': reports,
+            'team' : team,
+        }
+        return render(request, "matchingMatch/report_list.html", context=context)
+    else:
+        return redirect("/")
 
 @login_required(login_url='/login')
-def report_create(request):
-    form = ReportForm()
+def report_create(request, pk): #pk는 team pk
+    if (request.user.id) == pk:
+        form = ReportForm()
 
-    if request.method == "POST":
-        form = ReportForm(request.POST, request.FILES)
-        if form.is_valid:
-            form.save()
-            return redirect("matchingMatch:report_list")
-    context = {
-        'form': form,
-    }
-    return render(request, "matchingMatch/report_create.html", context=context)
+        if request.method == "POST":
+            form = ReportForm(request.POST, request.FILES)
+            team = Team.objects.get(id=pk)
+            if form.is_valid:
+                report = form.save()
+                report.writer_id = team
+                report.save()
+                return redirect(f"/report_list/{pk}")
 
+        team = Team.objects.get(id=pk)
+        context = {
+            'form': form,
+            'team' : team,
+        }
+        return render(request, "matchingMatch/report_create.html", context=context)
+    else:
+        return redirect("/")
 
-def report_detail(request, pk):
+@login_required
+def report_detail(request, pk): #pk는 report pk
     report = get_object_or_404(Report, id=pk)
-    context = {
-        'report': report,
-    }
-    return render(request, "matchingMatch/report_detail.html", context=context)
-
+    if report.writer_id.id == request.user.id or request.user.is_superuser == True:
+        context = {
+            'report': report,
+        }
+        return render(request, "matchingMatch/report_detail.html", context=context)
+    else:
+        return redirect("/")
 
 @login_required(login_url='/login')
-def report_update(request, pk):
+def report_update(request, pk): #pk는 report pk
+
     report = Report.objects.get(id=pk)
+    if report.writer_id.id == request.user.id or request.user.is_superuser == True:
+        if request.method == "POST":
+            form = ReportForm(request.POST, request.FILES, instance=report)
+            if form.is_valid():
+                # image_path = form.image.path
+                # if os.path.exists(image_path):
+                #     os.remove(image_path)
+                form.save()
+                return redirect(f"/report_detail/{pk}")
 
-    if request.method == "POST":
-        form = ReportForm(request.POST, request.FILES, instance=report)
-        if form.is_valid():
-            # image_path = form.image.path
-            # if os.path.exists(image_path):
-            #     os.remove(image_path)
-            form.save()
-            return redirect(f"/report_detail/{pk}")
-
-    form = ReportForm(instance=report)
-    context = {
-        'form': form,
-        'report': report
-    }
-    return render(request, "matchingMatch/report_update.html", context=context)
-
+        form = ReportForm(instance=report)
+        context = {
+            'form': form,
+            'report': report
+        }
+        return render(request, "matchingMatch/report_update.html", context=context)
+    else:
+        return redirect("/")
 
 @login_required(login_url='/login')
-def report_delete(request, pk):
-    if request.method == "POST":
-        report = Report.objects.get(id=pk)
-        report.delete()
-        return redirect("matchingMatch:report_list")
+def report_delete(request, pk): #pk는 report pk 
+    report = Report.objects.get(id=pk)
+    if report.writer_id.id == request.user.id or request.user.is_superuser == True:
+        if request.method == "POST":
+            report.delete()
+            return redirect(f"/report_list/{request.user.id}")
+    else:
+        return redirect("/")

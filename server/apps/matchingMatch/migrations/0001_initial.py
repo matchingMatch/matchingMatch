@@ -83,6 +83,16 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Stadium',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('stadium_name', models.CharField(max_length=250)),
+                ('address', models.CharField(max_length=250)),
+                ('is_park', models.BooleanField(default=0, null=True)),
+                ('location', models.CharField(max_length=10)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Report',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -92,16 +102,7 @@ class Migration(migrations.Migration):
                 ('image', models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Stadium',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('stadium_name', models.CharField(max_length=250)),
-                ('address', models.CharField(max_length=250)),
-                ('is_park', models.BooleanField(default=0, null=True)),
-                ('location', models.CharField(max_length=10)),
+                ('writer_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='writer_id', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
