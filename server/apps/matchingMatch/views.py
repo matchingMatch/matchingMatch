@@ -672,6 +672,9 @@ def cancel_game(request,pk): #pk는 match pk
             match.is_matched = False
             match.participant_id = None
             match.save()
-            return redirect(f"/my_register_matches/{request.user.id}")
+            if request.user.id == match.host_id.id:
+                return redirect(f"/my_register_matches/{request.user.id}")
+            else:
+                return redirect(f"/my_apply_matches/{request.user.id}")
     else:
         return redirect("/")    
