@@ -22,7 +22,9 @@
 				<div class = "host-info">
 					주최팀
 					<br>
+					{% if match.host_id.team_logo %}
 					<img src="{{match.host_id.team_logo.url}}" alt="">
+					{% endif %}
 					<br />
 					
 					<a href="{% url 'matchingMatch:team_detail' match.host_id.pk %}">				
@@ -35,7 +37,9 @@
 				<div class = "participant-info">
 					상대팀
 					<br>
+					{% if match.participant_id.team_logo %}
 					<img src="{{match.participant_id.team_logo.url}}" alt="">
+					{% endif %}
 					<br />
 
 					<a href="{% url 'matchingMatch:team_detail' match.participant_id.pk %}">				

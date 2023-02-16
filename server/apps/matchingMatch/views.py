@@ -661,3 +661,17 @@ def report_delete(request, pk): #pk는 report pk
             return redirect(f"/report_list/{request.user.id}")
     else:
         return redirect("/")
+
+@login_required(login_url='/login')
+def cancel_game(request,pk): #pk는 match pk
+    match = MatchInfo.objects.get(id=pk)
+    if request.user.id == match.host_id.id or request.user.id == match.participant_id.id:
+        if request.method == "POST":
+            match_requests_filter = MatchRequest.objects.filter(team_id=match.participant_id, match_id=match)
+            match_requests_filter[0].delete() # 신청 내역 삭제
+            match.is_matched = False
+            match.participant_id = None
+            match.save()
+            return redirect(f"/my_register_matches/{request.user.id}")
+    else:
+        return redirect("/")    
