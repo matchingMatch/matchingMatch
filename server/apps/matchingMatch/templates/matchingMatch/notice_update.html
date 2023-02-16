@@ -1,6 +1,9 @@
+{% extends 'matchingMatch/base.html' %}
+{% block content %}
 공지사항 수정 <br>
 <form action="/notice_detail/{{notice.pk}}/update" method="post">
     {% csrf_token%}
     <div>{{form.as_p}}</div>
     <input type="submit" value="수정">
 </form>
+{% endblock content %}

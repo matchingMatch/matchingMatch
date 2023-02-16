@@ -84,6 +84,8 @@ class Notice(models.Model):
 class Report(models.Model):
     title = models.CharField(max_length=128)
     writer = models.CharField(max_length=32)
+    writer_id = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE, related_name="writer_id")
     content = models.TextField()
     image = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
     created_at = models.DateTimeField(auto_now_add=True)
