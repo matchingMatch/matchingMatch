@@ -396,78 +396,88 @@ def change_enroll(request):
 # 해당 pk에 해당하는 유저가 로그인 했을 때만 이 페이지가 보이게끔 만들어야됨.
 @login_required(login_url='/login')
 def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk를 받아옴.
-    today = datetime.date.today()
-    now = datetime.datetime.now().time()
+    if request.user.id == pk:
+        today = datetime.date.today()
+        now = datetime.datetime.now().time()
 
-    my_matched_matches= MatchInfo.objects.filter(
-        is_matched=True, host_id=pk)
-    my_not_matched_matches = MatchInfo.objects.filter(
-        is_matched=False, host_id=pk)
-    
-    ended_matches = []
-    ended_yet_matches = []
+        my_matched_matches= MatchInfo.objects.filter(
+            is_matched=True, host_id=pk)
+        my_not_matched_matches = MatchInfo.objects.filter(
+            is_matched=False, host_id=pk)
+        
+        ended_matches = []
+        ended_yet_matches = []
 
-    for match in my_matched_matches:
-        if match.date < today:
-            ended_matches.append(match)
-        elif match.date > today:
-            ended_yet_matches.append(match)
-        elif match.start_time < now:
-            ended_matches.append(match)
-            
-    context = {
-        'ended' : ended_matches,
-        'ended_yet' : ended_yet_matches,
-        'my_not_matched_matches': my_not_matched_matches,
-    }
-    return render(request, 'matchingMatch/my_register_matches.html', context=context)
+        for match in my_matched_matches:
+            if match.date < today:
+                ended_matches.append(match)
+            elif match.date > today:
+                ended_yet_matches.append(match)
+            elif match.start_time < now:
+                ended_matches.append(match)
+                
+        context = {
+            'ended' : ended_matches,
+            'ended_yet' : ended_yet_matches,
+            'my_not_matched_matches': my_not_matched_matches,
+        }
+        return render(request, 'matchingMatch/my_register_matches.html', context=context)
+    else:
+        return redirect("/")
 
 
 @login_required(login_url='/login')
 def my_apply_matches(request, pk):
-    today = datetime.date.today()
-    now = datetime.datetime.now().time()
+    if request.user.id == pk:
+        today = datetime.date.today()
+        now = datetime.datetime.now().time()
 
-    my_matched_matches= MatchInfo.objects.filter(
-        is_matched=True, participant_id=pk)
-    ended_matches = []
-    ended_yet_matches = []
+        my_matched_matches= MatchInfo.objects.filter(
+            is_matched=True, participant_id=pk)
+        ended_matches = []
+        ended_yet_matches = []
 
-    for match in my_matched_matches:
-        if match.date < today:
-            ended_matches.append(match)
-        elif match.date > today:
-            ended_yet_matches.append(match)
-        elif match.start_time < now:
-            ended_matches.append(match)
-    my_match_requests = MatchRequest.objects.filter(team_id=pk)
-    context = {
-        'ended' : ended_matches,
-        'ended_yet' : ended_yet_matches,
-        'my_match_requests':  my_match_requests,
-    }
-    return render(request, 'matchingMatch/my_apply_matches.html', context=context)
+        for match in my_matched_matches:
+            if match.date < today:
+                ended_matches.append(match)
+            elif match.date > today:
+                ended_yet_matches.append(match)
+            elif match.start_time < now:
+                ended_matches.append(match)
+        my_match_requests = MatchRequest.objects.filter(team_id=pk)
+        context = {
+            'ended' : ended_matches,
+            'ended_yet' : ended_yet_matches,
+            'my_match_requests':  my_match_requests,
+        }
+        return render(request, 'matchingMatch/my_apply_matches.html', context=context)
+    else:
+        return redirect("/")
 
 
 @login_required(login_url='/login')
 def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지(주최자)에서 받아옴
-    if request.method == "POST":
-        try:
-            team = Team.objects.get(id=request.POST['select_participant'])
-            match = MatchInfo.objects.get(id=pk)
-            match.participant_id = team
-            match.is_matched = True
-            match.save()
-            return redirect("/")
-        except:
-            return redirect(f"/applying_team_list/{pk}")
-    applying_team_list = MatchRequest.objects.filter(match_id=pk)
     match = MatchInfo.objects.get(id=pk)
-    context = {
-        'applying_team_list': applying_team_list,
-        'match': match
-    }
-    return render(request, 'matchingMatch/applying_team_list.html', context=context)
+    if (request.user.id) == match.host_id.pk:
+        if request.method == "POST":
+            try:
+                team = Team.objects.get(id=request.POST['select_participant'])
+                match = MatchInfo.objects.get(id=pk)
+                match.participant_id = team
+                match.is_matched = True
+                match.save()
+                return redirect("/")
+            except:
+                return redirect(f"/applying_team_list/{pk}")
+        applying_team_list = MatchRequest.objects.filter(match_id=pk)
+        match = MatchInfo.objects.get(id=pk)
+        context = {
+            'applying_team_list': applying_team_list,
+            'match': match
+        }
+        return render(request, 'matchingMatch/applying_team_list.html', context=context)
+    else:
+        return render("/")
 
 
 def rate(request, pk):
