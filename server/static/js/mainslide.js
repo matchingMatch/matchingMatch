@@ -38,10 +38,15 @@ const slideWidth = 50; //한개의 슬라이드 넓이
 const slideMargin = 50; //슬라이드간의 margin 값
 
 //전체 슬라이드 컨테이너 넓이 설정
-slides.style.width = (slideWidth + slideMargin) * slideDateCount + "px";
+//slides.style.width = (slideWidth + slideMargin) * slideDateCount + "px";
 
 function moveSlide(num) {
-  slides.style.left = -num * 700 + "px";
+  viewWidth = window.innerWidth
+  if (viewWidth >= 700) {
+    slides.style.left = -num * 700 + 'px'
+  } else {
+    slides.style.left = -num * viewWidth + "px";
+  }
   currentIdx = num;
 }
 

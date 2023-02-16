@@ -204,10 +204,10 @@ def main(request, *args, **kwargs):
         matches = MatchInfo.objects.filter(**filter_set) 
     else:
         matches = MatchInfo.objects.all()
-    now = datetime.datetime.now().time()
+    now_time = datetime.datetime.now().time()
     today = datetime.date.today()
 
-    matches = matches.filter(date__gte = today, start_time__gte = now)
+    matches = matches.filter(date = today, start_time__gte = now_time) | matches.filter(date__gt = today)
     context = {
         'matches': matches,
         'filter_form' : filter_form

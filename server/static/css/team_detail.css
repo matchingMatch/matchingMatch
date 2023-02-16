@@ -4,3 +4,14 @@
 	object-fit: cover;
 	border-radius: 10px;
 }
+#match-detail p {
+	margin-bottom: 0;
+}
+
+#match-detail hr {
+	margin: 0 0 2rem 0;
+}
+
+#nav--col3 {
+	white-space: nowrap;
+}

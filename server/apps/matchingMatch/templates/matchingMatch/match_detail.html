@@ -1,97 +1,14 @@
-{% extends 'matchingMatch/base.html' %}
-{%load static%}
-{% block extra_head %}<link rel="stylesheet" href="{% static 'css/team_detail.css' %}">{% endblock %}
-{% block content %}
+{% extends 'matchingMatch/base.html' %} {%load static%} {% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/team_detail.css' %}" />
+{% endblock%} {% block content %}
 <body>
-	<main class="wrap w-100% d-flex bg-light justify-content-center p-0">
+	<main id = "match-detail" class="wrap w-100% d-flex bg-light justify-content-center p-0">
 		<div class="d-flex flex-column bg-white" style="width: 700px">
-			<div class = "stadium">
-				<h1>{{match.stadium}}</h1>
-				<h5>
-					{{match.stadium.location}}
-					<br />{{match.stadium.address}}
-				</h5>
-			</div>
-			<div class="match-time">
-				<h3>일시 {{match.date}}</h3>
-				<h3>시작시간: {{match.start_time}}</h3>
-				<h3>종료시간: {{match.end_time}}</h3>
-			</div>
-			<div class = "team-info d-flex">
-				
-				<div class = "host-info">
-					주최팀
-					<br>
-					{% if match.host_id.team_logo %}
-					<img src="{{match.host_id.team_logo.url}}" alt="">
-					{% endif %}
-					<br />
-					
-					<a href="{% url 'matchingMatch:team_detail' match.host_id.pk %}">				
-						{{match.host_id.team_name}}
-					</a>
-					
-				</div>
-				
-				{% if match.is_matched == True %} <span></span>VS 
-				<div class = "participant-info">
-					상대팀
-					<br>
-					{% if match.participant_id.team_logo %}
-					<img src="{{match.participant_id.team_logo.url}}" alt="">
-					{% endif %}
-					<br />
-
-					<a href="{% url 'matchingMatch:team_detail' match.participant_id.pk %}">				
-						{{match.participant_id.team_name}}
-				</div>
-				 {% endif %}
-				
-			</div>
-			<br />
-			<p>성별: {{match.get_gender_display}} </p>
-			<hr>
-			<div class = "match-etc">
-				
-				기타사항 : {{match.etc}}
-			</div>
-			
-			<hr>
-			
-			{%if user.is_authenticated %} 
-			{% if user == match.host_id and match.is_matched == False %}
-
-			<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
-				<button>신청자 목록 확인하기</button>
-			</form>
-
-			{% elif match.is_matched == True %}
-			<button class="end">마감되었습니다</button>
-
-			{% elif match.host_id != user and status == 0 %}
-			<div id="enroll-btn">
-				<button class="enroll" onclick="changeEnroll({{ match.id}}, 'enroll')">
-					신청하기
-				</button>
-			</div>
-			{% elif match.host_id != user and status == 1 %}
-			<div id="enroll">
-				<button
-					class="enroll-btn"
-					onclick="changeEnroll({{ match.id}}, 'enroll-cancel')"
-				>
-					신청취소
-				</button>
-			</div>
-			{% endif %} {% endif %}
-
-
-
 			<!-- 카카오맵 api -->
-			<div id="map" style="width: 500px; height: 400px"></div>
+			<div id="map" style="width: auto; height: 25rem"></div>
 			<script
 				type="text/javascript"
-				src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c9e1b4e5a36072194c8a19208ed6cb28&libraries=services,clusterer,drawing"
+				src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c9e1b4e5a36072194c8a19208ed6cb28&libraries=serviceclusterer,drawing"
 			></script>
 
 			<script>
@@ -132,9 +49,9 @@
 						// 인포윈도우로 장소에 대한 설명을 표시합니다
 						var infowindow = new kakao.maps.InfoWindow({
 							content: `<div style="width:150px;text-align:center;padding:6px 0;">
-						<p>{{match.stadium.stadium_name}}</p>
-						<p>{{match.stadium.address}}</p>
-						</div>`,
+							<p>{{match.stadium.stadium_name}}</p>
+							<p>{{match.stadium.address}}</p>
+							</div>`,
 						});
 						infowindow.open(map, marker);
 
@@ -143,7 +60,89 @@
 					}
 				});
 			</script>
+			<hr>
+			<div>
+				<div class = "d-flex d-flex align-items-center justify-content-around">
+				<div class="match-info-left">
+					<h3>{{match.stadium}}</h3>
+					<p>{{match.stadium.address}}</p>
+					<p>성별: {{match.get_gender_display}}</p>
+				</div>
 
+				<div class="match-info-right">
+					<p>{{match.date}}</p>
+					<p>{{match.start_time}} ~ {{match.end_time}}</p>
+				</div>
+			</div>
+				<div class="team-info d-flex align-items-center justify-content-evenly mt-4">
+					<div class="host-info">
+						주최팀
+						<br />
+						<img src="{{match.host_id.team_logo.url}}" alt="" />
+						<br />
+
+						<a href="{% url 'matchingMatch:team_detail' match.host_id.pk %}">
+							{{match.host_id.team_name}}
+						</a>
+					</div>
+
+					{% if match.is_matched == True %}
+					<h3>vs</h3>
+					<div class="participant-info">
+						상대팀
+						<br />
+						<img src="{{match.participant_id.team_logo.url}}" alt="" />
+						<br />
+
+						<a
+							href="{% url 'matchingMatch:team_detail' match.participant_id.pk %}"
+						>
+							{{match.participant_id.team_name}}
+						</a>
+					</div>
+					{% endif %}
+				</div>
+				<br />
+
+				<hr />
+				<div class="match-etc">기타사항 : {{match.etc}}</div>
+
+				<hr />
+
+				{%if user.is_authenticated %} {% if user == match.host_id and match.is_matched == False %}
+				
+
+				<form action="{% url 'matchingMatch:match_update' match.pk %}">
+					<button class="btn btn-primary">수정</button>
+				</form>
+
+				<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
+					<button class="btn btn-primary">신청자 목록 확인하기</button>
+				</form>
+
+				{% elif match.is_matched == True %}
+				<button class="end">마감되었습니다</button>
+
+				{% elif match.host_id != user and status == 0 %}
+				<div id="enroll-btn">
+					<button
+						class="enroll"
+						onclick="changeEnroll({{ match.id}}, 'enroll')"
+					>
+						신청하기
+					</button>
+				</div>
+				{% elif match.host_id != user and status == 1 %}
+				<div id="enroll">
+					<button
+						class="enroll-btn"
+						onclick="changeEnroll({{ match.id}}, 'enroll-cancel')"
+					>
+						신청취소
+					</button>
+				</div>
+				{% endif %} {% endif %}
+			</div>
 		</div>
 	</main>
 	<script>
