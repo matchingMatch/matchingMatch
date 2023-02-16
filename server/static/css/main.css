@@ -2,7 +2,6 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-
 }
 
 a {
@@ -33,7 +32,6 @@ main {
 	position: relative;
 	margin: 50px auto;
 	overflow: hidden;
-
 }
 
 .week {
@@ -149,18 +147,15 @@ nav a {
 	margin: 0 10px;
 }
 
-  
-.user--team_logo--lg{
-  height: 150px;
-  width: 150px;
-  object-fit: cover;
-  border-radius: 15px;
-  margin: 0;
-  padding: 0;
-  line-height: 0;
+.user--team_logo--lg {
+	height: 150px;
+	width: 150px;
+	object-fit: cover;
+	border-radius: 15px;
+	margin: 0;
+	padding: 0;
+	line-height: 0;
 }
-
-
 
 #nav--col3 {
 	display: flex;
@@ -187,18 +182,18 @@ nav a {
 	margin-right: 20px;
 }
 
-.success{
-    color: #31a62b;
+.success {
+	color: #31a62b;
 }
 
-.info{
-    color: #3aabd4;
+.info {
+	color: #3aabd4;
 }
 
-.container--main{
-    width: 1200px;
-    margin: 0 auto;
-    padding:0 1em ;
+.container--main {
+	width: 1200px;
+	margin: 0 auto;
+	padding: 0 1em;
 }
 
 .calendar .days {
@@ -245,7 +240,7 @@ nav a {
 
 .today {
 	position: relative;
-	color: #FFFFFF;
+	color: #ffffff;
 }
 
 .today::before {
@@ -257,18 +252,19 @@ nav a {
 	width: 30px;
 	height: 30px;
 	display: block;
-	background-color: #FF0000;
+	background-color: #ff0000;
 	border-radius: 50%;
-	content: '';
+	content: "";
 }
 
 @font-face {
-	font-family: 'Cafe24Ssurround';
-	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff') format('woff');
+	font-family: "Cafe24Ssurround";
+	src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff")
+		format("woff");
 	font-weight: normal;
 	font-style: normal;
 }
 
 body {
-	font-family: 'Cafe24Ssurround' !important;
+	font-family: "Cafe24Ssurround" !important;
 }
