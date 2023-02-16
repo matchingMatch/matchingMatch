@@ -21,19 +21,33 @@ header {
 	text-align: center;
 }
 
-main {
-	padding: 20px;
+.main_container {
+	max-width: 700px;
+	min-width: 330px;
+}
+.banner img {
+	width: 100%;
+}
+.plans_mode {
+	width: 100px;
+	display: flex;
+	justify-content: space-around;
 }
 
+.mode img {
+	width: 20px;
+}
+.mode input {
+	vertical-align: middle;
+}
 /*슬라이드쇼*/
 .week_slideshow {
 	background-color: white;
-	width: 700px;
+	width: 100%;
 	height: 100px;
 	position: relative;
 	margin: 50px auto;
 	overflow: hidden;
-
 }
 
 .week {
@@ -48,7 +62,7 @@ main {
 }
 
 .week .date {
-	padding: 10px;
+	width: calc(100vw/7);
 }
 
 .week .date:hover {
@@ -57,16 +71,13 @@ main {
 }
 
 .week_slideshow .date:first-child {
-	margin-left: 15px;
+	/* margin-left: 15px; */
 }
 
-.week_slideshow .date:not(:last-child) {
-	float: left;
-	margin-right: 30px;
-}
+
 
 .week_slideshow .date div {
-	width: 50px;
+	/* width: 50px; */
 	text-align: center;
 }
 
@@ -75,7 +86,7 @@ main {
 	color: black;
 	text-align: center;
 	border-radius: 50%;
-	padding: 15px 20px;
+	padding: 10px 20px;
 	font-size: 1.3em;
 	z-index: 10;
 	cursor: pointer;
@@ -170,10 +181,11 @@ nav a {
 
 /* 캘린더 */
 .calendar_container {
-	height: 300px;
-	width: 700px;
+	height: 500px;
+	width: 100%;
 	margin: 0 auto;
 	display: none;
+	background-color: white;
 }
 
 .calendar_header {
