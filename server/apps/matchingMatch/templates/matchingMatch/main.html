@@ -1,5 +1,9 @@
 {% extends 'matchingMatch/base.html' %}
 {%load static%}
+{% block scripts %}
+
+{% endblock %}
+
 {% block content %}
 	<body>
 
@@ -89,6 +93,7 @@
 						</div>
 						<input class = "btn btn-outline-info" type="submit" value = "확인">
 					</div>
+				</div>
 				</form>
 			</div>
 
@@ -142,73 +147,70 @@
 		</div>
 </main>
 </body>
+
+<script>
+	const checkMode = (e, theother) => {
+		document.querySelector(`.${e.target.value}`).style.display = 'block'
+		document.querySelector(`.${theother}`).style.display = 'none'
+	}
+	const slideModeBtn = document.querySelector('#slide')
+	const calendarModeBtn = document.querySelector('#calendar')
+	slideModeBtn.addEventListener('click', (e) => checkMode(e, 'calendar_container'))
+	calendarModeBtn.addEventListener('click', (e) => checkMode(e, 'week_slideshow'))
+	
+	const sendRequest = async () => {
+		const url = "/match/ended/";
+		let userMatches = await axios.get(url);
+		userMatches = userMatches.data.userMatches;
+		console.log("userMatches:", userMatches);
+		createModal(userMatches);
+	};
+	document.querySelector("header h1").addEventListener("click", sendRequest);
+
+	sendRequest();
+	window.setInterval(sendRequest, 10000); //30분마다 Ajax 요청
+
+	const createModal = (userMatches) => {
+		const alarmModalList = document.querySelector(".alarm_modal_list");
+		alarmModalList.innerHTML = "";
+		for (let i = 0; i < userMatches.length; i++) {
+			match = userMatches[i];
+			alarmModalList.innerHTML += `
+		<div class="alarm_modal" id="${i}">
+			<div>${match.host_teamname} VS ${match.participant_teamname}</div>
+			<div>경기 종료 시간: ${match.end_time}</div>
+			<div>즐거운 경기 되셨나요? 수고한 상대팀에게 좋은 점수 부탁드려요!</div>
+			<form action="/rate/${match.match_id}" method="post">
+				{% csrf_token %}
+				<label>실력: <input name="level" type="number" max="10"></label>
+				<label>매너: <input name="manner" type="number" max="10"></label>
+				<div class="rate_save">
+					<input type="submit" value="완료">
+				</div>
+			</form>
+		</div>
+		`;
+		}
+	};
+	
+	const regionAllCheck = document.getElementById("region-all-check")
+	const regionAllCancel = document.getElementById("region-all-cancel")
+	
+	regionAllCheck.addEventListener('click', () => {
+		const checkboxes = document.getElementsByName('region')
+		checkboxes.forEach((checkbox) => {
+			checkbox.checked = true
+		}) 
+	})
+
+	regionAllCancel.addEventListener('click', () => {
+		const checkboxes = document.getElementsByName('region')
+		checkboxes.forEach((checkbox) => {
+			checkbox.checked = false
+		}) 
+	})
+
+</script>
+
 {%endblock%}
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-		crossorigin="anonymous"
-	></script>
-	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-	<script>
-    const checkMode = (e, theother) => {
-      document.querySelector(`.${e.target.value}`).style.display = 'block'
-      document.querySelector(`.${theother}`).style.display = 'none'
-    }
-    const slideModeBtn = document.querySelector('#slide')
-    const calendarModeBtn = document.querySelector('#calendar')
-    slideModeBtn.addEventListener('click', (e) => checkMode(e, 'calendar_container'))
-    calendarModeBtn.addEventListener('click', (e) => checkMode(e, 'week_slideshow'))
-		
-		const sendRequest = async () => {
-			const url = "/match/ended/";
-			let userMatches = await axios.get(url);
-			userMatches = userMatches.data.userMatches;
-			console.log("userMatches:", userMatches);
-			createModal(userMatches);
-		};
-		document.querySelector("header h1").addEventListener("click", sendRequest);
 
-		sendRequest();
-		window.setInterval(sendRequest, 10000); //30분마다 Ajax 요청
-
-		const createModal = (userMatches) => {
-			const alarmModalList = document.querySelector(".alarm_modal_list");
-			alarmModalList.innerHTML = "";
-			for (let i = 0; i < userMatches.length; i++) {
-				match = userMatches[i];
-				alarmModalList.innerHTML += `
-      <div class="alarm_modal" id="${i}">
-        <div>${match.host_teamname} VS ${match.participant_teamname}</div>
-        <div>경기 종료 시간: ${match.end_time}</div>
-        <div>즐거운 경기 되셨나요? 수고한 상대팀에게 좋은 점수 부탁드려요!</div>
-        <form action="/rate/${match.match_id}" method="post">
-          {% csrf_token %}
-          <label>실력: <input name="level" type="number" max="10"></label>
-          <label>매너: <input name="manner" type="number" max="10"></label>
-          <div class="rate_save">
-            <input type="submit" value="완료">
-          </div>
-        </form>
-      </div>
-      `;
-			}
-		};
-		
-		const regionAllCheck = document.getElementById("region-all-check")
-		const regionAllCancel = document.getElementById("region-all-cancel")
-		
-		regionAllCheck.addEventListener('click', () => {
-			const checkboxes = document.getElementsByName('region')
-			checkboxes.forEach((checkbox) => {
-				checkbox.checked = true
-			}) 
-		})
-
-		regionAllCancel.addEventListener('click', () => {
-			const checkboxes = document.getElementsByName('region')
-			checkboxes.forEach((checkbox) => {
-				checkbox.checked = false
-			}) 
-		})
- 
-	</script>
