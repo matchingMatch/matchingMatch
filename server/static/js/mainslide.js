@@ -16,16 +16,45 @@ for (let i = 1; i <= 31 - thisDateLength; i++) {
 }
 
 let dayIndex = thisDay;
+let flag = 0
 dates.forEach((date, i) => {
   let condition =
     dayIndex % 7 == 0 ? "sun" : dayIndex % 7 == 6 ? "sat" : "rest_day";
-  dates[i] = `<li class='date ${condition}'><div>${
+  // i가 0이 아닌데 date가 1이면 달이 넘어갔다는 의미
+  if (i != 0 && date == 1) {
+    flag = 1
+  }
+  let now_month = flag ? thisMonth+2 : thisMonth+1
+  let now_year = now_month/13 == 1 ? thisYear+1 : thisYear
+  const urlstr = window.location.href
+  const url = new URL(urlstr)
+  const cur_date = url.searchParams.get('date')
+  
+  console.log(cur_date) 
+  
+  if (cur_date == `${now_year}-${now_month}-${date}`) {
+  days[i] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}" checked>
+  <label class = "date-select" style ="background-color:skyblue;" for="date-${i}">
+  <li class='date ${condition}' name = "date"><div>${
     daysKorean[dayIndex++ % 7]
-  }요일</div><div>${date}일</div></li> `;
+  }요일</div><div>${date}일</div></li>
+  </label>
+  `;
+  }
+  else {
+    days[i] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}">
+    <label class = "date-select" for="date-${i}">
+    <li class='date ${condition}' name = "date"><div>${
+      daysKorean[dayIndex++ % 7]
+    }요일</div><div>${date}일</div></li>
+    </label>
+    `;
+  }
+
 });
 
 const week = document.querySelector(".week");
-week.innerHTML = dates.join("");
+week.innerHTML = days.join("");
 
 //https://eunhee-programming.tistory.com/106
 const slides = document.querySelector(".week"); //전체 슬라이드 컨테이너
@@ -65,4 +94,23 @@ moveSlide 함수 불러옴 */
   if (currentIdx !== 4) {
     moveSlide(currentIdx + 1);
   }
+
+
+
+
+  
 });
+
+const slide_list = document.querySelectorAll(".slide-list")
+console.log(slide_list)
+const date_form = document.getElementById("date-form")
+slide_list.forEach((e) => {
+  e.checked = true  
+  e.addEventListener('click', event => {
+    //무한로딩 방지
+    event.preventDefault()
+    
+    date_form.submit()
+  })
+})
+
