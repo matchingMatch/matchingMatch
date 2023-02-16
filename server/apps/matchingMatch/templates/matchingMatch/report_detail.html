@@ -1,3 +1,5 @@
+{% extends 'matchingMatch/base.html' %}
+{% block content %}
 <div>작성자: {{report.writer}}</div>
 <div>제목: {{report.title}}</div>
 <div>내용: {{report.content}}</div>
@@ -12,3 +14,4 @@
     {% csrf_token %}
     <input type="submit" value="삭제하기">
 </form>
+{% endblock content %}

@@ -1,3 +1,5 @@
+{% extends 'matchingMatch/base.html' %}
+{% block content %}
 공지사항 목록 <a href="{% url 'matchingMatch:notice_create' %}">글 작성</a>
 {% for notice in notices %}
 <hr>
@@ -9,3 +11,4 @@
 <div>최근 수정일: {{notice.updated_at}}</div>
 <hr>
 {% endfor%}
+{% endblock content %}

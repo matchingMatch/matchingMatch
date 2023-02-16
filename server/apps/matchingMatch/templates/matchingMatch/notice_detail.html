@@ -1,3 +1,5 @@
+{% extends 'matchingMatch/base.html' %}
+{% block content %}
 <div class="">{{notice.hits_counter}}</div> <!--css display none 속성 달아야됨 -->
 <div>작성자: {{notice.writer}}</div>
 <div>제목: {{notice.title}}</div>
@@ -13,4 +15,5 @@
     <input type="submit" value="삭제하기">
 </form>
 {% endif %}
+{% endblock content %}
 

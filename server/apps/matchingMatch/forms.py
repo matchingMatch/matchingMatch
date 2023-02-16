@@ -44,7 +44,7 @@ class UserForm(ModelForm):
 class CustomUserCreateForm(UserCreationForm):
     class Meta:
         model = Team
-        fields = ['username', 'email', 'password1', 'password2', 'team_name', 'team_logo', 'team_intro', 'region', 'photo', 'pre_proplayer']
+        fields = ['username', 'email', 'password1', 'password2', 'team_name', 'team_logo', 'team_intro', 'region', 'photo', 'gender', 'pre_proplayer']
         labels = {
             'username': '유저네임',
             'team_name': '팀 이름',
@@ -53,6 +53,7 @@ class CustomUserCreateForm(UserCreationForm):
             'region': '지역',
             'photo': '팀 사진 (이미지 첨부파일)',
             'pre_proplayer': '선출 수 (자세하게 적어주세요.)',
+            'gender' : '성별',
         }
 
 class NoticeForm(forms.ModelForm):
