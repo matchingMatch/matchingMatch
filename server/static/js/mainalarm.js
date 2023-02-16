@@ -14,7 +14,7 @@ const sendRequest = async () => {
   console.log("userMatches:", userMatches);
   createModal(userMatches);
 };
-document.querySelector("header h1").addEventListener("click", sendRequest);
+//document.querySelector("header h1").addEventListener("click", sendRequest);
 
 sendRequest();
 window.setInterval(sendRequest, 10000); //30분마다 Ajax 요청
