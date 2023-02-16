@@ -507,7 +507,7 @@ def admin_team_block(request):
 def admin_match_delete(request):
     ...
 
-@login_required
+@login_required(login_url='/login')
 def notice_list(request):
     notices = Notice.objects.all()
     context = {
@@ -515,7 +515,7 @@ def notice_list(request):
     }
     return render(request, "matchingMatch/notice_list.html", context=context)
 
-@login_required
+@login_required(login_url='/login')
 def notice_detail(request, pk):
     notice = get_object_or_404(Notice, id=pk)
     context = {
@@ -571,7 +571,7 @@ def notice_delete(request, pk):
         notice.delete()
         return redirect("matchingMatch:notice_list")
 
-@login_required
+@login_required(login_url='/login')
 def report_list(request,pk): #pk는 team pk
     if (request.user.id) == pk or (request.user.is_superuser) == True:
         team = Team.objects.get(id=pk)
