@@ -65,6 +65,7 @@ main {
 	margin-right: 30px;
 }
 
+
 .week_slideshow .date div {
 	width: 50px;
 	text-align: center;
@@ -90,9 +91,11 @@ main {
 	left: -20px;
 }
 
+
 .next {
 	right: -20px;
 }
+
 
 .match_list {
 	height: 500px;
@@ -118,6 +121,7 @@ main {
 	width: 500px;
 	margin: 0 auto;
 }
+
 
 .user—team_logo—lg {
 	height: 150px;
@@ -149,6 +153,7 @@ nav a {
 	margin: 0 10px;
 }
 
+  line-height: 0;
   
 .user--team_logo--lg{
   height: 150px;
@@ -159,8 +164,6 @@ nav a {
   padding: 0;
   line-height: 0;
 }
-
-
 
 #nav--col3 {
 	display: flex;
@@ -176,27 +179,16 @@ nav a {
 	display: none;
 }
 
-.calendar_header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-
-.year_month {
-	font-size: 35px;
-	margin-right: 20px;
-}
-
 .success{
     color: #31a62b;
 }
 
-.info{
+.info {
     color: #3aabd4;
 }
 
-.container--main{
-    width: 1200px;
+.container--base {
+	width: 1200px;
     margin: 0 auto;
     padding:0 1em ;
 }
