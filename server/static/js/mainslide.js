@@ -17,7 +17,7 @@ for (let i = 1; i <= 31 - thisDateLength; i++) {
 
 let dayIndex = thisDay;
 let flag = 0
-window.onload = dates.forEach((date, i) => {
+dates.forEach((date, i) => {
   let condition =
     dayIndex % 7 == 0 ? "sun" : dayIndex % 7 == 6 ? "sat" : "rest_day";
   // i가 0이 아닌데 date가 1이면 달이 넘어갔다는 의미
@@ -26,13 +26,31 @@ window.onload = dates.forEach((date, i) => {
   }
   let now_month = flag ? thisMonth+2 : thisMonth+1
   let now_year = now_month/13 == 1 ? thisYear+1 : thisYear
-  days[i] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}" {%if date_val == "${now_year}-${now_month}-${date}" %} checked {%endif%}>
-  <label class = "date-select" for="date-${i}">
+  const urlstr = window.location.href
+  const url = new URL(urlstr)
+  const cur_date = url.searchParams.get('date')
+  
+  console.log(cur_date) 
+  
+  if (cur_date == `${now_year}-${now_month}-${date}`) {
+  days[i] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}" checked>
+  <label class = "date-select" style ="background-color:skyblue;" for="date-${i}">
   <li class='date ${condition}' name = "date"><div>${
     daysKorean[dayIndex++ % 7]
   }요일</div><div>${date}일</div></li>
   </label>
   `;
+  }
+  else {
+    days[i] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}">
+    <label class = "date-select" for="date-${i}">
+    <li class='date ${condition}' name = "date"><div>${
+      daysKorean[dayIndex++ % 7]
+    }요일</div><div>${date}일</div></li>
+    </label>
+    `;
+  }
+
 });
 
 const week = document.querySelector(".week");
