@@ -1,3 +1,5 @@
+{% extends 'matchingMatch/base.html' %}
+{% block content %}
 공지사항 생성 
 <div>
     <form action="{% url 'matchingMatch:notice_create' %}" method="post">
@@ -6,3 +8,4 @@
         <input type="submit" value="저장">
     </form>
 </div>
+{% endblock content %}

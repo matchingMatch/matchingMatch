@@ -1,4 +1,7 @@
-신고글 목록 <a href="{% url 'matchingMatch:report_create' %}">글 작성</a>
+{% extends 'matchingMatch/base.html' %}
+{% block content %}
+신고글 목록 <a href="{% url 'matchingMatch:report_create' team.pk%}">글 작성</a>
+{% if reports %} 
 {% for report in reports %}
 <hr>
 <div>작성자: {{report.writer}}</div><br>
@@ -8,3 +11,7 @@
 <div>최근 수정일: {{report.updated_at}}</div>
 <hr>
 {% endfor%}
+{% else %}
+<div>비어 있음</div>
+{% endif %}
+{% endblock content %}

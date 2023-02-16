@@ -1,8 +1,11 @@
+{% extends 'matchingMatch/base.html' %}
+{% block content %}
 신고글 생성 
 <div>
-    <form action="{% url 'matchingMatch:report_create' %}" method="post" enctype="multipart/form-data">
+    <form action="{% url 'matchingMatch:report_create' team.pk %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}    
         {{form.as_p}}
         <input type="submit" value="저장">
     </form>
 </div>
+{% endblock content %}
