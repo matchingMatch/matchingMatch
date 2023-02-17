@@ -1,5 +1,11 @@
 {% extends 'matchingMatch/base.html' %}
 {%load static%}
+{%block extra_head%}
+<script defer>
+
+</script>
+
+{%endblock%}
 {% block content %}
 <body>
 
@@ -91,41 +97,130 @@
 					<b>성별</b>
 					{{filter_form.gender}}
 				</div>
-				<input class = "btn btn-outline-info" type="submit" value = "확인">
+			</div>
+			<div class="calendar">
+				<div class="days">
+					<div class="day">일</div>
+					<div class="day">월</div>
+					<div class="day">화</div>
+					<div class="day">수</div>
+					<div class="day">목</div>
+					<div class="day">금</div>
+					<div class="day">토</div>
+				</div>
+				<!-- 날짜 영역 -->
+				<div class="dates">
+				</div>
 			</div>
 		</div>
-		</form>
-		</div>
+			<div class="week_slideshow sticky-top">
+				<ul class="week">
+					<li class="date">
+						<div>x요일</div>
+						<div>x일</div>
+					</li>
+				</ul>
+				<p class="controller">
+					<span class="prev">&lang;</span>
+					<span class="next">&rang;</span>
+				</p>
+			</div>
+		
 
-		<div class="match_list d-flex flex-column flex-nowrap align-items-center ">
-		{% for match in matches %}
-		<a href="{% url 'matchingMatch:match_detail' match.pk%}" style="text-decoration:none" class="w-100">
-			<div class="list-group-item d-flex  p-2 text-black border-bottom align-items-center justify-content-center" >
-				<div class="time-wrap btn btn-warning h-50" style="font-size: 12px;">
-					{{ match.date|date:"M d" }}일
+		
+		<div class="match_filter container">
+			<button
+			class="btn btn-primary"
+			type="button"
+			data-bs-toggle="collapse"
+			data-bs-target="#matchFilter"
+			aria-expanded="true"
+			aria-controls="matchFilter"
+			>
+			상세설정
+		</button>
+		
+			<div id="matchFilter" class="collapse">
+				<div class="container">
+					<b>지역</b>
 					<br>
-					{{match.start_time}}
+						<div id = "regions" class = "row">
+							{%for option in filter_form.region%}
+							
+							<div class = "col-4 col-sm-2">
+								{{option}}
+							</div>
+							{%endfor%}
+
+						</div>
+						<button type = 'button' class = "btn btn-primary" id = "region-all-check">전체 선택</button>
+						<button type = 'button' class = "btn btn-primary" id = "region-all-cancel">전체 선택 해제</button>
+						<div>
+							<b>마감 여부</b>
+							<br>
+							{% for option in filter_form.is_matched%}
+							{{option}}
+							{%endfor%}
+
+						</div>
+						<div>
+							<b>성별</b>
+							br
+							{% for option in filter_form.gender%}
+							{{option}}
+							{%endfor%}
+						</div>
+						<input class = "btn btn-outline-info" type="submit" value = "확인">
+					</div>
+				
 				</div>
-				<div class="info-wrap col-6 p-3"  >
-					<div class="match-wrap" >
-					{{match.stadium.stadium_name}}
-					<br>
-					{{match.get_gender_display}}
-					</div>
-					{% if match.is_matched %}
-					<div>
-						{{match.host_id.team_name}} vs {{match.participant_id.team_name}}
-					</div>
-					{% else %}
-					<div>
-						{{match.host_id.team_name}}
-					</div>
-					{%endif%}
-				</div>
-				<div class ="host-wrap">
-					{% if match.is_matched %}
-					<div class="btn btn-primary d-flex justify-content-center align-items-center py-3 " style="font-size: 12px; width:80px;">
-						<div>매치성사</div>
+			
+			</div>
+		</form>
+			<div class="match_list d-flex flex-column flex-nowrap align-items-center ">
+				{% for match in matches %}
+				<a href="{% url 'matchingMatch:match_detail' match.pk%}" style="text-decoration:none" class="w-100">
+					<div class="list-group-item d-flex  p-2 text-black border-bottom align-items-center justify-content-center" >
+						<div class="time-wrap btn btn-warning h-50" style="font-size: 12px;">
+							{{ match.date|date:"M d" }}일
+							<br>
+							{{match.start_time}}
+						</div>
+						<div class="info-wrap col-6 p-3"  >
+							<div class="match-wrap" >
+								{{match.stadium.stadium_name}}
+								<br>
+								{{match.get_gender_display}}
+							</div>
+								{% if match.is_matched %}
+								<div>
+									{{match.host_id.team_name}} vs {{match.participant_id.team_name}}
+								</div>
+								{% else %}
+								<div>
+									{{match.host_id.team_name}}
+								</div>
+								{%endif%}
+						</div>
+						<div class ="host-wrap">
+							{% if match.is_matched %}
+							<div class="btn btn-primary d-flex justify-content-center align-items-center py-3 " style="font-size: 12px; width:80px;">
+									<div>매치성사</div>
+								</div>
+							{% else %}
+							<div class="btn btn-danger d-flex justify-content-center align-items-center py-3 " style="font-size: 12px; width:80px;">
+									<div>찾는 중</div>
+								</div>
+							{% endif %}
+						</div>
+					</div>	
+				</a>
+				{% endfor %}
+			</div>
+			<div class="match_register_btn">
+				<a href="{% url 'matchingMatch:match_register'%}" style="text-decoration:none">
+					<div class="btn btn-success">
+						매치 등록하기
 					</div>
 					{% else %}
 					<div class="btn btn-danger d-flex justify-content-center align-items-center py-3 " style="font-size: 12px; width:80px;">

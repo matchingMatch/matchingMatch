@@ -187,28 +187,42 @@ def main(request, *args, **kwargs):
     match_detail_category = {
         'gender': 'gender__in',
         'is_matched': 'is_matched__in',
-        'region': 'stadium__location__in'
+        'region': 'stadium__location__in',
+        'date' : 'date__in'
     }
+    date_val = ''
+    filter_set = dict()
+    for key, value in dict(request.GET).items():
+        if key == 'date' and value:
+            date_val = value[0]
+            value[0] = datetime.datetime.strptime(value[0], '%Y-%m-%d').date()
 
-    filter_set = {match_detail_category.get(
-        key): value for key, value in dict(request.GET).items()}
+        key = match_detail_category.get(key)
+        filter_set[key] = value
+    print(date_val)
+    
     filter_form = MatchFilterForm()
     # html 태그 상의 name  : html 태그 상의 value
     if filter_set:
-        print(request.GET)
+        
+
         filter_form = MatchFilterForm(request.GET)
         matches = MatchInfo.objects.filter(**filter_set)
+
     else:
         matches = MatchInfo.objects.all()
+    
     now_time = datetime.datetime.now().time()
     today = datetime.date.today()
 
-    matches = matches.filter(
-        date=today, start_time__gte=now_time) | matches.filter(date__gt=today)
+    matches = matches.filter(date = today, start_time__gte = now_time) | matches.filter(date__gt = today)
+    
+    
     context = {
         'matches': matches,
-        'filter_form': filter_form
-    }
+        'filter_form' : filter_form,
+        'date_val' : date_val
+        }
     return render(request, "matchingMatch/main.html", context=context)
 
 
@@ -249,7 +263,6 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            messages.info(request, '성공적으로 로그인 하셨습니다.')
             return redirect('matchingMatch:main')
         else:
             messages.error(request, '이메일 혹은 비밀번호를 다시 확인해주세요.')
@@ -270,7 +283,6 @@ def register_page(request):
             user = form.save(commit=False)
             user.save()
             login(request, user)
-            messages.success(request, '성공적으로 회원가입이 진행됐습니다.')
             return redirect('matchingMatch:register_success')
         else:
             messages.error(request, '회원가입 도중에 문제가 발생하였습니다.')
@@ -292,7 +304,6 @@ def logout_user(request):
     if request.user.is_authenticated:
 
         logout(request)
-    messages.info(request, '성공적으로 로그아웃 하셨습니다.')
     return redirect('matchingMatch:main')
 
 

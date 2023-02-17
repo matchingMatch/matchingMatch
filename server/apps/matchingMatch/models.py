@@ -68,6 +68,7 @@ class MatchInfo(models.Model):
     participant_rated = models.BooleanField(default=False)
 
 
+
 class MatchRequest(models.Model):
     match_id = models.ForeignKey(
         MatchInfo, on_delete=models.CASCADE, related_name="request_match")
