@@ -1,17 +1,47 @@
 {% extends 'matchingMatch/base.html' %}
 {% block content %}
-신고글 목록 <a href="{% url 'matchingMatch:report_create' team.pk%}">글 작성</a>
-{% if reports %} 
-{% for report in reports %}
-<hr>
-<div>작성자: {{report.writer}}</div><br>
-<a href="/report_detail/{{report.pk}}"><div>제목: {{report.title}}</div></a><br>
-<div>내용: {{report.content}}</div><br>
-<div>최초 작성일: {{report.created_at}}</div>
-<div>최근 수정일: {{report.updated_at}}</div>
-<hr>
-{% endfor%}
-{% else %}
-<div>비어 있음</div>
-{% endif %}
+
+<div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+    <div class="d-flex flex-column bg-white " style = "width:700px; ">
+        <div class="report-list d-flex flex-column justify-content-center text-center m-3">
+            <h4>신고 게시판</h4>
+            <table class="report table table-hover px-3 " style="font-size: 12px;">
+                <thead style="font-style: oblique;">
+                    <tr>
+                        <th>제목</th>
+                        <th>등록일</th>
+                        <th>수정일</th>
+                        <th>작성자</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if reports %}
+                    {% for report in reports %}
+                        <tr onclick="location.href='{% url 'matchingMatch:report_detail' report.pk %}'" style="cursor:pointer;">
+                            <th>{{report.title}}</th>
+                            <th>{{ report.created_at|date:"M d" }}일</th>
+                            <th>{{ report.updated_at|date:"M d" }}일</th>
+                            <th>{{report.writer}}</th>
+                        </tr>
+                    {% endfor %}
+                    {% else %}
+                    <div>게시글이 없습니다. </div>
+                    {% endif %}
+                </tbody>
+            </table>
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item"><a class="page-link" href="">이전</a></li>
+                    <li class="page-item"><a class="page-link" href="">1</a></li>
+                    <li class="page-item"><a class="page-link" href="">2</a></li>
+                    <li class="page-item"><a class="page-link" href="">3</a></li>
+                    <li class="page-item"><a class="page-link" href="">다음</a></li>
+                </ul>
+            </nav>
+        </div>
+        <a href="{% url 'matchingMatch:report_create' team.pk %}">글 작성</a>
+    </div>
+</div>
+
+
 {% endblock content %}
