@@ -29,7 +29,7 @@
                 padding: 0px
             }
             #nav--col3 {
-	            white-space: nowrap;
+                white-space: nowrap;
             }
         </style>
         
@@ -61,11 +61,11 @@
                 </div>
                 
             </div>
-            <div class="menu-container mx-auto p-0 bg-white" style="max-width:700px">
-                <div class="nav-container d-flex justify-content-around">
-                    <a href="{% url 'matchingMatch:main' %}"> 매칭매치</a>
-                    <a href="{% url 'matchingMatch:team_list' %}"> 팀 목록</a>
-                    <a href="{% url 'matchingMatch:notice_list' %}">공지사항</a>
+            <div class="menu-container d-flex justify-content-around align-items-center mx-auto p-0 bg-white " style="max-width:700px; height: 45px">
+                <div class="nav-container justify-content-around " >
+                    <a href="{% url 'matchingMatch:main' %}" class="px-5"> 매칭매치</a>
+                    <a href="{% url 'matchingMatch:team_list' %}" class="px-5"> 팀 목록</a>
+                    <a href="{% url 'matchingMatch:notice_list' %}" class="px-5">공지사항</a>
                 </div>
             </div>
         </nav>
