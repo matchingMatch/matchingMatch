@@ -52,8 +52,8 @@ class CustomUserCreateForm(UserCreationForm):
             'team_intro': '팀 소개',
             'region': '지역',
             'photo': '팀 사진 (이미지 첨부파일)',
+            'gender': '팀 성별',
             'pre_proplayer': '선출 수 (자세하게 적어주세요.)',
-            'gender' : '성별',
         }
 
 class NoticeForm(forms.ModelForm):

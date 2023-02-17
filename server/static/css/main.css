@@ -104,9 +104,11 @@ header {
 	left: -20px;
 }
 
+
 .next {
 	right: -20px;
 }
+
 
 .match_list {
 	height: 500px;
@@ -132,6 +134,7 @@ header {
 	width: 500px;
 	margin: 0 auto;
 }
+
 
 .user—team_logo—lg {
 	height: 150px;
