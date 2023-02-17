@@ -35,7 +35,11 @@
     <div>경기일자: {{match.date}}</div>
     <div>시작시간: {{match.start_time}}</div>
     <div>상대팀: {{match.participant_id.team_name}} </div>
+    <span>경기 취소(매치등록 상태로 돌아갑니다)</span>
+    <form action="{% url 'matchingMatch:cancel_game' match.pk %}" method="post">  
+        {% csrf_token %}
+        <button type="submit">취소</button>
+    </form>
     <hr>
     {% endfor %}
-</body>
 {% endblock content %}
