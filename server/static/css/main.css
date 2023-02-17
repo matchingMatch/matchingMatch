@@ -126,14 +126,52 @@ header {
 	display: flex;
 	justify-content: end;
 }
-
+.alarm_modal_list {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+	background-color: rgba(0, 0, 0, 0.4);
+	z-index: 1030;
+}
+.alarm_modal_list.show {
+	display: block;
+}
 .alarm_modal {
 	border: 1px solid black;
+	border-radius: 10px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
 	width: 500px;
+	height: 250px;
 	margin: 0 auto;
+	text-align: center;
+	background-color: white;
+	transform: translateX(-50%) translateY(-50%);
+	padding: 10px;
 }
+.alarm_modal > * {
+	margin-bottom: 10px;
+}
+.exit_modal {
+	cursor: pointer;
+	display: flex;
+	justify-content: flex-end;
+}
+.exit_modal img {
+	width: 20px;
+}
+.rate_save {
+	margin-top: 10px;
+}
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> base
 .user—team_logo—lg {
 	height: 150px;
 	width: 150px;
@@ -153,10 +191,6 @@ header {
 	padding: 0.5em 2em;
 }
 
-.exit_modal {
-	cursor: pointer;
-	border: 1px solid black;
-}
 
 nav a {
 	text-decoration: none;
