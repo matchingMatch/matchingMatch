@@ -38,5 +38,6 @@ urlpatterns = [
     path('report_detail/<int:pk>', views.report_detail, name="report_detail"),
     path('report_detail/<int:pk>/update', views.report_update, name="report_update"),
     path('report_detail/<int:pk>/delete', views.report_delete, name="report_delete"),
+    path('cancel_game/<int:pk>', views.cancel_game, name="cancel_game"),
     
 ]

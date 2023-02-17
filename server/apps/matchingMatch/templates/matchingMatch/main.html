@@ -4,13 +4,17 @@
 <body>
 	<div class="alarm_modal_list"></div>
 	<main class="wrap w-100% d-flex bg-light justify-content-center p-0">
-		<div class = "d-flex flex-column bg-white" style = "width:700px;">
-			<div>
-				<img src="{%static 'image/banner_photo.jpg' %}" alt="banner_image" style = "width:700px; height: 300px">
+		<div class = "main_container d-flex flex-column bg-white">
+			<div class="banner p-2">
+				<img src="{%static 'image/banner_photo.jpg' %}" alt="banner_image">
 			</div>
 			<div class="plans_mode">
-				<label>슬라이드 <input type="radio" value="week_slideshow" name="mode" id="slide" checked></label>
-				<label>캘린더 <input type="radio" value="calendar_container" name="mode" id="calendar" ></label>
+				<div class="mode">
+					<img src="{% static 'icon/arrows-left-right-solid.svg' %}" alt="슬라이드"> <input type="radio" value="week_slideshow" name="mode" id="slide" checked>
+				</div>
+				<div class="mode">
+					<img src="{% static 'icon/calendar-solid.svg' %}" alt="캘린더"> <input type="radio" value="calendar_container" name="mode" id="calendar" >
+				</div>
 			</div>
 			<div class="calendar_container sticky-top">
 				<div class="calendar_header">

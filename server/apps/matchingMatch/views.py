@@ -204,10 +204,10 @@ def main(request, *args, **kwargs):
         matches = MatchInfo.objects.filter(**filter_set) 
     else:
         matches = MatchInfo.objects.all()
-    now = datetime.datetime.now().time()
+    now_time = datetime.datetime.now().time()
     today = datetime.date.today()
 
-    matches = matches.filter(date__gte = today, start_time__gte = now)
+    matches = matches.filter(date = today, start_time__gte = now_time) | matches.filter(date__gt = today)
     context = {
         'matches': matches,
         'filter_form' : filter_form
@@ -661,3 +661,20 @@ def report_delete(request, pk): #pk는 report pk
             return redirect(f"/report_list/{request.user.id}")
     else:
         return redirect("/")
+
+@login_required(login_url='/login')
+def cancel_game(request,pk): #pk는 match pk
+    match = MatchInfo.objects.get(id=pk)
+    if request.user.id == match.host_id.id or request.user.id == match.participant_id.id:
+        if request.method == "POST":
+            match_requests_filter = MatchRequest.objects.filter(team_id=match.participant_id, match_id=match)
+            match_requests_filter[0].delete() # 신청 내역 삭제
+            match.is_matched = False
+            match.participant_id = None
+            match.save()
+            if request.user.id == match.host_id.id:
+                return redirect(f"/my_register_matches/{request.user.id}")
+            else:
+                return redirect(f"/my_apply_matches/{request.user.id}")
+    else:
+        return redirect("/")    

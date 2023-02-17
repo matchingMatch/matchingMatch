@@ -1,112 +1,150 @@
-{% extends 'matchingMatch/base.html' %}
+{% extends 'matchingMatch/base.html' %} {%load static%} {% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/team_detail.css' %}" />
+{% endblock%} {% block content %}
+<body>
+	<main id = "match-detail" class="wrap w-100% d-flex bg-light justify-content-center p-0">
+		<div class="d-flex flex-column bg-white" style="width: 700px">
+			<!-- 카카오맵 api -->
+			<div id="map" style="width: auto; height: 25rem"></div>
+			<script
+				type="text/javascript"
+				src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c9e1b4e5a36072194c8a19208ed6cb28&libraries=serviceclusterer,drawing"
+			></script>
 
-{% block content %}
-	<body>
-		<h1>{{match.stadium}}</h1>
+			<script>
+				var container = document.getElementById("map"); //지도를 담을 영역의 DOM 레퍼런스
+				var options = {
+					//지도를 생성할 때 필요한 기본 옵션
+					center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
+					level: 3, //지도의 레벨(확대, 축소 정도)
+				};
 
-		<h3>날짜: {{match.date}}</h3>
-		<h3>시작시간: {{match.start_time}}</h3>
-		<h3>종료시간: {{match.end_time}}</h3>
+				var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 
-		주최자 아이디:
-		<a href="{% url 'matchingMatch:team_detail' match.host_id.pk %}">
-			{{match.host_id.team_name}}
-		</a>
-		{% if match.is_matched == True %} VS {{match.participant_id.team_name}} 
-		{% endif %}
-		<br />로고: {{match.host_id.team_logo}}
+				// 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+				var zoomControl = new kakao.maps.ZoomControl();
+				map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+				// 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+				var mapTypeControl = new kakao.maps.MapTypeControl();
+				// 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+				// kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+				map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
 
-		<br />성별: {{match.get_gender_display}} <br />기타사항 : {{match.etc}}
+				let stadiumAddress = "{{match.stadium.address}}";
+				console.log(stadiumAddress);
+				// 주소-좌표 변환 객체를 생성합니다
+				var geocoder = new kakao.maps.services.Geocoder();
+				// 주소로 좌표를 검색합니다
+				geocoder.addressSearch(stadiumAddress, function (result, status) {
+					// 정상적으로 검색이 완료됐으면
+					if (status === kakao.maps.services.Status.OK) {
+						var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+						console.log("coord 생성!");
+						// 결과값으로 받은 위치를 마커로 표시합니다
+						var marker = new kakao.maps.Marker({
+							map: map,
+							position: coords,
+						});
 
-		<h3>
-			지역: {{match.stadium.location}}
-			<br />주소: {{match.stadium.address}}
-		</h3>
-
-		<!-- 카카오맵 api -->
-		<div id="map" style="width: 500px; height: 400px"></div>
-		<script
-			type="text/javascript"
-			src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c9e1b4e5a36072194c8a19208ed6cb28&libraries=services,clusterer,drawing"
-		></script>
-
-		<script>
-			var container = document.getElementById("map"); //지도를 담을 영역의 DOM 레퍼런스
-			var options = {
-				//지도를 생성할 때 필요한 기본 옵션
-				center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
-				level: 3, //지도의 레벨(확대, 축소 정도)
-			};
-
-			var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
-
-			// 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
-			var zoomControl = new kakao.maps.ZoomControl();
-			map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-			// 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
-			var mapTypeControl = new kakao.maps.MapTypeControl();
-			// 지도에 컨트롤을 추가해야 지도위에 표시됩니다
-			// kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
-			map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
-
-			let stadiumAddress = "{{match.stadium.address}}";
-			console.log(stadiumAddress);
-			// 주소-좌표 변환 객체를 생성합니다
-			var geocoder = new kakao.maps.services.Geocoder();
-			// 주소로 좌표를 검색합니다
-			geocoder.addressSearch(stadiumAddress, function (result, status) {
-				// 정상적으로 검색이 완료됐으면
-				if (status === kakao.maps.services.Status.OK) {
-					var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-					console.log("coord 생성!");
-					// 결과값으로 받은 위치를 마커로 표시합니다
-					var marker = new kakao.maps.Marker({
-						map: map,
-						position: coords,
-					});
-
-					// 인포윈도우로 장소에 대한 설명을 표시합니다
-					var infowindow = new kakao.maps.InfoWindow({
-						content: `<div style="width:150px;text-align:center;padding:6px 0;">
-								<p>{{match.stadium.stadium_name}}</p>
-								<p>{{match.stadium.address}}</p>
+						// 인포윈도우로 장소에 대한 설명을 표시합니다
+						var infowindow = new kakao.maps.InfoWindow({
+							content: `<div style="width:150px;text-align:center;padding:6px 0;">
+							<p>{{match.stadium.stadium_name}}</p>
+							<p>{{match.stadium.address}}</p>
 							</div>`,
-					});
-					infowindow.open(map, marker);
+						});
+						infowindow.open(map, marker);
 
-					// 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-					map.setCenter(coords);
-				}
-			});
-		</script>
+						// 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+						map.setCenter(coords);
+					}
+				});
+			</script>
+			<hr>
+			<div>
+				<div class = "d-flex d-flex align-items-center justify-content-around">
+				<div class="match-info-left">
+					<h3>{{match.stadium}}</h3>
+					<p>{{match.stadium.address}}</p>
+					<p>성별: {{match.get_gender_display}}</p>
+				</div>
 
-		{%if user.is_authenticated %} {% if user == match.host_id and match.is_matched == False %}
-		
-		<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
-			<button>신청자 목록 확인하기</button>
-		</form>
+				<div class="match-info-right">
+					<p>{{match.date}}</p>
+					<p>{{match.start_time}} ~ {{match.end_time}}</p>
+				</div>
+			</div>
+				<div class="team-info d-flex align-items-center justify-content-evenly mt-4">
+					<div class="host-info">
+						주최팀
+						<br />
+						<img src="{{match.host_id.team_logo.url}}" alt="" />
+						<br />
 
-		{% elif match.is_matched == True %}
-		<button class="end">마감되었습니다</button>
+						<a href="{% url 'matchingMatch:team_detail' match.host_id.pk %}">
+							{{match.host_id.team_name}}
+						</a>
+					</div>
 
-		{% elif match.host_id != user and status == 0 %}
-		<div id="enroll-btn">
-			<button class="enroll" onclick="changeEnroll({{ match.id}}, 'enroll')">
-				신청하기
-			</button>
+					{% if match.is_matched == True %}
+					<h3>vs</h3>
+					<div class="participant-info">
+						상대팀
+						<br />
+						<img src="{{match.participant_id.team_logo.url}}" alt="" />
+						<br />
+
+						<a
+							href="{% url 'matchingMatch:team_detail' match.participant_id.pk %}"
+						>
+							{{match.participant_id.team_name}}
+						</a>
+					</div>
+					{% endif %}
+				</div>
+				<br />
+
+				<hr />
+				<div class="match-etc">기타사항 : {{match.etc}}</div>
+
+				<hr />
+
+				{%if user.is_authenticated %} {% if user == match.host_id and match.is_matched == False %}
+				
+
+				<form action="{% url 'matchingMatch:match_update' match.pk %}">
+					<button class="btn btn-primary">수정</button>
+				</form>
+
+				<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
+					<button class="btn btn-primary">신청자 목록 확인하기</button>
+				</form>
+
+				{% elif match.is_matched == True %}
+				<button class="end">마감되었습니다</button>
+
+				{% elif match.host_id != user and status == 0 %}
+				<div id="enroll-btn">
+					<button
+						class="enroll"
+						onclick="changeEnroll({{ match.id}}, 'enroll')"
+					>
+						신청하기
+					</button>
+				</div>
+				{% elif match.host_id != user and status == 1 %}
+				<div id="enroll">
+					<button
+						class="enroll-btn"
+						onclick="changeEnroll({{ match.id}}, 'enroll-cancel')"
+					>
+						신청취소
+					</button>
+				</div>
+				{% endif %} {% endif %}
+			</div>
 		</div>
-		{% elif match.host_id != user and status == 1 %}
-		<div id="enroll">
-			<button
-				class="enroll-btn"
-				onclick="changeEnroll({{ match.id}}, 'enroll-cancel')"
-			>
-				신청취소
-			</button>
-		</div>
-		{% endif %} 
-		{% endif %}
-	</body>
+	</main>
 	<script>
 		const strip = (string) => {
 			return string.replace(/^\s+|\s+$/g, "");
@@ -140,4 +178,5 @@
 			}
 		};
 	</script>
+</body>
 {% endblock content %}
