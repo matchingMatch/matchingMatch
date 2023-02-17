@@ -24,9 +24,11 @@ header {
 	max-width: 700px;
 	min-width: 330px;
 }
+
 .banner img {
 	width: 100%;
 }
+
 .plans_mode {
 	width: 100px;
 	display: flex;
@@ -36,9 +38,11 @@ header {
 .mode img {
 	width: 20px;
 }
+
 .mode input {
 	vertical-align: middle;
 }
+
 /*슬라이드쇼*/
 .week_slideshow {
 	background-color: white;
@@ -60,11 +64,11 @@ header {
 	padding: 0;
 }
 
-.week .date {
-	width: calc(100vw/7);
+.week > label {
+	width: calc(100vw / 7);
 }
 
-.week .date:hover {
+.week > label:hover {
 	cursor: pointer;
 	background-color: #cecece;
 }
@@ -72,8 +76,6 @@ header {
 .week_slideshow .date:first-child {
 	/* margin-left: 15px; */
 }
-
-
 
 .week_slideshow .date div {
 	/* width: 50px; */
@@ -275,12 +277,24 @@ nav a {
 
 @font-face {
 	font-family: "Cafe24Ssurround";
-	src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff")
-		format("woff");
+	src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff") format("woff");
 	font-weight: normal;
 	font-style: normal;
 }
 
 body {
 	font-family: "Cafe24Ssurround" !important;
+}
+
+.week > input {
+	position: absolute !important;
+	clip: rect(0, 0, 0, 0);
+	height: 1px;
+	width: 1px;
+	border: 0;
+	overflow: hidden;
+}
+.week label {
+	transition: all 0.1s ease-in-out;
+	border-radius: 5px;
 }

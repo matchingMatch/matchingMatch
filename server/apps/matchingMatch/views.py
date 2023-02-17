@@ -187,28 +187,42 @@ def main(request, *args, **kwargs):
     match_detail_category = {
         'gender': 'gender__in',
         'is_matched': 'is_matched__in',
-        'region': 'stadium__location__in'
+        'region': 'stadium__location__in',
+        'date' : 'date__in'
     }
+    date_val = ''
+    filter_set = dict()
+    for key, value in dict(request.GET).items():
+        if key == 'date' and value:
+            date_val = value[0]
+            value[0] = datetime.datetime.strptime(value[0], '%Y-%m-%d').date()
 
-    filter_set = {match_detail_category.get(
-        key): value for key, value in dict(request.GET).items()}
+        key = match_detail_category.get(key)
+        filter_set[key] = value
+    print(date_val)
+    
     filter_form = MatchFilterForm()
     # html 태그 상의 name  : html 태그 상의 value
     if filter_set:
-        print(request.GET)
+        
+
         filter_form = MatchFilterForm(request.GET)
         matches = MatchInfo.objects.filter(**filter_set)
+
     else:
         matches = MatchInfo.objects.all()
+    
     now_time = datetime.datetime.now().time()
     today = datetime.date.today()
 
-    matches = matches.filter(
-        date=today, start_time__gte=now_time) | matches.filter(date__gt=today)
+    matches = matches.filter(date = today, start_time__gte = now_time) | matches.filter(date__gt = today)
+    
+    
     context = {
         'matches': matches,
-        'filter_form': filter_form
-    }
+        'filter_form' : filter_form,
+        'date_val' : date_val
+        }
     return render(request, "matchingMatch/main.html", context=context)
 
 

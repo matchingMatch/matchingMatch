@@ -8,24 +8,70 @@ days = [];
 dates = [];
 
 for (let i = thisDate; i <= lastDate; i++) {
-  dates.push(i);
+	dates.push(i);
 }
 thisDateLength = dates.length;
 for (let i = 1; i <= 31 - thisDateLength; i++) {
-  dates.push(i);
+	dates.push(i);
 }
 
 let dayIndex = thisDay;
+let flag = 0;
+const urlstr = window.location.href;
+const url = new URL(urlstr);
+const cur_date = url.searchParams.get("date");
+let new_index = 0 // 새로 로드 될 떄의 curIndex
+let cur_checked = null //  현재 체크된 경우 window.onload에서 checked 이용
 dates.forEach((date, i) => {
-  let condition =
-    dayIndex % 7 == 0 ? "sun" : dayIndex % 7 == 6 ? "sat" : "rest_day";
-  dates[i] = `<li class='date ${condition}'><div>${
-    daysKorean[dayIndex++ % 7]
-  }요일</div><div>${date}일</div></li> `;
+	let condition =
+		dayIndex % 7 == 0 ? "sun" : dayIndex % 7 == 6 ? "sat" : "rest_day";
+	// i가 0이 아닌데 date가 1이면 달이 넘어갔다는 의미
+	if (i != 0 && date == 1) {
+		flag = 1;
+	}
+	let now_month = flag ? thisMonth + 2 : thisMonth + 1;
+	let now_year = now_month / 13 == 1 ? thisYear + 1 : thisYear;
+
+	console.log(cur_date);
+
+	if (cur_date == `${now_year}-${now_month}-${date}`) {
+    cur_checked = i
+    new_index = Math.floor(i/7)
+		days[i] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}" checked>
+  <label class = "date-select" style ="background-color:skyblue;" for="date-${i}">
+  <li class='date ${condition}' name = "date"><div>${
+			daysKorean[dayIndex++ % 7]
+		}요일</div><div>${date}일</div></li>
+  </label>
+  `;
+	}
+  else {
+		days[
+			i
+		] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}">
+    <label class = "date-select" for="date-${i}">
+    <li class='date ${condition}' name = "date"><div>${
+			daysKorean[dayIndex++ % 7]
+		}요일</div><div>${date}일</div></li>
+    </label>
+    `;
+	}
 });
 
 const week = document.querySelector(".week");
-week.innerHTML = dates.join("");
+week.innerHTML = days.join("");
+
+
+// 상세 설정 필터 이후에도 현재 선택된 슬라이드의 checked 상태 변환
+window.addEventListener('load', () => {
+  // 아직 날짜 필터를 걸지 않았을 경우
+  if (cur_checked == null) {
+    return;
+  }
+  const checked_one = document.getElementById(`date-${cur_checked}`)
+  console.log(cur_checked)
+  checked_one.checked = true
+})
 
 //https://eunhee-programming.tistory.com/106
 const slides = document.querySelector(".week"); //전체 슬라이드 컨테이너
@@ -41,28 +87,46 @@ const slideMargin = 50; //슬라이드간의 margin 값
 //slides.style.width = (slideWidth + slideMargin) * slideDateCount + "px";
 
 function moveSlide(num) {
-  viewWidth = window.innerWidth
-  if (viewWidth >= 700) {
-    slides.style.left = -num * 700 + 'px'
-  } else {
-    slides.style.left = -num * viewWidth + "px";
-  }
-  currentIdx = num;
+	viewWidth = window.innerWidth;
+	if (viewWidth >= 700) {
+		slides.style.left = -num * 700 + "px";
+	} else {
+		slides.style.left = -num * viewWidth + "px";
+	}
+	currentIdx = num;
 }
 
+moveSlide(new_index)
+
 prev.addEventListener("click", function () {
-  /*첫 번째 슬라이드로 표시 됐을때는 
+	/*첫 번째 슬라이드로 표시 됐을때는 
 이전 버튼 눌러도 아무런 반응 없게 하기 위해 
 currentIdx !==0일때만 moveSlide 함수 불러옴 */
-  if (currentIdx !== 0) moveSlide(currentIdx - 1);
+	if (currentIdx !== 0) moveSlide(currentIdx - 1);
 });
 
 next.addEventListener("click", function () {
-  /* 마지막 슬라이드로 표시 됐을때는 
+	/* 마지막 슬라이드로 표시 됐을때는 
 다음 버튼 눌러도 아무런 반응 없게 하기 위해
 currentIdx !==slideCount - 1 일때만 
 moveSlide 함수 불러옴 */
-  if (currentIdx !== 4) {
-    moveSlide(currentIdx + 1);
-  }
+	if (currentIdx !== 4) {
+		moveSlide(currentIdx + 1);
+	}
+});
+
+
+const slide_list = document.querySelectorAll(".slide-list");
+console.log(slide_list);
+const date_form = document.getElementById("date-form");
+slide_list.forEach((e) => {
+	e.checked = true;
+  
+	e.addEventListener("click", (event) => {
+		//무한로딩 방지
+    console.log(event.target);
+		event.preventDefault();
+    date_form.submit();
+
+	});
 });

@@ -88,11 +88,12 @@ class ReportForm(forms.ModelForm):
         }
 
 
-is_matched_list = [(True and False, "전체"), (False, "모집중"), (True, "마감됨")]
-
+is_matched_list = [(False, "모집중"), (True, "마감됨")]
+gender_list = (("male", "남성"), ("female", "여성"), ("mixed", "혼성"))
 class MatchFilterForm(forms.ModelForm):
     region = forms.ModelChoiceField(Stadium.objects.values_list('location', flat=True).distinct(), empty_label=None, widget=forms.CheckboxSelectMultiple)
-    is_matched = forms.ChoiceField(choices=is_matched_list)
+    is_matched = forms.ChoiceField(choices=is_matched_list, widget=forms.CheckboxSelectMultiple)
+    gender = forms.ChoiceField(choices=gender_list, widget=forms.CheckboxSelectMultiple)
     class Meta:
         model = MatchInfo
         fields = ['is_matched', 'region', 'gender']
