@@ -24,6 +24,7 @@ header {
 	max-width: 700px;
 	min-width: 330px;
 }
+
 .banner img {
 	width: 100%;
 }
@@ -36,9 +37,11 @@ header {
 .mode img {
 	width: 20px;
 }
+
 .mode input {
 	vertical-align: middle;
 }
+
 /*슬라이드쇼*/
 .week_slideshow {
 	background-color: white;

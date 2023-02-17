@@ -263,7 +263,8 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            return redirect('matchingMatch:main')
+
+            return success(request, '로그인 되었습니다.')
         else:
             messages.error(request, '이메일 혹은 비밀번호를 다시 확인해주세요.')
             return redirect('matchingMatch:login')
@@ -283,20 +284,20 @@ def register_page(request):
             user = form.save(commit=False)
             user.save()
             login(request, user)
-            return redirect('matchingMatch:register_success')
+            return success(request, '성공적으로 회원가입이 완료되었습니다.')
         else:
-            messages.error(request, '회원가입 도중에 문제가 발생하였습니다.')
-
+            return redirect('matchingMatch:register')
     page = 'register'
     context = {'page': page, 'form': form}
     return render(request, 'matchingMatch/login_register.html', context)
 
 
-def register_success(request):
-    messages.error(request, '성공적으로 회원가입이 진행됐습니다.')
+def success(request, message:str):
+    messages.info(request, message)
     sys_messages = list(messages.get_messages(request))
-    print(sys_messages)
-    context = {"messages": sys_messages}
+    sys_message = sys_messages.pop()
+    print(sys_message)
+    context = {"message": sys_message}
     return render(request, "matchingMatch/register_success.html", context)
 
 

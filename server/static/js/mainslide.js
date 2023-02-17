@@ -6,10 +6,12 @@ const lastDate = new Date(thisYear, thisMonth + 1, 0).getDate();
 daysKorean = ["일", "월", "화", "수", "목", "금", "토"];
 days = [];
 dates = [];
-
+//지금부터 이번 달 말일
 for (let i = thisDate; i <= lastDate; i++) {
 	dates.push(i);
+  console.log(i)
 }
+// 다음 달 날짜껒
 thisDateLength = dates.length;
 for (let i = 1; i <= 31 - thisDateLength; i++) {
 	dates.push(i);
@@ -36,6 +38,7 @@ dates.forEach((date, i) => {
 
 	if (cur_date == `${now_year}-${now_month}-${date}`) {
     cur_checked = i
+    // 현재 날짜의 curSlideIndex 계산
     new_index = Math.floor(i/7)
 		days[i] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}" checked>
   <label class = "date-select" style ="background-color:skyblue;" for="date-${i}">
@@ -119,6 +122,7 @@ moveSlide 함수 불러옴 */
 const slide_list = document.querySelectorAll(".slide-list");
 console.log(slide_list);
 const date_form = document.getElementById("date-form");
+
 slide_list.forEach((e) => {
 	e.checked = true;
   
