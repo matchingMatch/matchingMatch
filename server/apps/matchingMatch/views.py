@@ -28,7 +28,6 @@ import requests
 
 
 def match_detail(request, pk):  # pk = 매치 아이디
-
     team = request.user
     match = get_object_or_404(MatchInfo, pk=pk)
 
@@ -55,7 +54,7 @@ def match_detail(request, pk):  # pk = 매치 아이디
         context = {
             "user": team,
             "match": match,
-            "status": 0
+            "status": 0,
         }
 
     return render(request, "matchingMatch/match_detail.html", context=context)
@@ -87,6 +86,7 @@ def team_list(request):
     context = {"teams": teams,
                "order": order}
     return render(request, "matchingMatch/team_list.html", context=context)
+
 
 @check_recaptcha
 @login_required(login_url='/login')
@@ -168,10 +168,6 @@ def match_update(request, pk):
         return render(request, "matchingMatch/match_update.html", context=context)
 
 
-
-
-
-
 def match_delete(request, pk):  # 매치 자체를 없애기 매치를 없애면 어떤 게 생기나?
 
     if request.method == "POST":
@@ -237,7 +233,7 @@ def check_endedmatch(request):
     today = datetime.date.today()
     # 알람이 생성되지 않은 매치: 경기가 끝나지 않은 매치들
 
-    userMatches = MatchInfo.objects.filter(host_id=request.user.id, participant_rated=False) | MatchInfo.objects.filter(
+    userMatches = (MatchInfo.objects.filter(host_id=request.user.id, participant_rated=False) & MatchInfo.objects.exclude(participant_id=None)) | MatchInfo.objects.filter(
         participant_id=request.user.id, host_rated=False)
     userMatches_json = []
     if len(userMatches) != 0:
@@ -250,17 +246,13 @@ def check_endedmatch(request):
                     'participant_teamname': match.participant_id.team_name,
                     'end_time': match.end_time
                 })
-        # userMatches_json = json.loads(serializers.serialize(
-        #     'json', userMatches))
-        # userMatches_json = serializers.serialize(
-        #     'json', userMatches_json)
     print(userMatches_json)
     return JsonResponse({'userMatches': userMatches_json})
 
 
 def login_page(request):
     page = 'login'
-    
+
     if request.user.is_authenticated:
         return redirect("/")
     if request.method == "POST":
@@ -271,7 +263,6 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            messages.info(request, '성공적으로 로그인 하셨습니다.')
             return redirect('matchingMatch:main')
         else:
             messages.error(request, '이메일 혹은 비밀번호를 다시 확인해주세요.')
@@ -279,6 +270,7 @@ def login_page(request):
 
     context = {'page': page}
     return render(request, 'matchingMatch/login_register.html', context)
+
 
 @check_recaptcha
 def register_page(request):
@@ -291,7 +283,6 @@ def register_page(request):
             user = form.save(commit=False)
             user.save()
             login(request, user)
-            messages.success(request, '성공적으로 회원가입이 진행됐습니다.')
             return redirect('matchingMatch:register_success')
         else:
             messages.error(request, '회원가입 도중에 문제가 발생하였습니다.')
@@ -300,17 +291,19 @@ def register_page(request):
     context = {'page': page, 'form': form}
     return render(request, 'matchingMatch/login_register.html', context)
 
+
 def register_success(request):
     messages.error(request, '성공적으로 회원가입이 진행됐습니다.')
     sys_messages = list(messages.get_messages(request))
     print(sys_messages)
     context = {"messages": sys_messages}
     return render(request, "matchingMatch/register_success.html", context)
+
+
 def logout_user(request):
     if request.user.is_authenticated:
 
         logout(request)
-    messages.info(request, '성공적으로 로그아웃 하셨습니다.')
     return redirect('matchingMatch:main')
 
 
@@ -378,6 +371,7 @@ class delete_account(SuccessMessageMixin, generic.DeleteView):
     success_message = "유저가 성공적으로 삭제됐습니다."
     success_url = reverse_lazy('matchingMatch:main')
 
+
 @login_required(login_url='/login')
 @csrf_exempt
 def change_enroll(request):
@@ -415,11 +409,11 @@ def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk
         today = datetime.date.today()
         now = datetime.datetime.now().time()
 
-        my_matched_matches= MatchInfo.objects.filter(
+        my_matched_matches = MatchInfo.objects.filter(
             is_matched=True, host_id=pk)
         my_not_matched_matches = MatchInfo.objects.filter(
             is_matched=False, host_id=pk)
-        
+
         ended_matches = []
         ended_yet_matches = []
 
@@ -430,10 +424,10 @@ def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk
                 ended_yet_matches.append(match)
             elif match.start_time < now:
                 ended_matches.append(match)
-                
+
         context = {
-            'ended' : ended_matches,
-            'ended_yet' : ended_yet_matches,
+            'ended': ended_matches,
+            'ended_yet': ended_yet_matches,
             'my_not_matched_matches': my_not_matched_matches,
         }
         return render(request, 'matchingMatch/my_register_matches.html', context=context)
@@ -447,7 +441,7 @@ def my_apply_matches(request, pk):
         today = datetime.date.today()
         now = datetime.datetime.now().time()
 
-        my_matched_matches= MatchInfo.objects.filter(
+        my_matched_matches = MatchInfo.objects.filter(
             is_matched=True, participant_id=pk)
         ended_matches = []
         ended_yet_matches = []
@@ -461,8 +455,8 @@ def my_apply_matches(request, pk):
                 ended_matches.append(match)
         my_match_requests = MatchRequest.objects.filter(team_id=pk)
         context = {
-            'ended' : ended_matches,
-            'ended_yet' : ended_yet_matches,
+            'ended': ended_matches,
+            'ended_yet': ended_yet_matches,
             'my_match_requests':  my_match_requests,
         }
         return render(request, 'matchingMatch/my_apply_matches.html', context=context)
@@ -533,6 +527,7 @@ def admin_team_block(request):
 def admin_match_delete(request):
     ...
 
+
 @login_required(login_url='/login')
 def notice_list(request):
     notices = Notice.objects.all()
@@ -540,6 +535,7 @@ def notice_list(request):
         'notices': notices,
     }
     return render(request, "matchingMatch/notice_list.html", context=context)
+
 
 @login_required(login_url='/login')
 def notice_detail(request, pk):
@@ -597,21 +593,23 @@ def notice_delete(request, pk):
         notice.delete()
         return redirect("matchingMatch:notice_list")
 
+
 @login_required(login_url='/login')
-def report_list(request,pk): #pk는 team pk
+def report_list(request, pk):  # pk는 team pk
     if (request.user.id) == pk or (request.user.is_superuser) == True:
         team = Team.objects.get(id=pk)
         reports = Report.objects.filter(writer_id=team)
         context = {
             'reports': reports,
-            'team' : team,
+            'team': team,
         }
         return render(request, "matchingMatch/report_list.html", context=context)
     else:
         return redirect("/")
 
+
 @login_required(login_url='/login')
-def report_create(request, pk): #pk는 team pk
+def report_create(request, pk):  # pk는 team pk
     if (request.user.id) == pk:
         form = ReportForm()
 
@@ -627,14 +625,15 @@ def report_create(request, pk): #pk는 team pk
         team = Team.objects.get(id=pk)
         context = {
             'form': form,
-            'team' : team,
+            'team': team,
         }
         return render(request, "matchingMatch/report_create.html", context=context)
     else:
         return redirect("/")
 
+
 @login_required
-def report_detail(request, pk): #pk는 report pk
+def report_detail(request, pk):  # pk는 report pk
     report = get_object_or_404(Report, id=pk)
     if report.writer_id.id == request.user.id or request.user.is_superuser == True:
         context = {
@@ -644,8 +643,9 @@ def report_detail(request, pk): #pk는 report pk
     else:
         return redirect("/")
 
+
 @login_required(login_url='/login')
-def report_update(request, pk): #pk는 report pk
+def report_update(request, pk):  # pk는 report pk
 
     report = Report.objects.get(id=pk)
     if report.writer_id.id == request.user.id or request.user.is_superuser == True:
@@ -667,8 +667,9 @@ def report_update(request, pk): #pk는 report pk
     else:
         return redirect("/")
 
+
 @login_required(login_url='/login')
-def report_delete(request, pk): #pk는 report pk 
+def report_delete(request, pk):  # pk는 report pk
     report = Report.objects.get(id=pk)
     if report.writer_id.id == request.user.id or request.user.is_superuser == True:
         if request.method == "POST":
@@ -677,13 +678,15 @@ def report_delete(request, pk): #pk는 report pk
     else:
         return redirect("/")
 
+
 @login_required(login_url='/login')
-def cancel_game(request,pk): #pk는 match pk
+def cancel_game(request, pk):  # pk는 match pk
     match = MatchInfo.objects.get(id=pk)
     if request.user.id == match.host_id.id or request.user.id == match.participant_id.id:
         if request.method == "POST":
-            match_requests_filter = MatchRequest.objects.filter(team_id=match.participant_id, match_id=match)
-            match_requests_filter[0].delete() # 신청 내역 삭제
+            match_requests_filter = MatchRequest.objects.filter(
+                team_id=match.participant_id, match_id=match)
+            match_requests_filter[0].delete()  # 신청 내역 삭제
             match.is_matched = False
             match.participant_id = None
             match.save()
@@ -692,4 +695,4 @@ def cancel_game(request,pk): #pk는 match pk
             else:
                 return redirect(f"/my_apply_matches/{request.user.id}")
     else:
-        return redirect("/")    
+        return redirect("/")

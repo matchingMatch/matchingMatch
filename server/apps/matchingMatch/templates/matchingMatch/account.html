@@ -1,10 +1,11 @@
 {% extends 'matchingMatch/base.html' %}
 
 {% block content %}
+{% load static %}
 	<body>
 
 		<div class="section">
-      <h1>{{user.team_name}}</h1>
+      		<h1>{{user.team_name}}</h1>
 			{% if user.team_logo %}
 			<img class="user--team_logo--lg" src="{{user.team_logo.url}}" />
 			{% endif %}
