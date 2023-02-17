@@ -203,7 +203,7 @@ def main(request, *args, **kwargs):
 
         key = match_detail_category.get(key)
         filter_set[key] = value
-        
+    print(date_val)
     
     filter_form = MatchFilterForm()
     # html 태그 상의 name  : html 태그 상의 value

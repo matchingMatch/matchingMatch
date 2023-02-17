@@ -21,6 +21,7 @@ const urlstr = window.location.href;
 const url = new URL(urlstr);
 const cur_date = url.searchParams.get("date");
 let new_index = 0
+let cur_checked = null
 dates.forEach((date, i) => {
 	let condition =
 		dayIndex % 7 == 0 ? "sun" : dayIndex % 7 == 6 ? "sat" : "rest_day";
@@ -34,15 +35,17 @@ dates.forEach((date, i) => {
 	console.log(cur_date);
 
 	if (cur_date == `${now_year}-${now_month}-${date}`) {
+    cur_checked = i
     new_index = Math.floor(i/7)
-		days[i] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}" checked>
+		days[i] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date} checked">
   <label class = "date-select" style ="background-color:skyblue;" for="date-${i}">
   <li class='date ${condition}' name = "date"><div>${
 			daysKorean[dayIndex++ % 7]
 		}요일</div><div>${date}일</div></li>
   </label>
   `;
-	} else {
+	}
+  else {
 		days[
 			i
 		] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}">
@@ -59,6 +62,16 @@ const week = document.querySelector(".week");
 week.innerHTML = days.join("");
 
 
+// 상세 설정 필터 이후에도 현재 선택된 슬라이드의 checked 상태 변환
+window.addEventListener('load', () => {
+  // 아직 날짜 필터를 걸지 않았을 경우
+  if (cur_checked == null) {
+    return;
+  }
+  const checked_one = document.getElementById(`date-${cur_checked}`)
+  console.log(cur_checked)
+  checked_one.checked = true
+})
 
 //https://eunhee-programming.tistory.com/106
 const slides = document.querySelector(".week"); //전체 슬라이드 컨테이너

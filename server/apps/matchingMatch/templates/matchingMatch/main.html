@@ -62,7 +62,7 @@
 					<span class="next">&rang;</span>
 				</p>
 			</div>
-		</form>
+		
 
 		
 		<div class="match_filter container">
@@ -76,7 +76,7 @@
 			>
 			상세설정
 		</button>
-		<form action="" method="get">
+		
 			<div id="matchFilter" class="collapse">
 				<div class="container">
 					<b>지역</b>
@@ -109,11 +109,11 @@
 						</div>
 						<input class = "btn btn-outline-info" type="submit" value = "확인">
 					</div>
-				</form>
-				</div>
 				
+				</div>
+			
 			</div>
-		
+		</form>
 			<div class="match_list d-flex flex-column flex-nowrap align-items-center ">
 				{% for match in matches %}
 				<a href="{% url 'matchingMatch:match_detail' match.pk%}" style="text-decoration:none" class="w-100">
