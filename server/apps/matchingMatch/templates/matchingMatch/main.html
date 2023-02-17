@@ -82,9 +82,11 @@
 					<b>지역</b>
 					<br>
 						<div id = "regions" class = "row">
-			
-							{%for region in filter_form.region%}
-							<div class = "col-4 col-sm-2">{{region}}</div>
+							{%for option in filter_form.region%}
+							
+							<div class = "col-4 col-sm-2">
+								{{option}}
+							</div>
 							{%endfor%}
 
 						</div>
