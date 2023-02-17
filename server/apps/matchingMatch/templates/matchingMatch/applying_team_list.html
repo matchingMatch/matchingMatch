@@ -1,24 +1,42 @@
-매칭 참여자 목록 {% if applying_team_list %}
-<form
-  action="{% url 'matchingMatch:applying_team_list' match.pk %}"
-  method="post"
->
-  {% for list in applying_team_list %} {% csrf_token %}
-  <div>
-    <label
-      ><input
-        type="radio"
-        name="select_participant"
-        value="{{list.team_id.id}}"
-      />{{list.team_id.team_name}}</label
-    >
-  </div>
-  {% endfor %}
-  <div>
-    <input type="submit" value="마감하기" />
-  </div>
-</form>
-<hr />
-{% else %}
-<div>아직 신청한 팀이 없습니다!</div>
-{% endif %}
+{% extends 'matchingMatch/base.html' %} {%load static%} {% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/applying_team_list.css' %}" />
+{% endblock%}
+
+{% block content %}
+  <body>
+    <main class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+      <div class="d-flex flex-column bg-white " style = "width:700px;">
+        <div class="list"><p>매칭 참여자 목록</p></div>
+        {% if applying_team_list %}
+        <form
+        action="{% url 'matchingMatch:applying_team_list' match.pk %}"
+        method="post"
+        >
+        {% for list in applying_team_list %} {% csrf_token %}
+        <div class="d-flex">
+          <div class="team_name">
+            <label
+              ><input
+                type="radio"
+                name="select_participant"
+                value="{{list.team_id.id}}"
+              />{{list.team_id.team_name}}</label
+            >
+          </div>
+          <div><a href="{% url 'matchingMatch:team_detail' list.team_id.id %}">팀 정보</a></div>
+        </div>
+        {% endfor %}
+        <div class="button">
+          <input type="submit" value="마감하기" />
+        </div>
+        </form>
+        <hr />
+        {% else %}
+        <div>아직 신청한 팀이 없습니다!</div>
+        {% endif %}
+      </div>
+    </main>    
+  </body>
+  
+{% endblock content %}
+
