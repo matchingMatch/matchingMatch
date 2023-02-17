@@ -249,7 +249,6 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            messages.info(request, '성공적으로 로그인 하셨습니다.')
             return redirect('matchingMatch:main')
         else:
             messages.error(request, '이메일 혹은 비밀번호를 다시 확인해주세요.')
@@ -270,7 +269,6 @@ def register_page(request):
             user = form.save(commit=False)
             user.save()
             login(request, user)
-            messages.success(request, '성공적으로 회원가입이 진행됐습니다.')
             return redirect('matchingMatch:register_success')
         else:
             messages.error(request, '회원가입 도중에 문제가 발생하였습니다.')
@@ -292,7 +290,6 @@ def logout_user(request):
     if request.user.is_authenticated:
 
         logout(request)
-    messages.info(request, '성공적으로 로그아웃 하셨습니다.')
     return redirect('matchingMatch:main')
 
 

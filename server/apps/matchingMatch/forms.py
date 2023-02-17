@@ -40,6 +40,11 @@ class UserForm(ModelForm):
             'gender': '팀 성별',
             'pre_proplayer': '선출 수 (자세하게 적어주세요.)',
         }
+        widgets = {
+            'team_intro': forms.Textarea(attrs={'rows':3, 'cols':50}),
+            'pre_proplayer': forms.Textarea(attrs={'rows':3, 'cols':50}),
+        }
+
 
 class CustomUserCreateForm(UserCreationForm):
     class Meta:
@@ -54,6 +59,10 @@ class CustomUserCreateForm(UserCreationForm):
             'photo': '팀 사진 (이미지 첨부파일)',
             'gender': '팀 성별',
             'pre_proplayer': '선출 수 (자세하게 적어주세요.)',
+        }
+        widgets = {
+            'team_intro': forms.Textarea(attrs={'rows':3, 'cols':50}),
+            'pre_proplayer': forms.Textarea(attrs={'rows':3, 'cols':50}),
         }
 
 class NoticeForm(forms.ModelForm):
