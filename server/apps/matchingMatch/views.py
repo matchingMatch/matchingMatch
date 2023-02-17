@@ -94,7 +94,6 @@ def match_register(request):
 
     if request.method == "POST":
         match_form = MatchRegisterForm(request.POST, request.FILES)
-
         if match_form.is_valid() and request.recaptcha_is_valid:
             match = match_form.save(commit=False)
             match.host_id = request.user
@@ -156,7 +155,7 @@ def match_update(request, pk):
             return redirect("matchingMatch:match_detail", pk=pk)  # 수정된 페이지로 이동
 
         else:
-            context = {"match_form": match_form}
+            context = {"match_form": match_form, "match_stadium" : match.stadium}
             # 잘못된 부분 수정 요청
 
             # 다시 작성하기
@@ -164,7 +163,9 @@ def match_update(request, pk):
 
     else:
         match_form = MatchRegisterForm(instance=match)
-        context = {"match_form": match_form}
+        # stadium = match_form.stadium
+        # match_form.stadium = Stadium.objects.get(id=stadium)
+        context = {"match_form": match_form, "match_stadium" : match.stadium}
         return render(request, "matchingMatch/match_update.html", context=context)
 
 
