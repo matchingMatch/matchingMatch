@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="lastrow d-flex flex-row justify-content-end" style="font-size:10px;">
-            <div class="notice-time d-flex flex-row mx-3">
+            <div class="notice-time d-flex flex-row mx-3 my-2">
                 <div class="create mx-3">
                     등록일: {{notice.created_at}}
                 </div>
@@ -40,7 +40,7 @@
                 </a> 
             </button>
         </div>
- 
+
         {% if request.user.is_superuser %}
         <a href="/notice_detail/{{notice.pk}}/update">수정하기</a>
         <form action="/notice_detail/{{notice.pk}}/delete" method="post">
