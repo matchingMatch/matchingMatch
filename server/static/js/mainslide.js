@@ -20,8 +20,8 @@ let flag = 0;
 const urlstr = window.location.href;
 const url = new URL(urlstr);
 const cur_date = url.searchParams.get("date");
-let new_index = 0
-let cur_checked = null
+let new_index = 0 // 새로 로드 될 떄의 curIndex
+let cur_checked = null //  현재 체크된 경우 window.onload에서 checked 이용
 dates.forEach((date, i) => {
 	let condition =
 		dayIndex % 7 == 0 ? "sun" : dayIndex % 7 == 6 ? "sat" : "rest_day";
@@ -37,7 +37,7 @@ dates.forEach((date, i) => {
 	if (cur_date == `${now_year}-${now_month}-${date}`) {
     cur_checked = i
     new_index = Math.floor(i/7)
-		days[i] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date} checked">
+		days[i] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}" checked>
   <label class = "date-select" style ="background-color:skyblue;" for="date-${i}">
   <li class='date ${condition}' name = "date"><div>${
 			daysKorean[dayIndex++ % 7]
