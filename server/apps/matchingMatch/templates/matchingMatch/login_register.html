@@ -6,7 +6,7 @@
 	<body>
     <div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
       <div class="d-flex flex-column bg-white " style = "width:700px;">
-        <div class="login-register--container">
+        <div class="login-register--container m-3">
           <h1 class="form-field--title">회원가입</h1>
           <div>
             <form
@@ -16,7 +16,7 @@
             >
               <div id="form-wrapper">
                 {% csrf_token %} {% for field in form %}
-                <div class="form-field--wrapper">
+                <div class="form-field--wrapper py-1">
                   <label>{{field.label}}</label>
                   {{field}}
                   <div>
@@ -31,7 +31,7 @@
                   data-sitekey="6LerqngkAAAAAB3wEJV0hNQnBn3RWtlv5pkoL-7v"
                 ></div>
                 <input
-                  class="btn btn--primary formsubmit-btn"
+                  class="btn btn--primary formsubmit-btn py-1"
                   type="submit"
                   value="회원가입"
                 />
@@ -50,7 +50,7 @@
 	{% else %}
   <div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
     <div class="d-flex flex-column bg-white " style = "width:700px;">
-      <div class="login-register--container section">
+      <div class="login-register--container section m-3">
         <h1 class="form-field--title">로그인</h1>
         {%if messages%} {%for message in messages%}
         <script>
@@ -65,8 +65,8 @@
                               <input type="text" name="username"/>
                           </div> -->
 
-          <div class="form-field--wrapper">
-            <label>유저네임</label>
+          <div class="form-field--wrapper py-1">
+            <label>유저네임 </label>
             <input
               class="form-field--input"
               id="id_username"
@@ -75,8 +75,8 @@
             />
           </div>
 
-          <div class="form-field--wrapper">
-            <label>비밀번호</label>
+          <div class="form-field--wrapper py-1">
+            <label>비밀번호 </label>
             <input
               class="form-field--input"
               id="id_password1"

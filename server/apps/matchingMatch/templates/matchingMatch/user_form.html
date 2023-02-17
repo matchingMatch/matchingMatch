@@ -2,24 +2,27 @@
 
 {% block content %}
   <body>
-        
-    <div class="'edit-accinfo-container">
-        <h1 class="form-field--title">팀 정보 수정</h1>
-    
-        <div class="section">
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-    
-                {% for field in form %}
-                    <div class="form-field--wrapper">
-                        <label>{{field.label}}</label>
-                        {{field}}
-                    </div>
-                {% endfor %}
-                <div class="form-field--wrapper">
-                    <input class="btn btn--primary formsubmit-btn" type="submit" value="팀 정보 수정" />
+    <div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+        <div class="d-flex flex-column bg-white " style = "width:700px;">
+            <div class="'edit-accinfo-container  m-3">
+                <h1 class="form-field--title m-3">팀 정보 수정</h1>
+
+                <div class="section m-3">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        {% for field in form %}
+                            <div class="form-field--wrapper py-1">
+                                <label>{{field.label}}</label>
+                                {{field}}
+                            </div>
+                        {% endfor %}
+                        <div class="form-field--wrapper">
+                            <input class="btn btn--primary formsubmit-btn" type="submit" value="팀 정보 수정" />
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
   </body>
 {% endblock content %}

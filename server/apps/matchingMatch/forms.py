@@ -32,17 +32,18 @@ class UserForm(ModelForm):
         fields = ['username', 'email', 'team_name', 'team_logo', 'team_intro', 'region', 'photo', 'gender', 'pre_proplayer']
         labels = {
             'username': '유저네임',
+            'email': '이메일',
             'team_name': '팀 이름',
             'team_logo': '팀 로고 (이미지 첨부파일)',
-            'team_intro': '팀 소개',
+            'team_intro': '팀 소개 (자세하게 적어주세요.)',
             'region': '지역',
             'photo': '팀 사진 (이미지 첨부파일)',
             'gender': '팀 성별',
             'pre_proplayer': '선출 수 (자세하게 적어주세요.)',
         }
         widgets = {
-            'team_intro': forms.Textarea(attrs={'rows':3, 'cols':50}),
-            'pre_proplayer': forms.Textarea(attrs={'rows':3, 'cols':50}),
+            'team_intro': forms.Textarea(attrs={'rows':2, 'cols':70}),
+            'pre_proplayer': forms.Textarea(attrs={'rows':2, 'cols':70}),
         }
 
 
@@ -54,15 +55,15 @@ class CustomUserCreateForm(UserCreationForm):
             'username': '유저네임',
             'team_name': '팀 이름',
             'team_logo': '팀 로고 (이미지 첨부파일)',
-            'team_intro': '팀 소개',
+            'team_intro': '팀 소개 (자세하게 적어주세요.)',
             'region': '지역',
             'photo': '팀 사진 (이미지 첨부파일)',
             'gender': '팀 성별',
             'pre_proplayer': '선출 수 (자세하게 적어주세요.)',
         }
         widgets = {
-            'team_intro': forms.Textarea(attrs={'rows':3, 'cols':50}),
-            'pre_proplayer': forms.Textarea(attrs={'rows':3, 'cols':50}),
+            'team_intro': forms.Textarea(attrs={'rows':2, 'cols':70}),
+            'pre_proplayer': forms.Textarea(attrs={'rows':2, 'cols':70}),
         }
 
 class NoticeForm(forms.ModelForm):
