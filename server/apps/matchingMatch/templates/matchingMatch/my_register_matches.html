@@ -6,40 +6,48 @@
         <h1>우리 팀이 주최한 매치 목록</h1>
     </div>  
 
-    {% for match in my_not_matched_matches %}
-    <div>경기장: {{match.stadium.stadium_name}}</div>
-    <div>경기일자: {{match.date}}</div>
-    <div>시작시간: {{match.start_time}}</div>
-    {% if match.request_match.all %}
-    <div>신청팀이 있습니다</div>
-    {% else %}
-    <div>신청팀이 아직 없습니다</div>
-    {% endif %}
-    <a href="{% url 'matchingMatch:match_detail' match.pk%}">마감하러 가기</a>
-    <form action="{% url 'matchingMatch:match_delete' match.pk %}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="매치삭제">
-    </form>
-    <hr />
-    {% endfor %}
-    ---------------------매치 성사--------------------<br>
-    -경기 종료- {% for match in ended %}
-    <div>경기장: {{match.stadium.stadium_name}}</div>
-    <div>경기일자: {{match.date}}</div>
-    <div>시작시간: {{match.start_time}}</div>
-    <div>상대팀: {{match.participant_id.team_name}} </div>
-    <hr>
-    {% endfor %}
-    -경기 시작전- {% for match in ended_yet %}
-    <div>경기장: {{match.stadium.stadium_name}}</div>
-    <div>경기일자: {{match.date}}</div>
-    <div>시작시간: {{match.start_time}}</div>
-    <div>상대팀: {{match.participant_id.team_name}} </div>
-    <span>경기 취소(매치등록 상태로 돌아갑니다)</span>
-    <form action="{% url 'matchingMatch:cancel_game' match.pk %}" method="post">  
-        {% csrf_token %}
-        <button type="submit">취소</button>
-    </form>
-    <hr>
-    {% endfor %}
+    <div class="section">
+        <h3>대기중</h3>
+        {% for match in my_not_matched_matches %}
+        <div>경기장: {{match.stadium.stadium_name}}</div>
+        <div>경기일자: {{match.date}}</div>
+        <div>시작시간: {{match.start_time}}</div>
+        {% if match.request_match.all %}
+        <div>신청팀이 있습니다</div>
+        {% else %}
+        <div>신청팀이 아직 없습니다</div>
+        {% endif %}
+        <a href="{% url 'matchingMatch:match_detail' match.pk%}">마감하러 가기</a>
+        <form action="{% url 'matchingMatch:match_delete' match.pk %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="매치삭제">
+        </form>
+        <hr />
+        {% endfor %}
+    </div>
+    <br /><br />
+    
+    <div class="section">
+        <h3>매치 성사</h3>
+        -경기 종료- {% for match in ended %}
+        <div>경기장: {{match.stadium.stadium_name}}</div>
+        <div>경기일자: {{match.date}}</div>
+        <div>시작시간: {{match.start_time}}</div>
+        <div>상대팀: {{match.participant_id.team_name}} </div>
+        <hr>
+        {% endfor %}
+        -경기 시작전- {% for match in ended_yet %}
+        <div>경기장: {{match.stadium.stadium_name}}</div>
+        <div>경기일자: {{match.date}}</div>
+        <div>시작시간: {{match.start_time}}</div>
+        <div>상대팀: {{match.participant_id.team_name}} </div>
+        <span>경기 취소(매치등록 상태로 돌아갑니다)</span>
+        <form action="{% url 'matchingMatch:cancel_game' match.pk %}" method="post">  
+            {% csrf_token %}
+            <button type="submit">취소</button>
+        </form>
+        <hr>
+        {% endfor %}
+    </div>
+</body>
 {% endblock content %}
