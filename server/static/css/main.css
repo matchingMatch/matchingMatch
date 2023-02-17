@@ -60,11 +60,11 @@ header {
 	padding: 0;
 }
 
-.week .date {
-	width: calc(100vw/7);
+.week > label {
+	width: calc(100vw / 7);
 }
 
-.week .date:hover {
+.week > label:hover {
 	cursor: pointer;
 	background-color: #cecece;
 }
@@ -72,8 +72,6 @@ header {
 .week_slideshow .date:first-child {
 	/* margin-left: 15px; */
 }
-
-
 
 .week_slideshow .date div {
 	/* width: 50px; */
@@ -100,9 +98,11 @@ header {
 	left: -20px;
 }
 
+
 .next {
 	right: -20px;
 }
+
 
 .match_list {
 	height: 500px;
@@ -128,6 +128,7 @@ header {
 	width: 500px;
 	margin: 0 auto;
 }
+
 
 .user—team_logo—lg {
 	height: 150px;
@@ -280,4 +281,17 @@ nav a {
 
 body {
 	font-family: "Cafe24Ssurround" !important;
+}
+
+.week > input {
+	position: absolute !important;
+	clip: rect(0, 0, 0, 0);
+	height: 1px;
+	width: 1px;
+	border: 0;
+	overflow: hidden;
+}
+.week label {
+	transition: all 0.1s ease-in-out;
+	border-radius: 5px;
 }

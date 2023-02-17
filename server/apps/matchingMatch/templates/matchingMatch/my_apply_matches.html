@@ -1,44 +1,50 @@
 {% extends 'matchingMatch/base.html' %}
 
 {% block content %}
------------------------ 대기중 ---------------------- {% for request in my_match_requests %}
-{% if request.match_id.is_matched == False %}
-<div>경기장: {{request.match_id.stadium.stadium_name}}</div>
-<div>경기일자: {{request.match_id.date}}</div>
-<div>시작시간: {{request.match_id.start_time}}</div>
-<div>상대팀: {{request.match_id.host_id.team_name}}</div>
-<div><a href="{% url 'matchingMatch:match_detail' request.match_id.pk%}">경기정보/신청취소</a></div>
-<hr>
-{% endif %}
-{% endfor %}
-<br /><br />
-<!--
-성사 ------------------------- {% for match in my_matched_matches%}
-<div>경기장: {{match.stadium.stadium_name}}</div>
-<div>경기일자: {{match.date}}</div>
-<div>시작시간: {{match.start_time}}</div>
-<div>상대팀: {{match.host_id.team_name}}</div>
-<div>-------------------------------------------------</div>
-{% endfor %} -->
+<body>
+    <div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+        <div class="d-flex flex-column bg-white " style = "width:700px;">
+            <div class="section">
+                <h1>우리 팀이 신청한 매치 목록</h1>
+            </>  
+            <div class="section">
+                <h3>대기중</h3>
+                {% for request in my_match_requests %}
+                {% if request.match_id.is_matched == False %}
+                <div>경기장: {{request.match_id.stadium.stadium_name}}</div>
+                <div>경기일자: {{request.match_id.date}}</div>
+                <div>시작시간: {{request.match_id.start_time}}</div>
+                <div>상대팀: {{request.match_id.host_id.team_name}}</div>
+                <div><a href="{% url 'matchingMatch:match_detail' request.match_id.pk%}">경기정보</a></div>
+                <hr>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <br /><br />
 
----------------------매치 성사--------------------<br>
--경기 종료- {% for match in ended %}
-<div>경기장: {{match.stadium.stadium_name}}</div>
-<div>경기일자: {{match.date}}</div>
-<div>시작시간: {{match.start_time}}</div>
-<div>상대팀: {{match.host_id.team_name}} </div>
-<hr>
-{% endfor %}
--경기 시작전- {% for match in ended_yet %}
-<div>경기장: {{match.stadium.stadium_name}}</div>
-<div>경기일자: {{match.date}}</div>
-<div>시작시간: {{match.start_time}}</div>
-<div>상대팀: {{match.host_id.team_name}} </div>
-<span>경기 취소(매치등록 상태로 돌아갑니다)</span>
-<form action="{% url 'matchingMatch:cancel_game' match.pk %}" method="post">  
-    {% csrf_token %}
-    <button type="submit">취소</button>
-</form>
-<hr>
-{% endfor %}
+            <div class="section">
+                <h3>매치 성사</h3>
+                -경기 종료- {% for match in ended %}
+                <div>경기장: {{match.stadium.stadium_name}}</div>
+                <div>경기일자: {{match.date}}</div>
+                <div>시작시간: {{match.start_time}}</div>
+                <div>상대팀: {{match.host_id.team_name}} </div>
+                <hr>
+                {% endfor %}
+                -경기 시작전- {% for match in ended_yet %}
+                <div>경기장: {{match.stadium.stadium_name}}</div>
+                <div>경기일자: {{match.date}}</div>
+                <div>시작시간: {{match.start_time}}</div>
+                <div>상대팀: {{match.host_id.team_name}} </div>
+                <span>경기 취소(매치등록 상태로 돌아갑니다)</span>
+                <form action="{% url 'matchingMatch:cancel_game' match.pk %}" method="post">  
+                    {% csrf_token %}
+                    <button type="submit">취소</button>
+                </form>
+                <hr>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
 {% endblock content %}

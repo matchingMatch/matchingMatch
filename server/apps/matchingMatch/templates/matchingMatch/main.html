@@ -1,5 +1,11 @@
 {% extends 'matchingMatch/base.html' %}
 {%load static%}
+{%block extra_head%}
+<script defer>
+
+</script>
+
+{%endblock%}
 {% block content %}
 	<body>
 
@@ -16,17 +22,20 @@
 				<div class="mode">
 					<img src="{% static 'icon/calendar-solid.svg' %}" alt="캘린더"> <input type="radio" value="calendar_container" name="mode" id="calendar" >
 				</div>
+			
 			</div>
-			<div class="calendar_container sticky-top">
-				<div class="calendar_header">
-				<div class="year_month"></div>
+			<form id = "date-form" action="" method = "get">
+
+				<div class="calendar_container sticky-top">
+					<div class="calendar_header">
+						<div class="year_month"></div>
 				<div class="nav">
-					<button class="nav_btn go_prev">&lt;</button>
-					<button class="nav_btn go_today">Today</button>
-					<button class="nav_btn go_next">&gt;</button>
+					<button type = "button" class="nav_btn go_prev">&lt;</button>
+					<button type = "button" class="nav_btn go_today">Today</button>
+					<button type = "button" class="nav_btn go_next">&gt;</button>
 				</div>
-				</div>
-				<div class="calendar">
+			</div>
+			<div class="calendar">
 				<div class="days">
 					<div class="day">일</div>
 					<div class="day">월</div>
@@ -39,8 +48,8 @@
 				<!-- 날짜 영역 -->
 				<div class="dates">
 				</div>
-				</div>
 			</div>
+		</div>
 			<div class="week_slideshow sticky-top">
 				<ul class="week">
 					<li class="date">
@@ -49,31 +58,35 @@
 					</li>
 				</ul>
 				<p class="controller">
-				<span class="prev">&lang;</span>
-				<span class="next">&rang;</span>
+					<span class="prev">&lang;</span>
+					<span class="next">&rang;</span>
 				</p>
 			</div>
+		
 
-				
-			<div class="match_filter container">
-				<button
-					class="btn btn-primary"
-					type="button"
-					data-bs-toggle="collapse"
-					data-bs-target="#matchFilter"
-					aria-expanded="true"
-					aria-controls="matchFilter"
-				>
-					상세설정
-				</button>
-				<form action="" method="get">
-				<div id="matchFilter" class="collapse">
-					<div class="container">
-						<p>지역</p>
+		
+		<div class="match_filter container">
+			<button
+			class="btn btn-primary"
+			type="button"
+			data-bs-toggle="collapse"
+			data-bs-target="#matchFilter"
+			aria-expanded="true"
+			aria-controls="matchFilter"
+			>
+			상세설정
+		</button>
+		
+			<div id="matchFilter" class="collapse">
+				<div class="container">
+					<b>지역</b>
+					<br>
 						<div id = "regions" class = "row">
-			
-							{%for region in filter_form.region%}
-							<div class = "col-4 col-sm-2">{{region}}</div>
+							{%for option in filter_form.region%}
+							
+							<div class = "col-4 col-sm-2">
+								{{option}}
+							</div>
 							{%endfor%}
 
 						</div>
@@ -81,22 +94,26 @@
 						<button type = 'button' class = "btn btn-primary" id = "region-all-cancel">전체 선택 해제</button>
 						<div>
 							<b>마감 여부</b>
-						<select name="is_matched" >
+							<br>
 							{% for option in filter_form.is_matched%}
 							{{option}}
 							{%endfor%}
-						</select>
+
 						</div>
 						<div>
 							<b>성별</b>
-							{{filter_form.gender}}
+							br
+							{% for option in filter_form.gender%}
+							{{option}}
+							{%endfor%}
 						</div>
 						<input class = "btn btn-outline-info" type="submit" value = "확인">
 					</div>
+				
 				</div>
-				</form>
+			
 			</div>
-
+		</form>
 			<div class="match_list d-flex flex-column flex-nowrap align-items-center ">
 				{% for match in matches %}
 				<a href="{% url 'matchingMatch:match_detail' match.pk%}" style="text-decoration:none" class="w-100">

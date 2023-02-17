@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from PIL import Image
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from config.utils import image_resize
 
 # Create your models here.
 # Team 모델에 modes.Model이 없어서 역참조가 안됨
@@ -14,7 +15,14 @@ class Team(AbstractUser, PermissionsMixin):
     gender_list = (("male", "남성"), ("female", "여성"), ("mixed", "혼성"))
     team_name = models.CharField(null=False, max_length=20)
     team_logo = models.ImageField(
-        blank=True, null=True, upload_to='posts/%Y%m%d')
+        blank=True, null=True, default='avatar.png')
+    
+    def save(self, commit=True, *args, **kwargs):
+
+        if commit:
+            image_resize(self.team_logo, 150, 150)
+            super().save(*args, **kwargs)
+    
     team_intro = models.TextField(blank=True)  # 팀소개
     region = models.CharField(max_length=20)
     photo = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
@@ -58,6 +66,7 @@ class MatchInfo(models.Model):
     end_time = models.TimeField()
     host_rated = models.BooleanField(default=False)
     participant_rated = models.BooleanField(default=False)
+
 
 
 class MatchRequest(models.Model):
