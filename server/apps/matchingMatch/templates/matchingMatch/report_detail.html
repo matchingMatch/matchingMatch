@@ -1,17 +1,60 @@
 {% extends 'matchingMatch/base.html' %}
+{% load static %}
 {% block content %}
-<div>작성자: {{report.writer}}</div>
-<div>제목: {{report.title}}</div>
-<div>내용: {{report.content}}</div>
-{% if report.image %}
-<div>첨부이미지: <img src="{{report.image.url}}" alt=""></div>
-{% endif %}
-<div>최초 작성일자: {{report.created_at}}</div>
-<div>최근 수정일자: {{report.updated_at}}</div>
-<a href="{% url 'matchingMatch:report_list' report.writer_id.pk %}">목록으로</a>
-<a href="/report_detail/{{report.pk}}/update">수정하기</a>
-<form action="/report_detail/{{report.pk}}/delete" method="post">
-    {% csrf_token %}
-    <input type="submit" value="삭제하기">
-</form>
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/report_detail.css' %}" />
+{% endblock%}
+<div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+    <div class="d-flex flex-column bg-white " style = "width:700px;">
+        <div class="title border-bottom mx-3">
+            <div class="mx-3">
+                {{report.title}}
+            </div>
+        </div>
+        <div class="report-info border-bottom m-3 d-flex flex-row align-items-center" style="font-size:10px;">
+            <div class="writer mx-3 mb-2">
+                {{report.writer}}
+            </div>
+        </div>
+        <div class="content border-bottom mx-3" style="font-size:12px;">
+            <div class="mx-3">
+                {{report.content}}
+            </div>
+        </div>
+        <div class="lastrow d-flex flex-row justify-content-end" style="font-size:10px;">
+            <div class="report-time d-flex flex-row mx-3 my-2">
+                <div class="create mx-3">
+                    등록일: {{report.created_at}}
+                </div>
+        
+                <div class="updated">
+                    수정일: {{report.updated_at}}
+                </div>
+            </div>
+        </div>
+        <div class="update_delete_container">
+            <div class="update text-center mx-1">
+                <button class="btn btn-outline-warning btn-sm">
+                    <a href="/report_detail/{{report.pk}}/update" style="text-decoration:none; color:black;">수정하기</a>
+                </button>
+            </div>
+            <form action="/report_detail/{{report.pk}}/delete" method="post">
+                {% csrf_token %}
+                <div class="delete text-center mx-1">
+                    <button class="btn btn-outline-warning btn-sm" type="submit" style="text-decoration:none; color:black;">
+                        삭제하기
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="backtolist text-center my-5">
+            <button class="btn btn-outline-warning btn-sm">
+                <a href="{% url 'matchingMatch:report_list' report.writer_id.pk %}" style="text-decoration:none; color:black;">
+                    목록으로
+                </a> 
+            </button>
+        </div>
+    </div>
+</div>
 {% endblock content %}
+

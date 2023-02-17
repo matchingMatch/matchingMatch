@@ -4,14 +4,14 @@
     <body>
         <div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
             <div class="d-flex flex-column bg-white " style = "width:700px;">
-                <div class="section">
+                <div class="section m-3">
                     <h1>팀 계정 탈퇴 확정</h1>
                     <h6>팀 계정 탈퇴 확정 시 계정 기록이 모두 삭제됩니다. 계속하시려면 아래 버튼을 클릭해 삭제를 확정해주세요.</h6>
                 </div>
             
                 <form method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn">팀 계정 탈퇴</button>
+                    <button type="submit" class="btn m-3">팀 계정 탈퇴</button>
                 </form>
             </div>
         </div>

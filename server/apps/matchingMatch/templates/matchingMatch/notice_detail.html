@@ -1,19 +1,60 @@
 {% extends 'matchingMatch/base.html' %}
+{% load static %}
 {% block content %}
-<div class="">{{notice.hits_counter}}</div> <!--css display none 속성 달아야됨 -->
-<div>작성자: {{notice.writer}}</div>
-<div>제목: {{notice.title}}</div>
-<div>내용: {{notice.content}}</div>
-<div>최초 작성일자: {{notice.created_at}}</div>
-<div>최근 수정일자: {{notice.updated_at}}</div>
-<div>조회수: {{notice.hits}}</div>
-<a href="{% url 'matchingMatch:notice_list' %}">목록으로</a>
-{% if request.user.is_superuser %}
-<a href="/notice_detail/{{notice.pk}}/update">수정하기</a>
-<form action="/notice_detail/{{notice.pk}}/delete" method="post">
-    {% csrf_token %}
-    <input type="submit" value="삭제하기">
-</form>
+<div style="display:none">{{notice.hits_counter}}</div> <!--이거 지우지 마세요!-->
+<div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+    <div class="d-flex flex-column bg-white " style = "width:700px;">
+        <div class="title border-bottom mx-3">
+            <div class="mx-3">
+                {{notice.title}}
+            </div>
+        </div>
+        <div class="notice-info border-bottom m-3 d-flex flex-row align-items-center" style="font-size:10px;">
+            <div class="writer mx-3 mb-2">
+                {{notice.writer}}
+            </div>
+            <div class="hits mb-2">
+                <img src="{% static 'icon/eye-solid.svg' %}" alt="views" style="height:10px; width:10px;"> {{notice.hits}}
+            </div>
+        </div>
+        <div class="content border-bottom mx-3" style="font-size:12px;">
+            <div class="mx-3">
+                {{notice.content}}
+            </div>
+        </div>
+        <div class="lastrow d-flex flex-row justify-content-end" style="font-size:10px;">
+            <div class="notice-time d-flex flex-row mx-3 my-2">
+                <div class="create mx-3">
+                    등록일: {{notice.created_at}}
+                </div>
+        
+                <div class="updated">
+                    수정일: {{notice.updated_at}}
+                </div>
+            </div>
+        </div>
+        <div class="backtolist text-center my-5">
+            <button class="btn btn-outline-warning btn-sm">
+                <a href="{% url 'matchingMatch:notice_list' %}" style="text-decoration:none; color:black;">
+                    목록으로
+                </a> 
+            </button>
+        </div>
+
+        {% if request.user.is_superuser %}
+        <a href="/notice_detail/{{notice.pk}}/update">수정하기</a>
+        <form action="/notice_detail/{{notice.pk}}/delete" method="post">
+            {% csrf_token %}
+            <input type="submit" value="삭제하기">
+        </form>
+    </div>
+</div>
+
+
+
+<!--css display none 속성 달아야됨 -->
+
+
 {% endif %}
 {% endblock content %}
 
