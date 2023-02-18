@@ -4,7 +4,7 @@
 <body>
     <div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
         <div class="d-flex flex-column bg-white " style = "width:700px;">
-            <div class="section text-center">
+            <div class="section text-center mt-3">
                 <h4>우리 팀이 신청한 매치 목록</h4>
             </div>  
 
@@ -21,7 +21,7 @@
                             {% for request in my_match_requests %}
                             {% if request.match_id.is_matched == False %}
                             <div class="match d-flex flex-row justify-content-center align-items-center m-2">
-                                <div class="match_type col-2  text-center">
+                                <div class="match_type col-3  text-center">
                                     확정 대기중
                                 </div>
                                 
@@ -38,10 +38,10 @@
                                     </a>
                                 </div>
                                 
-                                <div class=" col-5 text-center ">
+                                <div class=" col-4 text-center ">
                                     <form action="{% url 'matchingMatch:my_apply_matches' request.team_id.pk %}" method="post">
                                         {% csrf_token %}
-                                        <button type="submit" value="{{request}}">매치 신청 취소</button>
+                                        <button type="submit" value="{{request}}" class="btn btn-outline-warning" style="color:black; font-size:12px;">매치 신청 취소</button>
                                     </form>
                                 </div>
                             </div>
@@ -62,7 +62,7 @@
                         <div class="accordion-body">
                             {% for match in ended_yet %}
                             <div class="match d-flex flex-row justify-content-center align-items-center m-2">
-                                <div class="match_type col-2 text-center">
+                                <div class="match_type col-3 text-center">
                                     경기 시작전
                                 </div>
                                 <div class="main-info justify-content-center col-5">
@@ -77,10 +77,10 @@
                                         </div>
                                     </a>
                                 </div>
-                                <div class=" col-5 text-center">
+                                <div class=" col-4 text-center">
                                     <form action="{% url 'matchingMatch:cancel_game' match.pk %}" method="post">  
                                         {% csrf_token %}
-                                        <button type="submit">경기 취소(매치등록 상태로 돌아갑니다)</button>
+                                        <button type="submit" class="btn btn-outline-warning" style="color:black; font-size:12px;">경기 취소<br>(매치등록 상태로 돌아갑니다)</button>
                                     </form>
                                 </div>
                             </div>
@@ -89,7 +89,7 @@
 
                             {% for match in ended %}
                             <div class="match d-flex flex-row justify-content-around align-items-center m-2">
-                                <div class="match_type col-2 text-center">
+                                <div class="match_type col-3 text-center">
                                     경기 종료
                                 </div>
                                 
@@ -105,8 +105,8 @@
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col-5 text-center">
-                                    경기 종료
+                                <div class="col-4 text-center">
+                                    
                                 </div>
                             </div>
                             <hr>

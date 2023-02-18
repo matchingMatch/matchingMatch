@@ -4,54 +4,118 @@
 <body>
     <div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
         <div class="d-flex flex-column bg-white " style = "width:700px;">
-            <div class="container">
+            <div class="container text-center mt-3">
                 <h4>우리 팀이 주최한 매치 목록</h4>
             </div>  
-            
-            <div class="container">
-                <h3>대기중</h3>
-                {% for match in my_not_matched_matches %}
-                <a href="{% url 'matchingMatch:match_detail' match.pk %}">
-                    <div>경기장: {{match.stadium.stadium_name}}</div>
-                    <div>경기일자: {{match.date}}</div>
-                    <div>시작시간: {{match.start_time}}</div>
-                </a>
-                {% if match.request_match.all %}
-                <div>신청팀이 있습니다</div>
-                {% else %}
-                <div>신청팀이 아직 없습니다</div>
-                {% endif %}
-                <a href="{% url 'matchingMatch:applying_team_list' match.pk%}">마감하러 가기</a>
-                <form action="{% url 'matchingMatch:match_delete' match.pk %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" value="매치삭제">
-                </form>
-                <hr />
-                {% endfor %}
-            </div>
-            <br /><br />
-            
-            <div class="container">
-                <h3>매치 성사</h3>
-                -경기 종료- {% for match in ended %}
-                <div>경기장: {{match.stadium.stadium_name}}</div>
-                <div>경기일자: {{match.date}}</div>
-                <div>시작시간: {{match.start_time}}</div>
-                <div>상대팀: {{match.participant_id.team_name}} </div>
-                <hr>
-                {% endfor %}
-                -경기 시작전- {% for match in ended_yet %}
-                <div>경기장: {{match.stadium.stadium_name}}</div>
-                <div>경기일자: {{match.date}}</div>
-                <div>시작시간: {{match.start_time}}</div>
-                <div>상대팀: {{match.participant_id.team_name}} </div>
-                <span>경기 취소(매치등록 상태로 돌아갑니다)</span>
-                <form action="{% url 'matchingMatch:cancel_game' match.pk %}" method="post">  
-                    {% csrf_token %}
-                    <button type="submit">취소</button>
-                </form>
-                <hr>
-                {% endfor %}
+            <div class="waiting accordion m-3" id="accordionExample" style="font-size:12px;">
+                <!-- 대기중인 매치 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button bg-warning" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="color:black; font-size:14px;">
+                            대기 중인 매치 목록
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            {% for match in my_not_matched_matches %}
+                            <div class="match d-flex flex-row justify-content-center align-items-center m-2">
+                                <div class="match_type col-3  text-center">
+                                    {% if match.request_match.all %}
+                                    <div class="btn btn-outline-warning btn-sm" style="font-size:12px;">
+                                        <a href="{% url 'matchingMatch:applying_team_list' match.pk%}" style="text-decoration:none; color:black;"> 신청팀이 있습니다.<br>마감하러 가기</a>
+                                    </div>
+                                    
+                                    {% else %}
+                                    <div>신청팀이 아직 없습니다</div>
+                                    {% endif %}
+                                </div>
+                                <div class="main-info justify-content-center col-5 ">
+                                    <a href="{% url 'matchingMatch:match_detail' match.pk %}" style="text-decoration:none;">
+                                        <div class="infoone" style="color:black;">
+                                            {{match.date}}
+                                            {{match.start_time}}
+                                        </div>
+                                        <div class="infotwo" style="color:black;">
+                                            {{match.stadium.stadium_name}}
+                                            {{request.match_id.host_id.team_name}}
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class=" col-4 text-center ">
+                                    <form action="{% url 'matchingMatch:match_delete' match.pk %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="submit" value="매치삭제" class="btn btn-outline-warning" style="color:black; font-size:12px;">
+                                    </form>
+                                </div>
+                            </div>
+                            <hr>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <!-- 성사된 매치 목록 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button bg-warning" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" style="color:black; font-size:14px;">
+                            성사된 매치 목록
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample" style="color:black;">
+                        <div class="accordion-body">
+                            {% for match in ended_yet %}
+                            <div class="match d-flex flex-row justify-content-center align-items-center m-2">
+                                <div class="match_type col-3 text-center">
+                                    경기 시작전
+                                </div>
+                                <div class="main-info justify-content-center col-5">
+                                    <a href="{% url 'matchingMatch:match_detail' match.id %}" style="text-decoration:none;">
+                                        <div class="infoone" style="color:black;">
+                                            {{match.date}}
+                                            {{match.start_time}}
+                                        </div>
+                                        <div class="infotwo" style="color:black;">
+                                            {{match.stadium.stadium_name}}
+                                            {{match.participant_id.team_name}}
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class=" col-4 text-center">
+                                    <form action="{% url 'matchingMatch:cancel_game' match.pk %}" method="post">  
+                                        {% csrf_token %}
+                                        <button class="btn btn-outline-warning" type="submit" style="font-size:12px; color:black;">경기 취소<br>(매치등록 상태로 돌아갑니다)</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <hr>
+                            {% endfor %}
+
+                            {% for match in ended %}
+                            <div class="match d-flex flex-row justify-content-around align-items-center m-2">
+                                <div class="match_type col-3 text-center">
+                                    경기 종료
+                                </div>
+
+                                <div class="main-info justify-content-center col-5">
+                                    <a href="{% url 'matchingMatch:match_detail' match.id %}" style="text-decoration:none;">
+                                        <div class="infoone" style="color:black;">
+                                            {{match.date}}
+                                            {{match.start_time}}
+                                        </div>
+                                        <div class="infotwo" style="color:black;">
+                                            {{match.stadium.stadium_name}}
+                                            {{match.host_id.team_name}}
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-4 text-center">
+                                    
+                                </div>
+                            </div>
+                            <hr>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
