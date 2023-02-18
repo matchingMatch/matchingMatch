@@ -62,7 +62,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'server.config.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -80,17 +80,19 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'server.config.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+GOOGLE_RECAPTCHA_SECRET_KEY = get_secret('GOOGLE_RECAPTCHA_SECRET_KEY')
+DEBUG = True
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3'
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -154,4 +156,3 @@ DATE_INPUT_FORMAT = ["%Y-%m-%d"]
 SILENCED_SYSTEM_CHECKS = ['auth.E003', 'auth.W004']
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
-
