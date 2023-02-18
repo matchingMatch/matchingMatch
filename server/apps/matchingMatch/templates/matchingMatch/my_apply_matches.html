@@ -41,7 +41,7 @@
                                 <div class=" col-5 text-center ">
                                     <form action="{% url 'matchingMatch:my_apply_matches' request.team_id.pk %}" method="post">
                                         {% csrf_token %}
-                                        <button type="submit" value="{{request}}">매치 신청 취소</button>
+                                        <button type="submit" name="request_object_id" value="{{request.id}}">매치 신청 취소</button>
                                     </form>
                                 </div>
                             </div>
