@@ -39,7 +39,7 @@
                     </thead>
                     <tbody>
                         {% for team in teams %}
-                        
+
                             <tr onclick="location.href='{% url 'matchingMatch:team_detail' team.pk %}'" style="cursor:pointer;">
                                 <th>{{team.team_name}}</th>
                                 <th>{{team.region}}</th>
@@ -57,7 +57,7 @@
                             <a class="page-link mx-0" href="?page={{teams.previous_page_number}}">이전</a>
                         </li>
                         {% endif %}
-        
+                        
                         {% for p in teams.paginator.page_range %}
                         <li class="page-item">
                             <a class="page-link mx-0" href="?page={{p}}" class="mx-1">{{p}}</a>

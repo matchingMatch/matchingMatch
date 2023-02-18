@@ -1,0 +1,96 @@
+{% extends 'matchingMatch/base.html' %}
+{% block content %}
+<body>
+    <div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+        <div class="d-flex flex-column bg-white " style = "width:700px;">
+            <div class="container text-center mt-3">
+                <h4>별점 등록을 해주세요!</h4>
+            </div>
+            <div class="waiting accordion m-3" id="accordionExample" style="font-size:12px;">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button bg-warning" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="color:black; font-size:14px;">
+                            우리팀이 주최한 경기
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            {% for match in not_rated_matches_by_host %}
+                            <div class="match d-flex flex-row justify-content-center align-items-center m-2">
+                                    <div class="col-3  text-center">
+                                        <div>
+                                            <img src="{{match.participant_id.team_logo.url}}" style="width:50%; height:auto;">
+                                        </div>
+                                        <a href="{% url 'matchingMatch:team_detail' match.participant_id.id %}" style="text-decoration:none; color:black;">
+                                            {{match.participant_id.team_name}}
+                                        </a>
+                                    </div>
+                                <div class="col-5 text-center ">
+                                    <a href="{% url 'matchingMatch:match_detail' match.pk %}" style="text-decoration:none;">
+                                        <div class="infoone" style="color:black;">
+                                            {{match.date}}
+                                            {{match.start_time}} 시작
+                                        </div>
+                                        <div class="infotwo" style="color:black;">
+                                            {{match.stadium.stadium_name}}
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="main-info justify-content-center col-4 ">
+                                    <form action="{% url 'matchingMatch:rate_match' match.pk %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="submit" value="상대팀 평가하기" class="btn btn-outline-warning" style="color:black; font-size:12px;">
+                                    </form>
+                                </div>
+                            </div>
+                            <hr>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button bg-warning" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" style="color:black; font-size:14px;">
+                            우리팀이 신청한 경기
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            {% for match in not_rated_matches_by_participant %}
+                            <div class="match d-flex flex-row justify-content-center align-items-center m-2">
+                                <div class="col-3  text-center">
+                                    <div>
+                                        <img src="{{match.host_id.team_logo.url}}" style="width:50%; height:auto;">
+                                    </div>
+                                    <a href="{% url 'matchingMatch:team_detail' match.host_id.id %}" style="text-decoration:none; color:black;">
+                                        {{match.host_id.team_name}}
+                                    </a>
+                                </div>
+                                <div class="col-5 text-center ">
+                                    <a href="{% url 'matchingMatch:match_detail' match.pk %}" style="text-decoration:none;">
+                                        <div class="infoone" style="color:black;">
+                                            {{match.date}}
+                                            {{match.start_time}} 시작
+                                        </div>
+                                        <div class="infotwo" style="color:black;">
+                                            {{match.stadium.stadium_name}}
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="main-info justify-content-center col-4 ">
+                                    <form action="{% url 'matchingMatch:rate_match' match.pk %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="submit" value="상대팀 평가하기" class="btn btn-outline-warning" style="color:black; font-size:12px;">
+                                    </form>
+                                </div>
+                            </div>
+                            <hr>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock content%}

@@ -38,5 +38,6 @@ urlpatterns = [
     path('report_detail/<int:pk>/update', views.report_update, name="report_update"),
     path('report_detail/<int:pk>/delete', views.report_delete, name="report_delete"),
     path('cancel_game/<int:pk>', views.cancel_game, name="cancel_game"),
-    
+    path('rate_list/<int:pk>', views.rate_list, name="rate_list"),
+    path('rate_match/<int:pk>', views.rate_match, name="rate_match")
 ]
