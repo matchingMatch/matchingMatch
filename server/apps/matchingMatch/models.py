@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from PIL import Image
 from django.contrib.auth.validators import UnicodeUsernameValidator
-from config.utils import image_resize
+from server.config.utils import image_resize
 
 # Create your models here.
 # Team 모델에 modes.Model이 없어서 역참조가 안됨
