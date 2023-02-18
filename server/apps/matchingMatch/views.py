@@ -94,7 +94,6 @@ def match_register(request):
 
     if request.method == "POST":
         match_form = MatchRegisterForm(request.POST, request.FILES)
-
         if match_form.is_valid() and request.recaptcha_is_valid:
             match = match_form.save(commit=False)
             match.host_id = request.user
@@ -156,7 +155,7 @@ def match_update(request, pk):
             return redirect("matchingMatch:match_detail", pk=pk)  # 수정된 페이지로 이동
 
         else:
-            context = {"match_form": match_form}
+            context = {"match_form": match_form, "match_stadium" : match.stadium}
             # 잘못된 부분 수정 요청
 
             # 다시 작성하기
@@ -164,7 +163,9 @@ def match_update(request, pk):
 
     else:
         match_form = MatchRegisterForm(instance=match)
-        context = {"match_form": match_form}
+        # stadium = match_form.stadium
+        # match_form.stadium = Stadium.objects.get(id=stadium)
+        context = {"match_form": match_form, "match_stadium" : match.stadium}
         return render(request, "matchingMatch/match_update.html", context=context)
 
 
@@ -263,7 +264,8 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            return redirect('matchingMatch:main')
+
+            return success(request, '로그인 되었습니다.')
         else:
             messages.error(request, '이메일 혹은 비밀번호를 다시 확인해주세요.')
             return redirect('matchingMatch:login')
@@ -283,20 +285,20 @@ def register_page(request):
             user = form.save(commit=False)
             user.save()
             login(request, user)
-            return redirect('matchingMatch:register_success')
+            return success(request, '성공적으로 회원가입이 완료되었습니다.')
         else:
-            messages.error(request, '회원가입 도중에 문제가 발생하였습니다.')
-
+            return redirect('matchingMatch:register')
     page = 'register'
     context = {'page': page, 'form': form}
     return render(request, 'matchingMatch/login_register.html', context)
 
 
-def register_success(request):
-    messages.error(request, '성공적으로 회원가입이 진행됐습니다.')
+def success(request, message:str):
+    messages.info(request, message)
     sys_messages = list(messages.get_messages(request))
-    print(sys_messages)
-    context = {"messages": sys_messages}
+    sys_message = sys_messages.pop()
+    print(sys_message)
+    context = {"message": sys_message}
     return render(request, "matchingMatch/register_success.html", context)
 
 

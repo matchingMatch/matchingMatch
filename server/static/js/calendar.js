@@ -49,8 +49,14 @@ const makeCalendar = () => {
   
   dates.forEach((date, i) => {
     const condition = i >= firstDateIndex && i <= lastDateIndex ? 'this' : 'other'
+    //선택 대상이 아닌 경우
     dates[i] = `<div class="date"><span class="${condition}">${date}</span></div>`
+    //선택 대상인 경우
+    // dates[i] = `<input class = "calendar-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}" checked><label class="date" for = "date-${i}"><span class="${condition}">${date}</span></label>`    
+
   })
+
+
   
   //html dates 그리기
   document.querySelector('.calendar .dates').innerHTML = dates.join('')

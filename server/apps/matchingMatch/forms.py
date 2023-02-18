@@ -21,6 +21,10 @@ class MatchRegisterForm(forms.ModelForm):
     }
     
     widgets = {
+            'stadium' : forms.TextInput(attrs={
+                    'id' :"stadium_search",
+					'list' :"stadium_list",
+					'placeholder' : "축구장 검색"}),
             'start_time': forms.TimeInput(attrs={'type': 'time'}, ),
             'end_time': forms.TimeInput(attrs={'type': 'time'}),
         }
