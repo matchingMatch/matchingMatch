@@ -440,11 +440,11 @@ def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk
 @login_required(login_url='/login')
 def my_apply_matches(request, pk):
     if request.user.id == pk:
-        if request.method == "POST":
+        if request.method == "POST": #매치 신청 취소 post
             request_object = MatchRequest.objects.get(id=request.POST.get('request_object_id'))
             request_object.delete()
             return redirect(f"/my_apply_matches/{request.user.id}")
-        else:
+        else: 
             today = datetime.date.today()
             now = datetime.datetime.now().time()
 
