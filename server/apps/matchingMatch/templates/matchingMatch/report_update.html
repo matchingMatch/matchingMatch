@@ -1,9 +1,19 @@
 {% extends 'matchingMatch/base.html' %}
 {% block content %}
-신고글 수정 <br>
-<form action="" method="post" enctype="multipart/form-data">
-    {% csrf_token%}
-    <div>{{form.as_p}}</div>
-    <input type="submit" value="수정">
-</form>
+<div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+    <div class="d-flex flex-column bg-white " style = "width:700px;">
+        <div>
+            <h1>신고 글 수정</h1>
+        </div>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token%}
+            <div>{{form.as_p}}</div>
+            <div class="update">
+                <button class="btn btn-outline-warning btn-sm" type="submit" style="text-decoration:none; color:black;">
+                    수정하기
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock content %}

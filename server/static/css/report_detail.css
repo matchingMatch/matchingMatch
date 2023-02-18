@@ -3,3 +3,8 @@
     flex-direction: row;
     justify-content: flex-end;
 }
+
+.report_image {
+    width: 70%;
+    height: auto;
+}

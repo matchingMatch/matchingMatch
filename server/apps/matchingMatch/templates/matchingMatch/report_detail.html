@@ -21,6 +21,13 @@
                 {{report.content}}
             </div>
         </div>
+        {% if report.image %}
+        <div class="image border-bottom mx-3" style="font-size:12px;">
+            <div class="mx-3">
+                <img class="report_image" src="{{report.image.url}}" />
+            </div>
+        </div>
+        {% endif %}
         <div class="lastrow d-flex flex-row justify-content-end" style="font-size:10px;">
             <div class="report-time d-flex flex-row mx-3 my-2">
                 <div class="create mx-3">
