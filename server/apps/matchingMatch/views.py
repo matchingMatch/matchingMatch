@@ -24,6 +24,7 @@ import re
 import datetime
 import json
 import requests
+from django.core.paginator import Paginator
 # Create your views here.
 
 
@@ -73,15 +74,28 @@ def team_detail(request, pk):  # pk = 팀 아이디
 def team_list(request):
     order = request.GET.get("order")
     search = request.GET.get("team_search")
+    page = request.GET.get("page")
 
-    print(order)
+    #print(order)
     if order:
         teams = Team.objects.order_by(order)
+        paginator = Paginator(teams, 10)
+        teams = paginator.get_page(page)
     else:
         teams = Team.objects.all()
-
+        paginator = Paginator(teams, 10)
+        teams = paginator.get_page(page)
     if search != None:
-        teams = teams.filter(team_name__contains=search)
+        if order:
+            teams = Team.objects.order_by(order)
+            teams = teams.filter(team_name__contains=search)
+            paginator = Paginator(teams, 10)
+            teams = paginator.get_page(page)
+        else:
+            teams = Team.objects.all()
+            teams = teams.filter(team_name__contains=search)
+            paginator = Paginator(teams, 10)
+            teams = paginator.get_page(page)
     # order와 search가 동시에 존재하는 경우?
     context = {"teams": teams,
                "order": order}
@@ -537,7 +551,11 @@ def admin_match_delete(request):
 
 @login_required(login_url='/login')
 def notice_list(request):
-    notices = Notice.objects.all()
+    all_notices = Notice.objects.all()
+    notices_objects = all_notices.order_by('-id') #최신 순으로 보여 주기 위해
+    page = request.GET.get("page")
+    paginator = Paginator(notices_objects, 10) #한 페이지당 10개의 공지사항을 보여줌
+    notices = paginator.get_page(page)
     context = {
         'notices': notices,
     }
@@ -605,7 +623,12 @@ def notice_delete(request, pk):
 def report_list(request, pk):  # pk는 team pk
     if (request.user.id) == pk or (request.user.is_superuser) == True:
         team = Team.objects.get(id=pk)
-        reports = Report.objects.filter(writer_id=team)
+        report_objects = Report.objects.filter(writer_id=team)
+        all_reports = report_objects.order_by('-id') #최신순으로 보여주기 위해 order_by id로 
+        paginator = Paginator(all_reports, 10) # 한 페이지에 10개씩 보여줌
+        page = request.GET.get("page")
+        reports = paginator.get_page(page)
+
         context = {
             'reports': reports,
             'team': team,

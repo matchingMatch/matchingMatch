@@ -1,6 +1,6 @@
 {% extends 'matchingMatch/base.html' %}
+{% load static %}
 {% block content %}
-
 <div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
     <div class="d-flex flex-column bg-white " style = "width:700px; ">
         <div class="report-list d-flex flex-column justify-content-center text-center m-3">
@@ -27,15 +27,28 @@
                     {% else %}
                     <div>게시글이 없습니다. </div>
                     {% endif %}
+
                 </tbody>
             </table>
             <nav>
-                <ul class="pagination justify-content-center">
-                    <li class="page-item"><a class="page-link" href="">이전</a></li>
-                    <li class="page-item"><a class="page-link" href="">1</a></li>
-                    <li class="page-item"><a class="page-link" href="">2</a></li>
-                    <li class="page-item"><a class="page-link" href="">3</a></li>
-                    <li class="page-item"><a class="page-link" href="">다음</a></li>
+                <ul class="pagination pagination-sm justify-content-center">
+                    {% if reports.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link mx-0" href="?page={{reports.previous_page_number}}">이전</a>
+                    </li>
+                    {% endif %}
+    
+                    {% for p in reports.paginator.page_range %}
+                    <li class="page-item">
+                        <a class="page-link mx-0" href="?page={{p}}" class="mx-1">{{p}}</a>
+                    </li>
+                    {% endfor %}
+    
+                    {% if reports.has_next %}
+                    <li class="page-item">
+                        <a class="page-link mx-0" href="?page={{reports.next_page_number}}">다음</a>
+                    </li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>

@@ -19,11 +19,12 @@
                             <option value="-manner" {%if order == "-manner" %} selected {% endif %}>
                                 매너순
                             </option>
-                            
                         </select>
                         <div id="team-search" class="m-3">
                             <input name="team_search" type="text" style="height:19px;">
-                            <div class="btn btn-primary btn-sm" type="submit">검색</div>
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                검색
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -50,12 +51,24 @@
                     </tbody>
                 </table>
                 <nav>
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item"><a class="page-link" href="">이전</a></li>
-                        <li class="page-item"><a class="page-link" href="">1</a></li>
-                        <li class="page-item"><a class="page-link" href="">2</a></li>
-                        <li class="page-item"><a class="page-link" href="">3</a></li>
-                        <li class="page-item"><a class="page-link" href="">다음</a></li>
+                    <ul class="pagination pagination-sm justify-content-center">
+                        {% if teams.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link mx-0" href="?page={{teams.previous_page_number}}">이전</a>
+                        </li>
+                        {% endif %}
+        
+                        {% for p in teams.paginator.page_range %}
+                        <li class="page-item">
+                            <a class="page-link mx-0" href="?page={{p}}" class="mx-1">{{p}}</a>
+                        </li>
+                        {% endfor %}
+        
+                        {% if teams.has_next %}
+                        <li class="page-item">
+                            <a class="page-link mx-0" href="?page={{teams.next_page_number}}">다음</a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </nav>
             </div>
