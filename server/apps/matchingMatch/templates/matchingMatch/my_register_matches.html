@@ -41,10 +41,12 @@
                 <hr>
                 {% endfor %}
                 -경기 시작전- {% for match in ended_yet %}
-                <div>경기장: {{match.stadium.stadium_name}}</div>
-                <div>경기일자: {{match.date}}</div>
-                <div>시작시간: {{match.start_time}}</div>
-                <div>상대팀: {{match.participant_id.team_name}} </div>
+                <a href="{% url 'matchingMatch:match_detail' match.pk %}">
+                    <div>경기장: {{match.stadium.stadium_name}}</div>
+                    <div>경기일자: {{match.date}}</div>
+                    <div>시작시간: {{match.start_time}}</div>
+                </a>
+                <div>상대팀: {{match.participant_id.team_name}} <a href="{% url 'matchingMatch:team_detail' match.participant_id.id %}">팀 정보</a></div>
                 <span>경기 취소(매치등록 상태로 돌아갑니다)</span>
                 <form action="{% url 'matchingMatch:cancel_game' match.pk %}" method="post">  
                     {% csrf_token %}
