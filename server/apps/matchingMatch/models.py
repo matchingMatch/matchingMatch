@@ -5,6 +5,8 @@ from django.conf import settings
 from PIL import Image
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from server.config.utils import image_resize
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 # Create your models here.
 # Team 모델에 modes.Model이 없어서 역참조가 안됨
@@ -12,17 +14,11 @@ USERNAME_FIELD = 'username'
 
 
 class Team(AbstractUser, PermissionsMixin):
+
     gender_list = (("male", "남성"), ("female", "여성"), ("mixed", "혼성"))
     team_name = models.CharField(null=False, max_length=20)
     team_logo = models.ImageField(
-        blank=True, null=True, default='avatar.png')
-    
-    def save(self, commit=True, *args, **kwargs):
-
-        if commit:
-            image_resize(self.team_logo, 150, 150)
-            super().save(*args, **kwargs)
-    
+        blank=True, null=True, default='avatar.png') #upolad_to 설정하는 게 좋아보임
     team_intro = models.TextField(blank=True)  # 팀소개
     region = models.CharField(max_length=20)
     photo = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
@@ -32,6 +28,10 @@ class Team(AbstractUser, PermissionsMixin):
     gender = models.CharField(choices=gender_list, max_length=10, null=False)
     pre_proplayer = models.TextField(null=True)
 
+    def save(self, commit=True, *args, **kwargs):
+        if commit:
+            image_resize(self.team_logo, 150, 150)
+            super().save(*args, **kwargs)
 
 
 class Stadium(models.Model):

@@ -25,6 +25,9 @@ import datetime
 import json
 import requests
 from django.core.paginator import Paginator
+import os
+from django.core.files import File
+from django.core.files.storage import default_storage
 # Create your views here.
 
 
@@ -112,7 +115,7 @@ def match_register(request):
             match = match_form.save(commit=False)
             match.host_id = request.user
             match.save()
-            return redirect("/")
+            return redirect("matchingMatch:match_detail", pk = match.pk) #만들어진 페이지로 이동
         else:
             stadium_name = Stadium.objects.all()
             stadium_name_list = stadium_name
@@ -371,14 +374,25 @@ def edit_account(request):
         # newsize = (10, 10)
         # img = img.resize(newsize)
         # print('NEW Image', request.FILES.get('avatar'))
+        old_image = request.user.team_logo
         form = UserForm(request.POST, request.FILES,  instance=request.user)
+        img = request.FILES.get('team_logo', False) #뭔가 새로운 파일 있는 경우에만 not False
+        # 수정사항이 존재하는 경우에만 
+        # if img:
+        #   request.user.team_logo.url
+
         if form.is_valid():
+            
             user = form.save(commit=False)
             user.save()
-            return redirect('matchingMatch:account')
+            # 로고도 upload_to 설정해서 중복 없애야 할듯
+            old_image.delete(save=False)
 
-    context = {'form': form}
-    return render(request, 'matchingMatch/user_form.html', context)
+            return redirect('matchingMatch:account')
+    else:
+        
+        context = {'form': form}
+        return render(request, 'matchingMatch/user_form.html', context)
 
 
 class delete_account(SuccessMessageMixin, generic.DeleteView):
