@@ -38,7 +38,9 @@
                 </ul>
             </nav>
         </div>
+        {% if request.user.is_superuser %}
         <a href="{% url 'matchingMatch:notice_create' %}">글 작성</a>
+        {% endif %}
     </div>
 </div>
 
