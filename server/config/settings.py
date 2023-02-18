@@ -11,22 +11,30 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import decouple
-import sys
-sys.path.insert(0, '/matchingMatch')
-import os
+import os, json
+from django.core.exceptions import ImproperlyConfigured
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+secret = os.path.join(BASE_DIR, 'secret.json')
+with open(secret) as f:
+    secrets = json.loads(f.read())
+
+def get_secret(keyword, secrets=secrets):
+    try:
+        return secrets[keyword]
+    except KeyError:
+        raise ImproperlyConfigured("No variable : {}".format(keyword))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = decouple.config('SECRET_KEY')
-
+SECRET_KEY = get_secret("SECRET_KEY")
+GOOGLE_RECAPTCHA_SECRET_KEY = get_secret('GOOGLE_RECAPTCHA_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -54,7 +62,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = 'server.config.urls'
 
 TEMPLATES = [
     {
@@ -72,19 +80,17 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = 'server.config.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-GOOGLE_RECAPTCHA_SECRET_KEY = decouple.config('GOOGLE_RECAPTCHA_SECRET_KEY')
-DEBUG = decouple.config('DEBUG', cast=bool)
 
 DATABASES = {
     'default': {
-        'DB_ENGINE': decouple.config('DB_ENGINE'),
-        'DB_NAME': decouple.config('DB_NAME'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3'
     }
 }
 
@@ -126,7 +132,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'statics')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'statics'),
@@ -147,3 +154,4 @@ DATE_INPUT_FORMAT = ["%Y-%m-%d"]
 SILENCED_SYSTEM_CHECKS = ['auth.E003', 'auth.W004']
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
+
