@@ -17,8 +17,8 @@
           <div>{{team.team_intro}}</div>
         </div>
         <div class = "team-info">
-          <div>실력: {{team.level}}</div>
-          <div>매너: {{team.manner}}</div>
+          <div>실력: {{level}}</div>
+          <div>매너: {{manner}}</div>
           <div>선출 여부: {{team.pre_proplayer}}</div>
         </div>
       </div class = "team-detail-bottom">
@@ -33,24 +33,5 @@
       </div>
     </div>
   </div>
-
-  <div class = "team-detail-mid">
-    <div class="team-intro">
-      <h3>팀 소개:</h3>
-      <h5>{{team.team_intro}}</h5>
-    </div>
-    <div class = "team-info">
-      <h3>실력: {{team.level}}</h3>
-      <h3>매너: {{team.manner}}</h3>
-      <h3>선출 여부: {{team.pre_proplayer}}</h3>
-    </div>
-  </div class = "team-detail-bottom">
-    <h3>{{team.team_name}}팀이 현재 모집 중인 매치:</h3>
-    {% for match in match_list %}
-      <div>
-        <a href="{% url 'matchingMatch:match_detail' match.pk%}">{{match.stadium}}</a>
-      </div>
-    {%endfor%}
-    <!-- 페이지 네이션으로 처리 나중에 하기 -->
 </body>
 {% endblock content %}
