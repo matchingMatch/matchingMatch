@@ -25,9 +25,12 @@ datalist option:hover, datalist option:focus {
 </style>
 {%endblock%}
 <body>
-	{{ match_form.errors }} {{match_form.non_field_errors }}
 	<div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+		
 		<div class="d-flex flex-column bg-white" style="width: 700px">
+			{% for error in match_form.errors %}
+			<span>{{error}}</span>
+			{% endfor%}
 			<form
 				action="{% url 'matchingMatch:match_register' %}"
 				method="post"

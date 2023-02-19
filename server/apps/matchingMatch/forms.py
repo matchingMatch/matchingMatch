@@ -24,11 +24,6 @@ class MatchRegisterForm(forms.ModelForm):
             'start_time' : '시작 시간',
             'end_time' : '종료 시간',
         }
-        error_messages = {
-            NON_FIELD_ERRORS: {
-                'unique_together': "%(model_name)s's %(field_labels)s are not unique.",
-            }
-        }
         widgets = {
                 'stadium' : forms.TextInput(attrs={
                         'id' :"stadium_search",
@@ -40,12 +35,16 @@ class MatchRegisterForm(forms.ModelForm):
             
     def clean(self):
         clean_data = super().clean()
-        start_time = self.cleaned_data.get('start_time')
-        end_time = self.cleaned_data.get('end_time')
-        date = self.cleaned_data.get('date')
+        start_time = self.cleaned_data.get('start_time', False)
+        end_time = self.cleaned_data.get('end_time', False)
+        date = self.cleaned_data.get('date', False)
         now_date = datetime.date.today()
+
+        if not start_time or  not  end_time or not date:
+            return clean_data 
+
         if start_time > end_time:
-            raise ValidationError({'start': "시작시간이 현재시간보다 이릅니다"}, code = 'invalid')
+            raise ValidationError({'start_time': "시작시간이 현재시간보다 이릅니다"}, code = 'invalid')
         elif date < now_date or (date == now_date and datetime.datetime.now().time() < start_time):
             raise ValidationError({"date": "시작시간이 현재시간보다 이릅니다"},
                 code='invalid'

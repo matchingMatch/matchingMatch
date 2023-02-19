@@ -188,10 +188,6 @@ def match_update(request, pk):
         if match_form.is_valid():
 
             match = match_form.save(commit=False)
-            now_date = datetime.date.now()
-            
-
-
             match.save()
             return redirect("matchingMatch:match_detail", pk=pk)  # 수정된 페이지로 이동
 
@@ -218,12 +214,6 @@ def match_delete(request, pk):  # 매치 자체를 없애기 매치를 없애면
         match = get_object_or_404(MatchInfo, id=pk)
         match.delete()
         return redirect("/")
-
-
-# team detail과 다른 점?
-def my_page(request, pk):  # pk = 유저 아이디
-    # 아직 어떤 기능을 넣을지 미정
-    pass
 
 
 def main(request, *args, **kwargs):
@@ -303,7 +293,7 @@ def login_page(request):
         if user is not None:
             login(request, user)
 
-            return success(request, '로그인 되었습니다.')
+            return success(request, '로그인 되었습니다.', 'matchingMatch:main')
         else:
             messages.error(request, '이메일 혹은 비밀번호를 다시 확인해주세요.')
             return redirect('matchingMatch:login')
@@ -323,7 +313,7 @@ def register_page(request):
             user = form.save(commit=False)
             user.save()
             login(request, user)
-            return success(request, '성공적으로 회원가입이 완료되었습니다.')
+            return success(request, '성공적으로 회원가입이 완료되었습니다.', 'matchingMatch:main')
         else:
             return redirect('matchingMatch:register')
     page = 'register'
@@ -331,12 +321,12 @@ def register_page(request):
     return render(request, 'matchingMatch/login_register.html', context)
 
 
-def success(request, message:str):
+def success(request, message:str, url):
     messages.info(request, message)
     sys_messages = list(messages.get_messages(request))
     sys_message = sys_messages.pop()
     print(sys_message)
-    context = {"message": sys_message}
+    context = {"message": sys_message, 'redirect_url' : url}
     return render(request, "matchingMatch/register_success.html", context)
 
 
@@ -374,7 +364,6 @@ def change_password(request):
             new_pass = make_password(password1)
             request.user.password = new_pass
             request.user.save()
-            messages.success(request, '비밀번호를 성공적으로 변경하셨습니다!')
             return redirect('matchingMatch:account')
     return render(request, 'matchingMatch/change_password.html')
 # 매치 상대방 평가하기

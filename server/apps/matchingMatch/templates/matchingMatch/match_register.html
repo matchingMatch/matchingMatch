@@ -1,6 +1,5 @@
 {% extends 'matchingMatch/base.html' %} {% load static %} {% block content %}
 <body>
-	{{ match_form.errors }} {{match_form.non_field_errors }}
 	<div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
 		<div class="d-flex flex-column bg-white" style="width: 700px">
 			<form
@@ -16,7 +15,9 @@
 
 				<label for="date"> 날짜 </label>
 				<input name="date" type="date" id="date" />
-
+				{% if match_form.date.errors %}
+				<span style="color: red;">{{match_form.date.errors}}</span>
+				{% endif %} 
 				<label for="start_time">시작시간</label>
 				<input name="start_time" type="time" id="start_time" />
 
