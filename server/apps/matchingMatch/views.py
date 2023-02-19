@@ -265,9 +265,8 @@ def check_endedmatch(request):
     now = datetime.datetime.now().time()
     today = datetime.date.today()
     # 알람이 생성되지 않은 매치: 경기가 끝나지 않은 매치들
-
-    userMatches = (MatchInfo.objects.filter(host_id=request.user.id, participant_rated=False) & MatchInfo.objects.exclude(participant_id=None)) | MatchInfo.objects.filter(
-        participant_id=request.user.id, host_rated=False)
+    userMatches = (MatchInfo.objects.filter(host_id=request.user.id, participant_rated=False) & MatchInfo.objects.filter(is_matched=True)) | (MatchInfo.objects.filter(
+        participant_id=request.user.id, host_rated=False) & MatchInfo.objects.filter(is_matched = True))
     userMatches_json = []
     if len(userMatches) != 0:
         for match in userMatches:
