@@ -52,27 +52,37 @@
                 </table>
                 <nav>
                     <ul class="pagination pagination-sm justify-content-center">
-                        {% if teams.has_previous %}
+                        
                         <li class="page-item">
-                            <a class="page-link mx-0" href="?page={{teams.previous_page_number}}">이전</a>
+                            <a class="page-link mx-0" {% if teams.has_previous %} href="?page={{teams.previous_page_number}}" {%else%} href ="#" onclick="fnc();return false;"
+                            {% endif %}>이전</a>
                         </li>
-                        {% endif %}
+                        
         
                         {% for p in teams.paginator.page_range %}
+                        
+                        {%if p == teams.number%}
+                        <li class="page-item">
+                            <a class="page-link mx-0 text-white bg-primary" href="?page={{p}}" class="mx-1">{{p}}</a>
+                        </li>
+                        {%else%}
                         <li class="page-item">
                             <a class="page-link mx-0" href="?page={{p}}" class="mx-1">{{p}}</a>
                         </li>
+                        {%endif%}
                         {% endfor %}
         
-                        {% if teams.has_next %}
                         <li class="page-item">
-                            <a class="page-link mx-0" href="?page={{teams.next_page_number}}">다음</a>
+                            <a class="page-link mx-0" {% if teams.has_next %} href="?page={{teams.next_page_number}}" {%else%} href ="#" onclick="fnc();return false;"{% endif %}>다음</a>
                         </li>
-                        {% endif %}
+                        
                     </ul>
                 </nav>
             </div>
         </div>
     </div>
 </body>
+<script>
+    
+</script>
 {% endblock %}

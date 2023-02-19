@@ -80,25 +80,38 @@ def team_list(request):
     page = request.GET.get("page")
 
     #print(order)
-    if order:
-        teams = Team.objects.order_by(order)
-        paginator = Paginator(teams, 10)
-        teams = paginator.get_page(page)
+    # if order:
+    #     teams = Team.objects.order_by(order)
+    #     paginator = Paginator(teams, 10)
+    #     teams = paginator.get_page(page)
+    # else:
+    #     teams = Team.objects.all()
+    #     paginator = Paginator(teams, 10)
+    #     teams = paginator.get_page(page)
+    # if search != None:
+    #     if order:
+    #         teams = Team.objects.order_by(order)
+    #         teams = teams.filter(team_name__contains=search)
+    #         paginator = Paginator(teams, 10)
+    #         teams = paginator.get_page(page)
+    #     else:
+    #         teams = Team.objects.all()
+    #         teams = teams.filter(team_name__contains=search)
+    #         paginator = Paginator(teams, 10)
+    #         teams = paginator.get_page(page)
+    
+    if search:
+        teams = Team.objects.filter(team_name__contains=search)
     else:
         teams = Team.objects.all()
-        paginator = Paginator(teams, 10)
-        teams = paginator.get_page(page)
-    if search != None:
-        if order:
-            teams = Team.objects.order_by(order)
-            teams = teams.filter(team_name__contains=search)
-            paginator = Paginator(teams, 10)
-            teams = paginator.get_page(page)
-        else:
-            teams = Team.objects.all()
-            teams = teams.filter(team_name__contains=search)
-            paginator = Paginator(teams, 10)
-            teams = paginator.get_page(page)
+
+    if order:
+        teams = teams.order_by(order)
+
+    
+
+    paginator = Paginator(teams, 10)
+    teams = paginator.get_page(page)
     # order와 search가 동시에 존재하는 경우?
     context = {"teams": teams,
                "order": order}
@@ -201,6 +214,11 @@ def my_page(request, pk):  # pk = 유저 아이디
 
 
 def main(request, *args, **kwargs):
+        
+    now_time = datetime.datetime.now().time()
+    today = datetime.date.today()
+
+    matches = MatchInfo.objects.filter(date = today, start_time__gte = now_time) | MatchInfo.objects.filter(date__gt = today)
 
     match_detail_category = {
         'gender': 'gender__in',
@@ -222,18 +240,8 @@ def main(request, *args, **kwargs):
     filter_form = MatchFilterForm()
     # html 태그 상의 name  : html 태그 상의 value
     if filter_set:
-        
-
         filter_form = MatchFilterForm(request.GET)
-        matches = MatchInfo.objects.filter(**filter_set)
-
-    else:
-        matches = MatchInfo.objects.all()
-    
-    now_time = datetime.datetime.now().time()
-    today = datetime.date.today()
-
-    matches = matches.filter(date = today, start_time__gte = now_time) | matches.filter(date__gt = today)
+        matches = matches.filter(**filter_set)
     
     
     context = {
