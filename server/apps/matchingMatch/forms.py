@@ -83,12 +83,19 @@ class NoticeForm(forms.ModelForm):
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['title', 'writer', 'content','image']
+        fields = ['title', 'content','image']
         labels = {
             'title' : '제목',
-            'writer' : '작성자',
             'content' : '내용',
             'image' : '첨부 이미지',
+        }
+        
+        widgets = {
+            'title' : forms.TextInput(attrs={
+                    'class' :"form-control",
+					'placeholder' : "제목을 입력하세요"}),
+            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 20} ),
+            'image': forms.FileInput(attrs={'type': 'file'}),
         }
 
 
