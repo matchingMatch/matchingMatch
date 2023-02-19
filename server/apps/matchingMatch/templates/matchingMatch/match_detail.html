@@ -75,29 +75,29 @@
 				</div>
 			</div>
 				<div class="team-info d-flex align-items-center justify-content-evenly mt-4">
-					<div class="host-info">
+					<div class="host-info" style="text-align: center;">
 						주최팀
 						<br />
 						{% if match.host_id.team_logo %}
-						<img src="{{match.host_id.team_logo.url}}" alt="" />
+						<img src="{{match.host_id.team_logo.url}}" alt="팀로고" />
 						{% endif %}
 						<br />
 
-						<a href="{% url 'matchingMatch:team_detail' match.host_id.pk %}">
+						<a href="{% url 'matchingMatch:team_detail' match.host_id.pk %}" style="text-decoration: none;">
 							{{match.host_id.team_name}}
 						</a>
 					</div>
 
 					{% if match.is_matched == True %}
 					<h3>vs</h3>
-					<div class="participant-info">
+					<div class="participant-info" style="text-align: center;">
 						상대팀
 						<br />
-						<img src="{{match.participant_id.team_logo.url}}" alt="" />
+						<img src="{{match.participant_id.team_logo.url}}" alt="팀로고" />
 						<br />
 
 						<a
-							href="{% url 'matchingMatch:team_detail' match.participant_id.pk %}"
+							href="{% url 'matchingMatch:team_detail' match.participant_id.pk %}" style="text-decoration: none;"
 						>
 							{{match.participant_id.team_name}}
 						</a>
@@ -114,7 +114,7 @@
 				{%if user.is_authenticated %} {% if user == match.host_id and match.is_matched == False %}
 				
 
-				<form action="{% url 'matchingMatch:match_update' match.pk %}">
+				<form action="{% url 'matchingMatch:match_update' match.pk %}" style="margin-bottom: 10px;">
 					<button class="btn btn-primary">수정</button>
 				</form>
 
