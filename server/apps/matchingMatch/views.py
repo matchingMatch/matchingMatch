@@ -186,7 +186,12 @@ def match_update(request, pk):
         print(match.id)
         match_form = MatchRegisterForm(request.POST, instance=match)
         if match_form.is_valid():
+
             match = match_form.save(commit=False)
+            now_date = datetime.date.now()
+            
+
+
             match.save()
             return redirect("matchingMatch:match_detail", pk=pk)  # 수정된 페이지로 이동
 
