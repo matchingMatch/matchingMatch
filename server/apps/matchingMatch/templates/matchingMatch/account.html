@@ -44,7 +44,8 @@
 				class="btn btn--secondary"
 				href="{% url 'matchingMatch:my_apply_matches' user.pk %}"
 				>우리 팀이 신청한 매치 목록 조회하기</a
-			> 
+			>
+			<h3><a href="{% url 'matchingMatch:rate_list' user.id %}" style="text-decoration:none; color:black">경기 상대방의 실력, 매너 점수 등록하러가기</a></h3> 
 			</div>
 		</div>
 	</div>

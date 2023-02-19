@@ -37,7 +37,6 @@
                                         </div>
                                         <div class="infotwo" style="color:black;">
                                             {{match.stadium.stadium_name}}
-                                            {{request.match_id.host_id.team_name}}
                                         </div>
                                     </a>
                                 </div>
@@ -103,12 +102,18 @@
                                         </div>
                                         <div class="infotwo" style="color:black;">
                                             {{match.stadium.stadium_name}}
-                                            {{match.host_id.team_name}}
+                                            {{match.participant_id.team_name}}
                                         </div>
                                     </a>
                                 </div>
                                 <div class="col-4 text-center">
-                                    
+                                    {% if match.participant_rated == False %}
+                                    <div>
+                                        <a class="btn btn-outline-warning" href="{% url 'matchingMatch:rate_match' match.pk %}" style="font-size:12px; color:black;">상대방의 실력과 매너는?</a>
+                                    </div>
+                                    {% else %}
+                                    <div>상대방 평가 완료</div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <hr>

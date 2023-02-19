@@ -39,7 +39,7 @@
                     </thead>
                     <tbody>
                         {% for team in teams %}
-                        
+
                             <tr onclick="location.href='{% url 'matchingMatch:team_detail' team.pk %}'" style="cursor:pointer;">
                                 <th>{{team.team_name}}</th>
                                 <th>{{team.region}}</th>

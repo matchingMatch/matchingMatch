@@ -1,0 +1,19 @@
+{% extends 'matchingMatch/base.html' %}
+{% block content %}
+<body>
+    <div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+        <div class="d-flex flex-column bg-white " style = "width:700px;">
+            <div>{{match.host_id.team_name}} VS {{match.participant_id.team_name}}</div>
+            <div>즐거운 경기 되셨나요? 수고한 상대팀에게 좋은 점수 부탁드려요!</div>
+            <form action="{% url 'matchingMatch:rate_match' match.pk %}" method="post">
+                {% csrf_token %}
+                <div>
+                    <label>실력: <input name="level" type="number" max="10" min="1"></label>
+                    <label>매너: <input name="manner" type="number" max="10" min="1"></label>
+                </div>
+                <input type="submit" value="제출">
+            </form>
+        </div>
+    </div>
+</body>
+{% endblock content%}

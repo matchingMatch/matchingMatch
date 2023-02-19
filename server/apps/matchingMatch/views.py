@@ -69,8 +69,14 @@ def team_detail(request, pk):  # pk = 팀 아이디
 
     team = get_object_or_404(Team, id=pk)
     match_list = MatchInfo.objects.filter(host_id=team)
-    context = {"user": user, "team": team, "match_list": match_list}
-
+    
+    level = team.level / team.match_count
+    manner = team.manner / team.match_count
+    
+    level = round(level,1)
+    manner = round(manner,1)
+    
+    context = {"user": user, "team": team, "match_list": match_list, "level": level, "manner" : manner}
     return render(request, "matchingMatch/team_detail.html", context=context)
 
 
@@ -684,7 +690,7 @@ def report_create(request, pk):  # pk는 team pk
         return redirect("/")
 
 
-@login_required
+@login_required(login_url='/login')
 def report_detail(request, pk):  # pk는 report pk
     report = get_object_or_404(Report, id=pk)
     if report.writer_id.id == request.user.id or request.user.is_superuser == True:
@@ -746,5 +752,65 @@ def cancel_game(request, pk):  # pk는 match pk
                 return redirect(f"/my_register_matches/{request.user.id}")
             else:
                 return redirect(f"/my_apply_matches/{request.user.id}")
+    else:
+        return redirect("/")
+
+@login_required(login_url='/login')
+def rate_list(request,pk): #pk는 team pk
+    if request.user.id == pk:
+        today = datetime.date.today()
+        now = datetime.datetime.now().time()
+        
+        matches = MatchInfo.objects.filter(host_id=pk, is_matched=True, participant_rated=False)
+        not_rated_matches_by_host = [] #host가 별점 안 매긴 매치들
+        
+        for match in matches:
+            if (match.date < today) or (match.date == today and match.end_time < now):
+                not_rated_matches_by_host.append(match)
+
+        matches = MatchInfo.objects.filter(participant_id=pk, is_matched=True, host_rated=False)
+        not_rated_matches_by_participant = [] #participant가 별점 안 매긴 매치들
+ 
+        for match in matches:
+            if (match.date < today) or (match.date == today and match.end_time < now):
+                not_rated_matches_by_participant.append(match)
+
+        context = {
+            'not_rated_matches_by_host' : not_rated_matches_by_host,
+            'not_rated_matches_by_participant' :  not_rated_matches_by_participant,
+        }
+        return render(request, "matchingMatch/rate_list.html", context=context)
+    else:
+        return redirect("/")
+
+@login_required(login_url='/login')
+def rate_match(request,pk): #pk는 match pk
+    match = MatchInfo.objects.get(id=pk)
+    if (request.user.id == match.participant_id.id) or (request.user.id == match.host_id.id):
+        if request.method == "POST":
+            try:
+                if request.user.id == match.participant_id.id: # 상대방 아이디가 접속한 경우, host를 평가해야 됨.
+                    match.host_id.manner = match.host_id.manner + float(request.POST.get('manner'))
+                    match.host_id.level = match.host_id.level + float(request.POST.get('level'))
+                    match.host_id.match_count += 1
+                    match.host_rated = True
+                    match.host_id.save()
+                    match.save()
+                    return redirect(f"/rate_list/{request.user.id}")
+                else: # 주최자 아이디가 접속한 경우, participant를 평가해야됨.
+                    match.participant_id.manner = match.participant_id.manner + float(request.POST.get('manner'))
+                    match.participant_id.level = match.participant_id.level + float(request.POST.get('level'))
+                    match.participant_id.match_count += 1
+                    match.participant_rated = True
+                    match.participant_id.save()
+                    match.save()
+                    return redirect(f"/rate_list/{request.user.id}")
+            except:
+                return redirect(f"/rate_match/{pk}")
+        else:
+            context = {
+                'match' : match,
+            }
+            return render(request, "matchingMatch/rate_match.html", context=context)
     else:
         return redirect("/")
