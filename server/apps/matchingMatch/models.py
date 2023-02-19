@@ -18,7 +18,7 @@ class Team(AbstractUser, PermissionsMixin):
     gender_list = (("male", "남성"), ("female", "여성"), ("mixed", "혼성"))
     team_name = models.CharField(null=False, max_length=20)
     team_logo = models.ImageField(
-        blank=True, null=True, default='avatar.png') #upolad_to 설정하는 게 좋아보임
+        blank=True, null=True, default='avatar.png', upload_to = 'logo/%Y%m%d') #upolad_to 설정하는 게 좋아보임
     team_intro = models.TextField(blank=True)  # 팀소개
     region = models.CharField(max_length=20)
     photo = models.ImageField(blank=True, null=True, upload_to='posts/%Y%m%d')
