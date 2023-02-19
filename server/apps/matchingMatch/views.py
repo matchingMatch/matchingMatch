@@ -114,7 +114,7 @@ def team_list(request):
         teams = Team.objects.all()
     if order:
         teams = teams.order_by(order)
-    
+    teams = teams.filter(is_superuser=False, is_staff = False)
     paginator = Paginator(teams, 10)
     teams = paginator.get_page(page)
     # order와 search가 동시에 존재하는 경우?
@@ -135,6 +135,7 @@ def match_register(request):
             match.save()
             return redirect("matchingMatch:match_detail", pk = match.pk) #만들어진 페이지로 이동
         else:
+            print(match_form.errors)
             stadium_name = Stadium.objects.order_by('stadium_name')
             stadium_name_list = stadium_name
             context = {"match_form": match_form, "stadium_name": stadium_name,
@@ -803,6 +804,9 @@ def rate_list(request,pk): #pk는 team pk
     else:
         return redirect("/")
 
+
+
+
 @login_required(login_url='/login')
 def rate_match(request,pk): #pk는 match pk
     match = MatchInfo.objects.get(id=pk)
@@ -810,16 +814,16 @@ def rate_match(request,pk): #pk는 match pk
         if request.method == "POST":
             try:
                 if request.user.id == match.participant_id.id: # 상대방 아이디가 접속한 경우, host를 평가해야 됨.
-                    match.host_id.manner = match.host_id.manner + float(request.POST.get('manner'))
-                    match.host_id.level = match.host_id.level + float(request.POST.get('level'))
+                    match.host_id.manner += request.POST.get('manner')
+                    match.host_id.level += request.POST.get('level')
                     match.host_id.match_count += 1
                     match.host_rated = True
                     match.host_id.save()
                     match.save()
                     return redirect(f"/rate_list/{request.user.id}")
                 else: # 주최자 아이디가 접속한 경우, participant를 평가해야됨.
-                    match.participant_id.manner = match.participant_id.manner + float(request.POST.get('manner'))
-                    match.participant_id.level = match.participant_id.level + float(request.POST.get('level'))
+                    match.participant_id.manner += request.POST.get('manner')
+                    match.participant_id.level += request.POST.get('level')
                     match.participant_id.match_count += 1
                     match.participant_rated = True
                     match.participant_id.save()
