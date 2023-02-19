@@ -436,21 +436,29 @@ def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk
         my_not_matched_matches = MatchInfo.objects.filter(
             is_matched=False, host_id=pk)
 
-        ended_matches = []
-        ended_yet_matches = []
+        ended_matches = [] #경기 성사 후 종료된 매치
+        not_started_matches = []  #경기 성사 후 시작되지 않은 매치
+        before_start_time = [] #매칭 성사 되지 않은 매치 중에서 시작 시간이 지나지 않은 매치들
 
         for match in my_matched_matches:
             if match.date < today:
                 ended_matches.append(match)
             elif match.date > today:
-                ended_yet_matches.append(match)
-            elif match.start_time < now:
-                ended_matches.append(match)
+                not_started_matches.append(match)
+            else:
+                if match.end_time < now:
+                    ended_matches.append(match)
+                if match.start_time > now:
+                    not_started_matches.append(match)
+
+        for match in my_not_matched_matches:
+            if (match.date > today) or (match.date == today and match.start_time > now):
+                before_start_time.append(match)
 
         context = {
-            'ended': ended_matches,
-            'ended_yet': ended_yet_matches,
-            'my_not_matched_matches': my_not_matched_matches,
+            'ended': ended_matches, #성사 후 종료
+            'not_started': not_started_matches, #성사 후 시작 전
+            'before_start': before_start_time, #성사 되기 전 경기 시작시간 전
         }
         return render(request, 'matchingMatch/my_register_matches.html', context=context)
     else:
@@ -470,21 +478,31 @@ def my_apply_matches(request, pk):
 
             my_matched_matches = MatchInfo.objects.filter(
                 is_matched=True, participant_id=pk)
-            ended_matches = []
-            ended_yet_matches = []
+            my_match_requests = MatchRequest.objects.filter(team_id=pk)
+            
+            ended_matches = [] #경기 성사 후 종료된 매치
+            not_started_matches = [] #경기 성사 후 시작하기 전 매치
+            before_start_time = [] #경기 시작시간 지나기 전 성사되지 않은 요청
 
             for match in my_matched_matches:
                 if match.date < today:
                     ended_matches.append(match)
                 elif match.date > today:
-                    ended_yet_matches.append(match)
-                elif match.start_time < now:
-                    ended_matches.append(match)
-            my_match_requests = MatchRequest.objects.filter(team_id=pk)
+                    not_started_matches.append(match)
+                else:
+                    if match.end_time < now:
+                        ended_matches.append(match)
+                    if match.start_time > now:
+                        not_started_matches.append(match)   
+
+            for requests in my_match_requests:
+                if (requests.match_id.date > today) or (requests.match_id.date == today and requests.match_id.start_time > now):
+                    before_start_time.append(requests)
+
             context = {
                 'ended': ended_matches,
-                'ended_yet': ended_yet_matches,
-                'my_match_requests':  my_match_requests,
+                'not_started': not_started_matches,
+                'before_start': before_start_time,
             }
             return render(request, 'matchingMatch/my_apply_matches.html', context=context)
     else:
