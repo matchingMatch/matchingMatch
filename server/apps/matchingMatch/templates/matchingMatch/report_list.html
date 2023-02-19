@@ -32,23 +32,26 @@
             </table>
             <nav>
                 <ul class="pagination pagination-sm justify-content-center">
-                    {% if reports.has_previous %}
+          
                     <li class="page-item">
-                        <a class="page-link mx-0" href="?page={{reports.previous_page_number}}">이전</a>
+                        <a class="page-link mx-0" {% if reports.has_previous %} href="?page={{reports.previous_page_number}}" {%else%} href ="#" onclick="fnc();return false;"
+                        {% endif %}>이전</a>
                     </li>
-                    {% endif %}
+                    
     
                     {% for p in reports.paginator.page_range %}
+                    {%if p == reports.number%}
+                    <li class="page-item">
+                        <a class="page-link mx-0 text-white bg-primary" href="?page={{p}}" class="mx-1">{{p}}</a>
+                    {%else%}
                     <li class="page-item">
                         <a class="page-link mx-0" href="?page={{p}}" class="mx-1">{{p}}</a>
                     </li>
+                    {%endif%}
                     {% endfor %}
     
-                    {% if reports.has_next %}
                     <li class="page-item">
-                        <a class="page-link mx-0" href="?page={{reports.next_page_number}}">다음</a>
-                    </li>
-                    {% endif %}
+                        <a class="page-link mx-0" {% if reports.has_next %} href="?page={{reports.next_page_number}}" {%else%} href ="#" onclick="fnc();return false;"{% endif %}>다음</a>
                 </ul>
             </nav>
         </div>
