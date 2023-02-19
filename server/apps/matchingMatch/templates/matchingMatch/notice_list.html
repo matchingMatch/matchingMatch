@@ -29,16 +29,34 @@
                 </tbody>
             </table>
             <nav>
-                <ul class="pagination justify-content-center">
-                    <li class="page-item"><a class="page-link" href="">이전</a></li>
-                    <li class="page-item"><a class="page-link" href="">1</a></li>
-                    <li class="page-item"><a class="page-link" href="">2</a></li>
-                    <li class="page-item"><a class="page-link" href="">3</a></li>
-                    <li class="page-item"><a class="page-link" href="">다음</a></li>
+                <ul class="pagination pagination-sm justify-content-center">
+          
+                    <li class="page-item">
+                        <a class="page-link mx-0" {% if notices.has_previous %} href="?page={{notices.previous_page_number}}" {%else%} href ="#" onclick="fnc();return false;"
+                        {% endif %}>이전</a>
+                    </li>
+                    
+    
+                    {% for p in notices.paginator.page_range %}
+                    {%if p == notices.number%}
+                    <li class="page-item">
+                        <a class="page-link mx-0 text-white bg-primary" href="?page={{p}}" class="mx-1">{{p}}</a>
+                    </li>
+                    {%else%}
+                    <li class="page-item">
+                        <a class="page-link mx-0" href="?page={{p}}" class="mx-1">{{p}}</a>
+                    </li>
+                    {%endif%}
+                    {% endfor %}
+    
+                    <li class="page-item">
+                        <a class="page-link mx-0" {% if notices.has_next %} href="?page={{notices.next_page_number}}" {%else%} href ="#" onclick="fnc();return false;"{% endif %}>다음</a>
                 </ul>
             </nav>
         </div>
+        {% if request.user.is_superuser %}
         <a href="{% url 'matchingMatch:notice_create' %}">글 작성</a>
+        {% endif %}
     </div>
 </div>
 

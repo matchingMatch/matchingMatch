@@ -19,11 +19,12 @@
                             <option value="-manner" {%if order == "-manner" %} selected {% endif %}>
                                 매너순
                             </option>
-                            
                         </select>
                         <div id="team-search" class="m-3">
                             <input name="team_search" type="text" style="height:19px;">
-                            <div class="btn btn-primary btn-sm" type="submit">검색</div>
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                검색
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -38,7 +39,7 @@
                     </thead>
                     <tbody>
                         {% for team in teams %}
-                        
+
                             <tr onclick="location.href='{% url 'matchingMatch:team_detail' team.pk %}'" style="cursor:pointer;">
                                 <th>{{team.team_name}}</th>
                                 <th>{{team.region}}</th>
@@ -50,16 +51,38 @@
                     </tbody>
                 </table>
                 <nav>
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item"><a class="page-link" href="">이전</a></li>
-                        <li class="page-item"><a class="page-link" href="">1</a></li>
-                        <li class="page-item"><a class="page-link" href="">2</a></li>
-                        <li class="page-item"><a class="page-link" href="">3</a></li>
-                        <li class="page-item"><a class="page-link" href="">다음</a></li>
+                    <ul class="pagination pagination-sm justify-content-center">
+                        
+                        <li class="page-item">
+                            <a class="page-link mx-0" {% if teams.has_previous %} href="?page={{teams.previous_page_number}}" {%else%} href ="#" onclick="fnc();return false;"
+                            {% endif %}>이전</a>
+                        </li>
+                        
+        
+                        {% for p in teams.paginator.page_range %}
+                        
+                        {%if p == teams.number%}
+                        <li class="page-item">
+                            <a class="page-link mx-0 text-white bg-primary" href="?page={{p}}" class="mx-1">{{p}}</a>
+                        </li>
+                        {%else%}
+                        <li class="page-item">
+                            <a class="page-link mx-0" href="?page={{p}}" class="mx-1">{{p}}</a>
+                        </li>
+                        {%endif%}
+                        {% endfor %}
+        
+                        <li class="page-item">
+                            <a class="page-link mx-0" {% if teams.has_next %} href="?page={{teams.next_page_number}}" {%else%} href ="#" onclick="fnc();return false;"{% endif %}>다음</a>
+                        </li>
+                        
                     </ul>
                 </nav>
             </div>
         </div>
     </div>
 </body>
+<script>
+    
+</script>
 {% endblock %}

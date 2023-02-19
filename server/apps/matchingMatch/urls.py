@@ -7,7 +7,6 @@ urlpatterns = [
     path("", views.main, name="main"),
     path('login/', views.login_page, name="login"),
     path('register/', views.register_page, name="register"),
-    path('register/success', views.register_success, name = "register_success"),
     path('logout/', views.logout_user, name="logout"),
     path('account/', views.account_page, name="account"),
     path('my_register_matches/<int:pk>', views.my_register_matches, name="my_register_matches"),
@@ -39,5 +38,6 @@ urlpatterns = [
     path('report_detail/<int:pk>/update', views.report_update, name="report_update"),
     path('report_detail/<int:pk>/delete', views.report_delete, name="report_delete"),
     path('cancel_game/<int:pk>', views.cancel_game, name="cancel_game"),
-    
+    path('rate_list/<int:pk>', views.rate_list, name="rate_list"),
+    path('rate_match/<int:pk>', views.rate_match, name="rate_match")
 ]

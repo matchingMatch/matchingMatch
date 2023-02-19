@@ -1,17 +1,67 @@
 {% extends 'matchingMatch/base.html' %}
+{% load static %}
 {% block content %}
-신고글 목록 <a href="{% url 'matchingMatch:report_create' team.pk%}">글 작성</a>
-{% if reports %} 
-{% for report in reports %}
-<hr>
-<div>작성자: {{report.writer}}</div><br>
-<a href="/report_detail/{{report.pk}}"><div>제목: {{report.title}}</div></a><br>
-<div>내용: {{report.content}}</div><br>
-<div>최초 작성일: {{report.created_at}}</div>
-<div>최근 수정일: {{report.updated_at}}</div>
-<hr>
-{% endfor%}
-{% else %}
-<div>비어 있음</div>
-{% endif %}
+<div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+    <div class="d-flex flex-column bg-white " style = "width:700px; ">
+        <div class="report-list d-flex flex-column justify-content-center text-center m-3">
+            <h4>신고 게시판</h4>
+            <table class="report table table-hover px-3 " style="font-size: 12px;">
+                <thead style="font-style: oblique;">
+                    <tr>
+                        <th>제목</th>
+                        <th>등록일</th>
+                        <th>수정일</th>
+                        <th>작성자</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if reports %}
+                    {% for report in reports %}
+                        <tr onclick="location.href='{% url 'matchingMatch:report_detail' report.pk %}'" style="cursor:pointer;">
+                            <th>{{report.title}}</th>
+                            <th>{{ report.created_at|date:"M d" }}일</th>
+                            <th>{{ report.updated_at|date:"M d" }}일</th>
+                            <th>{{report.writer}}</th>
+                        </tr>
+                    {% endfor %}
+                    {% else %}
+                    <div>게시글이 없습니다. </div>
+                    {% endif %}
+
+                </tbody>
+            </table>
+            <nav>
+                <ul class="pagination pagination-sm justify-content-center">
+          
+                    <li class="page-item">
+                        <a class="page-link mx-0" {% if reports.has_previous %} href="?page={{reports.previous_page_number}}" {%else%} href ="#" onclick="fnc();return false;"
+                        {% endif %}>이전</a>
+                    </li>
+                    
+    
+                    {% for p in reports.paginator.page_range %}
+                    {%if p == reports.number%}
+                    <li class="page-item">
+                        <a class="page-link mx-0 text-white bg-primary" href="?page={{p}}" class="mx-1">{{p}}</a>
+                    {%else%}
+                    <li class="page-item">
+                        <a class="page-link mx-0" href="?page={{p}}" class="mx-1">{{p}}</a>
+                    </li>
+                    {%endif%}
+                    {% endfor %}
+    
+                    <li class="page-item">
+                        <a class="page-link mx-0" {% if reports.has_next %} href="?page={{reports.next_page_number}}" {%else%} href ="#" onclick="fnc();return false;"{% endif %}>다음</a>
+                </ul>
+            </nav>
+        </div>
+        <div class="create mx-5">
+            <button class="btn btn-outline-warning btn-sm">
+                <a href="{% url 'matchingMatch:report_create' team.pk %}" style="text-decoration:none; color:black;">작성하기</a>
+            </button>
+        </div>
+    </div>
+</div>
+
+
 {% endblock content %}
