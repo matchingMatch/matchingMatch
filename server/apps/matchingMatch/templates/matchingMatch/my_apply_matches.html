@@ -18,7 +18,7 @@
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                            {% for request in my_match_requests %}
+                            {% for request in before_start %}
                             {% if request.match_id.is_matched == False %}
                             <div class="match d-flex flex-row justify-content-center align-items-center m-2">
                                 <div class="match_type col-3  text-center">
@@ -60,7 +60,7 @@
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample" style="color:black;">
                         <div class="accordion-body">
-                            {% for match in ended_yet %}
+                            {% for match in not_started %}
                             <div class="match d-flex flex-row justify-content-center align-items-center m-2">
                                 <div class="match_type col-3 text-center">
                                     경기 시작전
