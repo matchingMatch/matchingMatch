@@ -70,12 +70,14 @@ def team_detail(request, pk):  # pk = 팀 아이디
     team = get_object_or_404(Team, id=pk)
     match_list = MatchInfo.objects.filter(host_id=team)
     
-    level = team.level / team.match_count
-    manner = team.manner / team.match_count
-    
-    level = round(level,1)
-    manner = round(manner,1)
-    
+    if team.match_count >= 3:
+        level = team.level / team.match_count
+        manner = team.manner / team.match_count
+        level = round(level,1)
+        manner = round(manner,1)
+    else:
+        level = None
+        manner = None
     context = {"user": user, "team": team, "match_list": match_list, "level": level, "manner" : manner}
     return render(request, "matchingMatch/team_detail.html", context=context)
 
