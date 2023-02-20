@@ -4,7 +4,7 @@
 	{% if page == 'register' %}
 
 	<body>
-    <div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+    <div class="wrap w-100 vh-102 d-flex bg-light justify-content-center p-0">
       <div class="d-flex flex-column bg-white " style = "width:700px;">
         <div class="login-register--container m-3">
           <h1 class="form-field--title">회원가입</h1>
@@ -30,25 +30,25 @@
                   class="g-recaptcha"
                   data-sitekey="6Lc6UZEkAAAAAKB5hLtF7-cnZtOPcuvgzKRaJPDq"
                 ></div>
-                <input
-                  class="btn btn--primary formsubmit-btn py-1"
-                  type="submit"
-                  value="회원가입"
-                />
+                <div class="form-field--wrapper py-1"></div>
+                  <input
+                    type="submit"
+                    value="회원가입"
+                  />
+                </div>
+                <p class="login-register-switchpagetext py-1">
+                  이미 계정이 있으신가요?
+                  <a href="{% url 'matchingMatch:login' %}">로그인</a>
+                </p>
               </div>
             </form>
           </div>
-
-          <p class="login-register-switchpagetext">
-            이미 계정이 있으신가요?
-            <a href="{% url 'matchingMatch:login' %}">로그인</a>
-          </p>
         </div>
       </div>
     </div>
 
 	{% else %}
-  <div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+  <div class="wrap w-100 vh-99 d-flex bg-light justify-content-center p-0">
     <div class="d-flex flex-column bg-white " style = "width:700px;">
       <div class="login-register--container section m-3">
         <h1 class="form-field--title">로그인</h1>
@@ -85,15 +85,14 @@
             />
           </div>
 
-          <div class="form-field--wrapper">
+          <div class="form-field--wrapper py-1">
             <input
-              class="btn btn--primary formsubmit-btn"
               type="submit"
               value="로그인"
             />
           </div>
 
-          <p class="login-register-switchpagetext">
+          <p class="login-register-switchpagetext py-1">
             아직 회원가입을 하지 않으셨나요?
             <a href="{% url 'matchingMatch:register' %}">회원 가입</a>
           </p>
@@ -103,5 +102,40 @@
   </div>
 	{% endif %}
 
+  <script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"
+	></script>
+
 </body>
+
+<script>
+	window.onload = () => {
+		const options = document.querySelectorAll("#stadium_list option");
+		const check = new Map();
+		for (let i = 0; i < options.length; i++) {
+			console.log(options[i].innerText);
+			check.set(options[i].innerText, options[i].getAttribute("data-value"));
+		}
+
+		document
+			.getElementById("stadium_search")
+			.addEventListener("input", function (e) {
+				var input = e.target,
+					list = input.getAttribute("list"),
+					hiddenInput = document.getElementById(
+						input.getAttribute("id") + "-hidden"
+					),
+					inputValue = input.value;
+				hiddenInput.value = inputValue;
+				console.log(check.has(inputValue));
+				console.log(inputValue);
+				if (check.has(inputValue)) {
+					hiddenInput.value = check.get(inputValue);
+				}
+			});
+	};
+</script>
+
 {% endblock content %}
