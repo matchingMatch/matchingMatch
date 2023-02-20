@@ -16,6 +16,12 @@
 <main class="wrap w-100% d-flex bg-light justify-content-center p-0">
 <<<<<<< Updated upstream
 	<div class = "main_container d-flex flex-column bg-white">
+<<<<<<< HEAD
+		<div class="banner p-2">
+		<img src="{%static 'image/banner_photo.jpg' %}" alt="banner_image">
+		</div>
+
+=======
 		<div class = "main_container d-flex flex-column bg-white">
 			<div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
 				<div class="carousel-inner">
@@ -36,6 +42,7 @@
 				</button>
 			</div>
 	
+>>>>>>> dev
 		<form id = "date-form" action="" method = "get">
 
 		<div class="calendar_container sticky-top">
@@ -185,14 +192,15 @@
 	</div>
 </main>
 </body>
-<script>	
+<script>
+	
 	const sendRequest = async () => {
 		const url = "/match/ended/";
 		let userMatches = await axios.get(url);
 		userMatches = userMatches.data.userMatches;
 		console.log("userMatches:", userMatches);
 		if (userMatches.length == 0) {
-			return;
+			return
 		}
 		createModal(userMatches);
 	};
@@ -203,6 +211,7 @@
 	
 	const createModal = (userMatches) => {
 		const alarmModalList = document.querySelector(".alarm_modal_list");
+		
 		alarmModalList.classList.toggle('show')
 		alarmModalList.innerHTML = "";
 		for (let i = 0; i < userMatches.length; i++) {

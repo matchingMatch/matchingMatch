@@ -3,7 +3,7 @@
 {% endblock%} {% block content %}
 <body>
 	{{m}}
-	<main id = "match-detail" class="wrap w-100% d-flex bg-light justify-content-center p-0" style="min-height:80vh">
+	<main id = "match-detail" class="wrap w-100% d-flex bg-light justify-content-center p-0">
 		<div class="d-flex flex-column bg-white" style="width: 700px">
 			<!-- 카카오맵 api -->
 			<div id="map" style="width: auto; height: 25rem"></div>
@@ -144,7 +144,7 @@
 				</div>
 				
 				{% elif match.host_id != user and status == 1 %}
-				<div id="enroll" >
+				<div id="enroll">
 					<button
 						class="enroll-btn"
 						onclick="changeEnroll({{ match.id}}, 'enroll-cancel')"

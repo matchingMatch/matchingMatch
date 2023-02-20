@@ -337,7 +337,11 @@ nav a {
 	font-weight: normal;
 	font-style: normal;
 } */
+<<<<<<< HEAD
+@font-face {
+=======
 /* @font-face {
+>>>>>>> dev
 	font-family: 'NEXONFootballGothicBA1';
 	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXONFootballGothicBA1.woff') format('woff');
 	font-weight: normal;
