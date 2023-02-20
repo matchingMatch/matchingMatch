@@ -819,16 +819,16 @@ def rate_match(request, pk):  # pk는 match pk
         if request.method == "POST":
             try:
                 if request.user.id == match.participant_id.id:  # 상대방 아이디가 접속한 경우, host를 평가해야 됨.
-                    match.host_id.manner += request.POST.get('manner')
-                    match.host_id.level += request.POST.get('level')
+                    match.host_id.manner += int(request.POST.get('manner'))
+                    match.host_id.level += int(request.POST.get('level'))
                     match.host_id.match_count += 1
                     match.host_rated = True
                     match.host_id.save()
                     match.save()
                     return redirect(f"/rate_list/{request.user.id}")
-                else:  # 주최자 아이디가 접속한 경우, participant를 평가해야됨.
-                    match.participant_id.manner += request.POST.get('manner')
-                    match.participant_id.level += request.POST.get('level')
+                elif request.user.id == match.host_id.id:  # 주최자 아이디가 접속한 경우, participant를 평가해야됨.
+                    match.participant_id.manner += int(request.POST.get('manner'))
+                    match.participant_id.level += int(request.POST.get('level'))
                     match.participant_id.match_count += 1
                     match.participant_rated = True
                     match.participant_id.save()
