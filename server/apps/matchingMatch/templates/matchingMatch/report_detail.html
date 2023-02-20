@@ -11,20 +11,16 @@
                 {{report.title}}
             </div>
         </div>
-        <div class="report-info border-bottom m-3 d-flex flex-row align-items-center" style="font-size:10px;">
-            <div class="writer mx-3 mb-2">
-                {{report.writer}}
-            </div>
-        </div>
-        <div class="content border-bottom mx-3" style="font-size:12px;">
-            <div class="mx-3">
+        
+        <div class="content border-bottom m-3" style="font-size:12px; height:30%;">
+            <div class="mx-3" >
                 {{report.content}}
             </div>
         </div>
         {% if report.image %}
-        <div class="image border-bottom mx-3" style="font-size:12px;">
-            <div class="mx-3">
-                <img class="report_image" src="{{report.image.url}}" />
+        <div class="image border-bottom mx-3" style="font-size:12px; height:40%;">
+            <div class="mx-3" style="height:100%;">
+                <img class="report_image" src="{{report.image.url}}" style="max-height:100%; width:auto !important ">
             </div>
         </div>
         {% endif %}
@@ -39,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <div class="update_delete_container">
+        <div class="update_delete_container d-flex flex-row justify-content-end m-3">
             <div class="update text-center mx-1">
                 <button class="btn btn-outline-warning btn-sm">
                     <a href="/report_detail/{{report.pk}}/update" style="text-decoration:none; color:black;">수정하기</a>

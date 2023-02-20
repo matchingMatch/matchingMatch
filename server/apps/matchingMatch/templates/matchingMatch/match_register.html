@@ -1,9 +1,9 @@
 {% extends 'matchingMatch/base.html' %} {% load static %} {% block content %}
 <body>
 	<div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
-		<div class="d-flex flex-column bg-white" style="width: 700px">
-			<div class="container">
-				<div class="register-content">
+		<div class="d-flex flex-column bg-white v-100" style="width: 700px">
+			<div class="container v-100">
+				<div class="register-content v-100">
 					<div class="register-form justify-content-center">
 						<h4 class="form-title text-center mt-3">매치 등록하기</h4>
 					<form
@@ -98,14 +98,14 @@
 						</div>
 					</div>
 
-					<div class="form-group border-bottom border-dark d-flex flex-row align-items-center " style="position: relative; margin-bottom: 25px; overflow: hidden; width:80%; padding: 6px 0px;">
+					<div class="form-group border-bottom border-dark d-flex flex-row  " style="position: relative; margin-bottom: 25px; overflow: hidden; width:80%; padding: 6px 0px;">
 						<div class="col-4 px-2 text-start">
 							<label for="etc" class="p-0 text-center">
 								<img src="{% static 'icon/comment-dots-solid.svg' %}" alt="comment-dots-solid" style="height:12px; width:12px;"> 기타사항 
 							</label>
 						</div>
 						<div class="col-8 text-center">
-							<textarea rows="8" cols="50" name="etc" type="text" id="etc" placeholder="기타사항/ 연락처 혹은 카톡 아이디 남겨주세요" style="width:100%; border:none; "></textarea>
+							<textarea rows="5" cols="40" name="etc" type="text" id="etc" placeholder="기타사항/ 연락처 혹은 카톡 아이디 남겨주세요" style="width:100%; border:none; "></textarea>
 						</div>
 					</div>
 
