@@ -134,16 +134,19 @@
 				
 				
 				{% elif match.host_id != user and status == 0 %}
-				<div id="enroll-btn">
-					<button
+				<div class = "d-flex justify-content-center">				
+					<div id="enroll-btn">
+						<button
 						class="enroll"
 						onclick="changeEnroll({{ match.id}}, 'enroll')"
-					>
+						>
 						신청하기
 					</button>
 				</div>
+				</div>
 				
 				{% elif match.host_id != user and status == 1 %}
+				<div class = "d-flex justify-content-center">	
 				<div id="enroll-btn" >
 					<button
 						class="enroll-btn"
@@ -152,6 +155,7 @@
 						신청취소
 					</button>
 				</div>
+			</div>
 				{% endif %} {% endif %}
 				
 			</div>
