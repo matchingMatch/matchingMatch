@@ -1,11 +1,16 @@
 {% extends 'matchingMatch/base.html' %}
-
+{% load static %}
 {% block content %}
 	{% if page == 'register' %}
 
 	<body>
     <div class="wrap w-100 vh-102 d-flex bg-light justify-content-center p-0">
       <div class="d-flex flex-column bg-white " style = "width:700px;">
+        <div class="mx-auto">
+          <a href="/">
+            <img class="ml-3" src="{% static 'img/site_logo.png' %}" width="300">
+          </a>
+        </div>
         <div class="login-register--container m-3">
           <h1 class="form-field--title">회원가입</h1>
           <div>
@@ -50,6 +55,11 @@
 	{% else %}
   <div class="wrap w-100 vh-99 d-flex bg-light justify-content-center p-0">
     <div class="d-flex flex-column bg-white " style = "width:700px;">
+      <div class="mx-auto">
+        <a href="/">
+          <img class="ml-3" src="{% static 'img/site_logo.png' %}" width="300">
+        </a>
+      </div>
       <div class="login-register--container section m-3">
         <h1 class="form-field--title">로그인</h1>
         {%if messages%} {%for message in messages%}
