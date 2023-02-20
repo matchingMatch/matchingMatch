@@ -11,19 +11,15 @@
                 {{report.title}}
             </div>
         </div>
-        <div class="report-info border-bottom m-3 d-flex flex-row align-items-center" style="font-size:10px;">
-            <div class="writer mx-3 mb-2">
-                {{report.writer}}
-            </div>
-        </div>
-        <div class="content border-bottom mx-3" style="font-size:12px;">
+        
+        <div class="content border-bottom mx-3 mt-3" style="font-size:12px;">
             <div class="mx-3">
                 {{report.content}}
             </div>
         </div>
         {% if report.image %}
         <div class="image border-bottom mx-3" style="font-size:12px;">
-            <div class="mx-3">
+            <div class="m-3">
                 <img class="report_image" src="{{report.image.url}}" />
             </div>
         </div>
