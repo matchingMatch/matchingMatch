@@ -419,7 +419,6 @@ def edit_account(request):
 class delete_account(SuccessMessageMixin, generic.DeleteView):
     model = Team
     template_name = 'matchingMatch/delete_account_confirm.html'
-    success_message = "유저가 성공적으로 삭제됐습니다."
     success_url = reverse_lazy('matchingMatch:main')
 
     def get(self, request, pk, *args, **kwargs):

@@ -57,12 +57,12 @@
                                     manner = Number('{{team.manner}}')
                                     teamLevel = document.getElementById('{{team.id}}level')
                                     teamManner = document.getElementById('{{team.id}}manner')
-                                    if (count <= 3) {
+                                    if (count < 3) {
                                         teamLevel.innerText = '-'
                                         teamManner.innerText = '-'   
                                     } else {
-                                        teamLevel.innerText = `${(level/count).toFixed(2)}`
-                                        teamManner.innerText = `${(manner/count).toFixed(2)}`
+                                        teamLevel.innerText = `${(level/count).toFixed(1)}`
+                                        teamManner.innerText = `${(manner/count).toFixed(1)}`
                                     }
                                         
                                 </script>

@@ -35,6 +35,9 @@
 						</div>
 					</div>
 					
+					{% if match_form.date.errors %}
+					<span class="error">{{match_form.date.errors}}</span>
+					{% endif %} 
 
 					<div class="form-group border-bottom border-dark d-flex flex-row align-items-center " style="position: relative; margin-bottom: 25px; overflow: hidden; width:80%; padding: 6px 0px;">
 						<div class="col-4 px-2 text-start">
@@ -47,8 +50,8 @@
 						</div>
 					</div>
 
-				{% if match_form.date.errors %}
-				<span style="color: red;">{{match_form.date.errors}}</span>
+				{% if match_form.start_time.errors %}
+				<span class = "error">{{match_form.start_time.errors}}</span>
 				{% endif %} 
 
 
@@ -62,6 +65,9 @@
 							<input name="end_time" type="time" id="end_time" style="width:100%; border:none; ">
 						</div>
 					</div>
+					{% if match_form.end_time.errors %}
+					<span class = "error">{{match_form.end_time.errors}}</span>
+					{% endif %} 
 
 					<div class="form-group border-bottom border-dark d-flex flex-row align-items-center " style="position: relative; margin-bottom: 25px; overflow: hidden; width:80%; padding: 6px 0px;">
 						<div class="col-4 px-2 text-start">
@@ -83,7 +89,10 @@
 							<input type="hidden" name="stadium" id="stadium_search-hidden" />
 						</div>
 					</div>
-
+					{% if match_form.stadium.errors %}
+					<span class = "error">{{match_form.stadium.errors}}</span>
+					{% endif %} 
+	
 					
 					<div class="form-group border-bottom border-dark d-flex flex-row align-items-center " style="position: relative; margin-bottom: 25px; overflow: hidden; width:80%; padding: 6px 0px;">
 						<div class="col-4 px-2 text-start">
@@ -97,6 +106,9 @@
 							placeholder="원구장비/상대팀 부담비용" style="width:100%; border:none; ">
 						</div>
 					</div>
+					{% if match_form.stadium_cost.errors %}
+					<span class = "error">{{match_form.stadium_cost.errors}}</span>
+					{% endif %} 
 
 					<div class="form-group border-bottom border-dark d-flex flex-row  " style="position: relative; margin-bottom: 10px; overflow: hidden; width:80%; padding: 6px 0px;">
 						<div class="col-3 px-2 text-start align-items-bottom">
@@ -108,6 +120,9 @@
 							<textarea rows="8" cols="50" name="etc" type="text" id="etc" placeholder="기타사항/ 연락처 혹은 카톡 아이디 남겨주세요" style="width:100%; border:none; "></textarea>
 						</div>
 					</div>
+					{% if match_form.stadium_cost.errors %}
+					<span class = "error">{{match_form.etc.errors}}</span>
+					{% endif %} 
 
 					<div class="justify-content-center mb-4">
 						<div
