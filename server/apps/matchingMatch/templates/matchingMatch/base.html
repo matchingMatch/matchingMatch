@@ -138,16 +138,16 @@
         <nav class="bg-light">
             <footer class="bg-white d-flex flex-column align-items-center gap-1 py-5 mx-auto border-top" style="max-width:700px;">
                 <p style="margin-bottom: 0;">너와 나, 축구로 하나되는</p>
-                <div>
+                <div class="d-flex justify-content-center">
                     <a href="{% url 'matchingMatch:main' %}">
                         <img class="ml-3" src="{% static 'img/main_logo.png' %}" width="200">
                     </a>
-                    <a href="{% url 'matchingMatch:main' %}">
+                    <a href="https://pirogramming.com/">
                         <img class="ml-3" src="{% static 'img/piro18.png' %}" width="200">
                     </a>
                 </div>
 
-                <p class="mb-3 mb-md-0 text-muted">&copy; 2022 Company, Inc</p>
+                <p class="mb-3 text-muted" style="margin-bottom: 10px;">2022 Company, Inc</p>
 
             
                 <ul class="nav justify-content-end list-unstyled d-flex">
@@ -164,7 +164,7 @@
                     {% endif %}
                     <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
                 </ul>
-                <p class="text-center text-muted">&#169; 2022 Company, Inc</p>
+                <p class="text-center text-muted">2022 Company, Inc</p>
             </footer>
 
         </nav>
