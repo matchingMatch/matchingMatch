@@ -60,15 +60,15 @@ header {
 	top: 0;
 	width: 3100px;
 	/* 슬라이드할 사진과 마진 총 넓이 */
-	transition: left 0.5s ease-out;
+	/* transition: left 0.5s ease-out; */
 	padding: 0;
 }
 
-.week .date {
-	width: calc(100vw/7);
+.week > label {
+	width: calc(100vw / 7);
 }
 
-.week .date:hover {
+.week > label:hover {
 	cursor: pointer;
 	background-color: #cecece;
 }
@@ -76,8 +76,6 @@ header {
 .week_slideshow .date:first-child {
 	/* margin-left: 15px; */
 }
-
-
 
 .week_slideshow .date div {
 	/* width: 50px; */
@@ -104,9 +102,11 @@ header {
 	left: -20px;
 }
 
+
 .next {
 	right: -20px;
 }
+
 
 .match_list {
 	height: 500px;
@@ -169,6 +169,7 @@ header {
 
 .exit_modal img {
 	width: 20px;
+	cursor: pointer;
 }
 
 .rate_save {
@@ -314,8 +315,7 @@ nav a {
 
 /* @font-face {
 	font-family: "Cafe24Ssurround";
-	src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff")
-		format("woff");
+	src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff") format("woff");
 	font-weight: normal;
 	font-style: normal;
 } */
@@ -344,4 +344,17 @@ body {
 	/* font-family: "Cafe24Ssurround" !important; */
 	font-family: 'NEXONFootballGothicBA1' !important;
 
+}
+
+.week > input {
+	position: absolute !important;
+	clip: rect(0, 0, 0, 0);
+	height: 1px;
+	width: 1px;
+	border: 0;
+	overflow: hidden;
+}
+.week label {
+	transition: all 0.1s ease-in-out;
+	border-radius: 5px;
 }

@@ -11,7 +11,6 @@ def admin_required(function):
       if request.user.is_superuser == True:
         return function(request, *args, **kwargs)
       else:  
-        messages.info(request, "접근 권한이 없습니다.")
         return redirect('matchingMatch:main')
   
   return wrap

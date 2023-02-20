@@ -1,6 +1,5 @@
 {% extends 'matchingMatch/base.html' %} {% load static %} {% block content %}
 <body>
-	{{ match_form.errors }} {{match_form.non_field_errors }}
 	<div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
 		<div class="d-flex flex-column bg-white" style="width: 700px">
 			<div class="container">
@@ -48,6 +47,9 @@
 						</div>
 					</div>
 
+				{% if match_form.date.errors %}
+				<span style="color: red;">{{match_form.date.errors}}</span>
+				{% endif %} 
 
 
 					<div class="form-group border-bottom border-dark d-flex flex-row align-items-center " style="position: relative; margin-bottom: 25px; overflow: hidden; width:80%; padding: 6px 0px;">
@@ -167,7 +169,6 @@
 		const options = document.querySelectorAll("#stadium_list option");
 		const check = new Map();
 		for (let i = 0; i < options.length; i++) {
-			console.log(options[i].innerText);
 			check.set(options[i].innerText, options[i].getAttribute("data-value"));
 		}
 
@@ -181,8 +182,6 @@
 					),
 					inputValue = input.value;
 				hiddenInput.value = inputValue;
-				console.log(check.has(inputValue));
-				console.log(inputValue);
 				if (check.has(inputValue)) {
 					hiddenInput.value = check.get(inputValue);
 				}

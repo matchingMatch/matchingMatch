@@ -7,23 +7,15 @@
 
 {%endblock%}
 {% block content %}
+<div class="alarm_modal_list"></div>
 <body>
 
-<div class="alarm_modal_list"></div>
 <main class="wrap w-100% d-flex bg-light justify-content-center p-0">
 	<div class = "main_container d-flex flex-column bg-white">
 		<div class="banner p-2">
 		<img src="{%static 'image/banner_photo.jpg' %}" alt="banner_image">
 		</div>
-		<div class="plans_mode">
-		<div class="mode">
-			<img src="{% static 'icon/arrows-left-right-solid.svg' %}" alt="슬라이드"> <input type="radio" value="week_slideshow" name="mode" id="slide" checked>
-		</div>
-		<div class="mode">
-			<img src="{% static 'icon/calendar-solid.svg' %}" alt="캘린더"> <input type="radio" value="calendar_container" name="mode" id="calendar" >
-		</div>
-		
-		</div>
+
 		<form id = "date-form" action="" method = "get">
 
 		<div class="calendar_container sticky-top">
@@ -164,20 +156,15 @@
 </main>
 </body>
 <script>
-	const checkMode = (e, theother) => {
-		document.querySelector(`.${e.target.value}`).style.display = 'block'
-		document.querySelector(`.${theother}`).style.display = 'none'
-	}
-	const slideModeBtn = document.querySelector('#slide')
-	const calendarModeBtn = document.querySelector('#calendar')
-	slideModeBtn.addEventListener('click', (e) => checkMode(e, 'calendar_container'))
-	calendarModeBtn.addEventListener('click', (e) => checkMode(e, 'week_slideshow'))
 	
 	const sendRequest = async () => {
 		const url = "/match/ended/";
 		let userMatches = await axios.get(url);
 		userMatches = userMatches.data.userMatches;
 		console.log("userMatches:", userMatches);
+		if (userMatches.length == 0) {
+			return
+		}
 		createModal(userMatches);
 	};
 	window.onload = () => {
@@ -188,12 +175,6 @@
 	const createModal = (userMatches) => {
 		const alarmModalList = document.querySelector(".alarm_modal_list");
 		
-		/*
-		alarmModalList.addEventListener('click', (e)=> {
-			alarmModalList.classList.toggle('show')
-			console.log(e.target)
-		})
-		*/
 		alarmModalList.classList.toggle('show')
 		alarmModalList.innerHTML = "";
 		for (let i = 0; i < userMatches.length; i++) {
@@ -217,12 +198,17 @@
 			</div>
 			`;
 		}
-		const exitModal = document.querySelector('.alarm_modal .exit_modal')
-
+		const exitModal = document.querySelector('.alarm_modal .exit_modal img')
+		const rateSave = document.querySelector('.alarm_modal .rate_save')
 		exitModal.addEventListener('click', (e)=> {
 			alarmModalList.classList.toggle('show')
 			console.log(e.target)
 		})
+		/*
+		rateSave.addEventListener('click', () => {
+			alarmModalList.classList.toggle('show')
+		})
+		*/
 	};
 </script>
 {%endblock%}
