@@ -1,4 +1,4 @@
-let date = new Date()
+
 const thisYear = date.getFullYear();
 const thisMonth = date.getMonth();
 const thisDate = date.getDate();
@@ -23,9 +23,8 @@ const urlstr = window.location.href;
 const url = new URL(urlstr);
 const cur_date = url.searchParams.get("date");
 
-
-let new_index = 0 // 새로 로드 될 떄의 curIndex
-let cur_checked = 0 //  현재 체크된 경우 window.onload에서 checked 이용
+let new_index = 0; // 새로 로드 될 떄의 curIndex
+let cur_checked = 0; //  현재 체크된 경우 window.onload에서 checked 이용
 dates.forEach((date, i) => {
 	let condition =
 		dayIndex % 7 == 0 ? "sun" : dayIndex % 7 == 6 ? "sat" : "rest_day";
@@ -36,20 +35,20 @@ dates.forEach((date, i) => {
 	let now_month = flag ? thisMonth + 2 : thisMonth + 1;
 	let now_year = now_month / 13 == 1 ? thisYear + 1 : thisYear;
 
-
 	if (cur_date == `${now_year}-${now_month}-${date}`) {
-    cur_checked = i
-    // 현재 날짜의 curSlideIndex 계산
-    new_index = Math.floor(i/7)
-		days[i] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}" checked>
+		cur_checked = i;
+		// 현재 날짜의 curSlideIndex 계산
+		new_index = Math.floor(i / 7);
+		days[
+			i
+		] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}" checked>
   <label class = "date-select" style ="background-color:skyblue;" for="date-${i}">
   <li class='date ${condition}' name = "date"><div>${
 			daysKorean[dayIndex++ % 7]
 		}요일</div><div>${date}일</div></li>
   </label>
   `;
-	}
-  else {
+	} else {
 		days[
 			i
 		] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}">
@@ -65,23 +64,16 @@ dates.forEach((date, i) => {
 const week = document.querySelector(".week");
 week.innerHTML = days.join("");
 
-
 // 상세 설정 필터 이후에도 현재 선택된 슬라이드의 checked 상태 변환
-window.addEventListener('load', () => {
-  // 아직 날짜 필터를 걸지 않았을 경우
-	if (cur_date == null) {
-		const date_form = document.getElementById("date-form");
-		const checked_one = document.getElementById(`date-${cur_checked}`)
-		checked_one.checked = true;
-		date_form.submit();
-	}
- 
-	const checked_one = document.getElementById(`date-${cur_checked}`)
-	
-  checked_one.checked = true
-	const slide = document.querySelector(".week")
-	slide.classList.add('week-transition');
-})
+window.addEventListener("load", () => {
+	// 아직 날짜 필터를 걸지 않았을 경우
+
+	const checked_one = document.getElementById(`date-${cur_checked}`);
+
+	checked_one.checked = true;
+	const slide = document.querySelector(".week");
+	slide.classList.add("week-transition");
+});
 
 //https://eunhee-programming.tistory.com/106
 const slides = document.querySelector(".week"); //전체 슬라이드 컨테이너
@@ -106,7 +98,7 @@ function moveSlide(num) {
 	currentIdx = num;
 }
 
-moveSlide(new_index)
+moveSlide(new_index);
 
 prev.addEventListener("click", function () {
 	/*첫 번째 슬라이드로 표시 됐을때는 
@@ -125,17 +117,15 @@ moveSlide 함수 불러옴 */
 	}
 });
 
-
 const slide_list = document.querySelectorAll(".slide-list");
 const date_form = document.getElementById("date-form");
 
 slide_list.forEach((e) => {
 	e.checked = true;
-  
+
 	e.addEventListener("click", (event) => {
 		//무한로딩 방지
 		event.preventDefault();
-    date_form.submit();
-
+		date_form.submit();
 	});
 });

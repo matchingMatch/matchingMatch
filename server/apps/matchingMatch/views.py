@@ -220,8 +220,10 @@ def main(request, *args, **kwargs):
         
     now_time = datetime.datetime.now().time()
     today = datetime.date.today()
+    
 
-    matches = MatchInfo.objects.filter(date = today, start_time__gte = now_time) | MatchInfo.objects.filter(date__gt = today)
+
+
 
     match_detail_category = {
         'gender': 'gender__in',
@@ -244,8 +246,14 @@ def main(request, *args, **kwargs):
     # html 태그 상의 name  : html 태그 상의 value
     if filter_set:
         filter_form = MatchFilterForm(request.GET)
-        matches = matches.filter(**filter_set)
-    
+        matches = MatchInfo.objects.filter(**filter_set)
+        is_date_filter = request.GET.get('date', False)
+        if is_date_filter:
+            matches = matches.filter(date=today)
+    else:    
+        matches = MatchInfo.objects.filter(date=today)
+        
+
     
     context = {
         'matches': matches,
@@ -560,15 +568,15 @@ def rate(request, pk):
         if user == match.host_id:
             opponent = get_object_or_404(Team, id=match.participant_id.id)
             match.participant_rated = True
-        else:
+        elif user == match.participant_id:
             opponent = get_object_or_404(Team, id=match.host_id.id)
             match.host_rated = True
 
         user.match_count += 1
         opponent.match_count += 1
         try:
-            opponent.level = opponent.level + float(request.POST['level'])
-            opponent.manner = opponent.manner + float(request.POST['manner'])
+            opponent.level = opponent.level + int(request.POST['level'])
+            opponent.manner = opponent.manner + int(request.POST['manner'])
             match.save()
             user.save()
             opponent.save()
@@ -577,18 +585,7 @@ def rate(request, pk):
         return redirect('/')
 
 
-@login_required(login_url='/login')
-@admin_required
-# 차단 유저 목록
-def admin_team_block(request):
-    blocked_teams = Team.objects.filter(is_active=False)
 
-    return render("admin_block")
-# 삭제 목록
-
-
-def admin_match_delete(request):
-    ...
 
 
 @login_required(login_url='/login')
