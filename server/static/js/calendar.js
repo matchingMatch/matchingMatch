@@ -1,4 +1,4 @@
-let date = new Date()
+l
 const makeCalendar = () => {
   const viewYear = date.getFullYear()
   const viewMonth = date.getMonth()

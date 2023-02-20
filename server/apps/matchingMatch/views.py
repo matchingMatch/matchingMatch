@@ -718,7 +718,7 @@ def report_update(request, pk):  # pk는 report pk
     report = get_object_or_404(Report, id=pk)
     if report.writer_id.id == request.user.id or request.user.is_superuser == True:
         if request.method == "POST":
-            old_image = report.image.url
+            old_image = report.image
             form = ReportForm(request.POST, request.FILES, instance=report)
             img = request.FILES.get('image', False)
             if form.is_valid():

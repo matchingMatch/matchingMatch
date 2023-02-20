@@ -1,3 +1,4 @@
+let date = new Date()
 const thisYear = date.getFullYear();
 const thisMonth = date.getMonth();
 const thisDate = date.getDate();
