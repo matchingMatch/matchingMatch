@@ -16,7 +16,6 @@
 			crossorigin="anonymous"
 		/>
         <script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        <script defer src="{% static 'js/calendar.js' %}"></script>
         <script defer src="{% static 'js/mainslide.js' %}"></script>
         <script defer src="{% static 'js/maincheck.js' %}"></script>
         <script src="https://www.google.com/recaptcha/api.js"></script>
@@ -75,6 +74,8 @@
         </style>
         
     </head>
+    {%block modal%}
+    {%endblock%}
     <body>
         <nav class="bg-light">
             <div class="d-flex justify-content-between align-items-center mx-auto p-0 bg-white" style="max-width:700px">
@@ -155,7 +156,7 @@
                 <li class="nav-item"><a href="{% url 'matchingMatch:team_list' %}" class="nav-link px-2 text-muted">팀목록</a></li>
                 <li class="nav-item"><a href="{% url 'matchingMatch:notice_list' %}" class="nav-link px-2 text-muted">공지사항</a></li>
                 {% if request.user.is_authenticated %}
-                <li class="nav-item"><a href="{% url 'matchingMatch:report_list' request.user.id %}" class="nav-link px-2 text-muted">신고게시판</a></li>
+                <li class="nav-item"><a href="{% url 'matchingMatch:report_list' %}" class="nav-link px-2 text-muted">신고게시판</a></li>
                 {% endif %}
                 <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
             </ul>

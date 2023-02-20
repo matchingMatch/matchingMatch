@@ -43,8 +43,16 @@
                             <tr onclick="location.href='{% url 'matchingMatch:team_detail' team.pk %}'" style="cursor:pointer;">
                                 <th>{{team.team_name}}</th>
                                 <th>{{team.region}}</th>
-                                <th>{{team.level}}</th>
-                                <th>{{team.manner}}</th>
+                                <th class="level"></th>
+                                <th class="manner"></th>
+                                <script>
+                                    let count = Number('{{team.match_count}}')
+                                    let level = Number('{{team.level}}')
+                                    let manner = Number('{{team.manner}}')
+                                    document.querySelector('.level').innerText = `${(level/count).toFixed(2)}`
+                                    document.querySelector('.manner').innerText = `${(manner/count).toFixed(2)}`
+
+                                </script>
                             </tr>
                         
                         {% endfor %}
