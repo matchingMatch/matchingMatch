@@ -693,7 +693,7 @@ def report_create(request, pk):  # pk는 team pk
         if request.method == "POST":
             form = ReportForm(request.POST, request.FILES)
             team = Team.objects.get(id=pk)
-            if form.is_valid:
+            if form.is_valid():
                 report = form.save()
                 report.writer_id = team
                 report.save()
@@ -734,7 +734,6 @@ def report_update(request, pk):  # pk는 report pk
                 #     os.remove(image_path)
                 form.save()
                 return redirect(f"/report_detail/{pk}")
-
         form = ReportForm(instance=report)
         context = {
             'form': form,
