@@ -175,8 +175,7 @@
 	</div>
 </main>
 </body>
-<script>
-	
+<script>	
 	const sendRequest = async () => {
 		const url = "/match/ended/";
 		let userMatches = await axios.get(url);
@@ -194,7 +193,6 @@
 	
 	const createModal = (userMatches) => {
 		const alarmModalList = document.querySelector(".alarm_modal_list");
-		
 		alarmModalList.classList.toggle('show')
 		alarmModalList.innerHTML = "";
 		for (let i = 0; i < userMatches.length; i++) {
