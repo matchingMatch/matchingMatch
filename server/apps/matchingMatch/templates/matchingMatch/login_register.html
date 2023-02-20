@@ -53,10 +53,10 @@
     </div>
 
 	{% else %}
-  <div class="wrap w-100 vh-99 d-flex bg-light justify-content-center p-0">
+  <div class="wrap w-100 vh-99 d-flex bg-light justify-content-center p-0" style="min-height:80vh">
     <div class="d-flex flex-column bg-white " style = "width:700px;">
       <div class="login-register--container section m-3">
-        <h1 class="form-field--title">로그인</h1>
+        <h3 class="form-field--title m-2">로그인</h3>
         {%if messages%} {%for message in messages%}
         <script>
           alert("{{message}}");
@@ -69,37 +69,45 @@
                               <label>User:</label>
                               <input type="text" name="username"/>
                           </div> -->
-
-          <div class="form-field--wrapper py-1">
-            <label>유저네임 </label>
-            <input
-              class="form-field--input"
+          <div class="form-group border-bottom border-dark d-flex flex-row align-items-center " style="position: relative; margin-bottom: 25px; overflow: hidden; width:80%; padding: 6px 0px;">
+						<div class="col-4 px-2 text-start">
+							<label for="gender" class="p-0 text-center">
+								<img src="{% static 'icon/id-badge-regular.svg' %}" alt="id-badge-regular" style="height:12px; width:12px;"> 아이디
+							</label>
+						</div>
+						<div class="col-8 text-center">
+							<input class="form-field--input"
               id="id_username"
               type="username"
-              name="username"
-            />
-          </div>
+              name="username" style="width:100%; border:none; ">
+						</div>
+					</div>
 
-          <div class="form-field--wrapper py-1">
-            <label>비밀번호 </label>
-            <input
-              class="form-field--input"
-              id="id_password1"
-              type="password"
-              name="password"
-            />
-          </div>
+          <div class="form-group border-bottom border-dark d-flex flex-row align-items-center " style="position: relative; margin-bottom: 10px; overflow: hidden; width:80%; padding: 6px 0px;">
+						<div class="col-4 px-2 text-start">
+							<label for="gender" class="p-0 text-center">
+								<img src="{% static 'icon/lock-solid.svg' %}" alt="lock-solid" style="height:12px; width:12px;"> 비밀번호
+							</label>
+						</div>
+						<div class="col-8 text-center">
+							<input name="password" type="password" id="id_password1" class="form-field--input"style="width:100%; border:none; ">
+						</div>
+					</div>
 
-          <div class="form-field--wrapper py-1">
+
+          <div class="form-field--wrapper py-1 m-1">
             <input
               type="submit"
               value="로그인"
+              class="btn btn-outline-dark btn-sm text-center" 
             />
           </div>
 
-          <p class="login-register-switchpagetext py-1">
+          <p class="login-register-switchpagetext py-1 mb-3">
             아직 회원가입을 하지 않으셨나요?
+            
             <a href="{% url 'matchingMatch:register' %}">회원 가입</a>
+            
           </p>
         </form>
       </div>
