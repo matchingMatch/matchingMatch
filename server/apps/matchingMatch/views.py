@@ -233,12 +233,12 @@ def main(request, *args, **kwargs):
     filter_set = dict()
     for key, value in dict(request.GET).items():
         if key == 'date' and value:
+
             date_val = value[0]
             value[0] = datetime.datetime.strptime(value[0], '%Y-%m-%d').date()
 
         key = match_detail_category.get(key)
         filter_set[key] = value
-    print(date_val)
     
     filter_form = MatchFilterForm()
     # html 태그 상의 name  : html 태그 상의 value

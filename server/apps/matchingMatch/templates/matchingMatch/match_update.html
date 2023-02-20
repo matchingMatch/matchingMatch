@@ -101,7 +101,6 @@ datalist option:hover, datalist option:focus {
 		const options = document.querySelectorAll("#stadium_list option");
 		const check = new Map();
 		for (let i = 0; i < options.length; i++) {
-			console.log(options[i].innerText);
 			check.set(options[i].innerText, options[i].getAttribute("data-value"));
 		}
 
@@ -115,8 +114,6 @@ datalist option:hover, datalist option:focus {
 					),
 					inputValue = input.value;
 				hiddenInput.value = inputValue;
-				console.log(check.has(inputValue));
-				console.log(inputValue);
 				if (check.has(inputValue)) {
 					hiddenInput.value = check.get(inputValue);
 				}
