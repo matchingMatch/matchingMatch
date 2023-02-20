@@ -40,6 +40,7 @@
                     
     
                     {% for p in reports.paginator.page_range %}
+                    {% if p >= reports.number|add:-4 and p <= reports.number|add:4 %}
                     {%if p == reports.number%}
                     <li class="page-item">
                         <a class="page-link mx-0 text-white bg-primary" href="?page={{p}}" class="mx-1">{{p}}</a>
@@ -47,6 +48,7 @@
                     <li class="page-item">
                         <a class="page-link mx-0" href="?page={{p}}" class="mx-1">{{p}}</a>
                     </li>
+                    {%endif%}
                     {%endif%}
                     {% endfor %}
     
