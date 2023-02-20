@@ -126,6 +126,11 @@ header {
 	color: blue;
 }
 
+.match_register_btn {
+	display: flex;
+	justify-content: end;
+}
+
 .alarm_modal_list {
 	position: absolute;
 	top: 0;
@@ -136,9 +141,11 @@ header {
 	background-color: rgba(0, 0, 0, 0.4);
 	z-index: 1030;
 }
+
 .alarm_modal_list.show {
 	display: block;
 }
+
 .alarm_modal {
 	border: 1px solid black;
 	border-radius: 10px;
@@ -153,18 +160,22 @@ header {
 	transform: translateX(-50%) translateY(-50%);
 	padding: 10px;
 }
-.alarm_modal > * {
+
+.alarm_modal>* {
 	margin-bottom: 10px;
 }
+
 .exit_modal {
 	cursor: pointer;
 	display: flex;
 	justify-content: flex-end;
 }
+
 .exit_modal img {
 	width: 20px;
 	cursor: pointer;
 }
+
 .rate_save {
 	margin-top: 10px;
 }
@@ -306,15 +317,37 @@ nav a {
 	content: "";
 }
 
-@font-face {
+/* @font-face {
 	font-family: "Cafe24Ssurround";
 	src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff") format("woff");
+	font-weight: normal;
+	font-style: normal;
+} */
+
+/* @font-face {
+	font-family: 'HealthsetGothicLight';
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/HealthsetGothicLight.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+} */
+
+/* @font-face {
+	font-family: "Jeju Gothic", sans-serif;
+	src: url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
+	font-weight: normal;
+	font-style: normal;
+} */
+@font-face {
+	font-family: 'NEXONFootballGothicBA1';
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXONFootballGothicBA1.woff') format('woff');
 	font-weight: normal;
 	font-style: normal;
 }
 
 body {
-	font-family: "Cafe24Ssurround" !important;
+	/* font-family: "Cafe24Ssurround" !important; */
+	font-family: 'NEXONFootballGothicBA1' !important;
+
 }
 
 .week > input {
