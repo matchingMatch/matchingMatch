@@ -664,7 +664,6 @@ def report_update(request, pk):  # pk는 report pk
                 #     os.remove(image_path)
                 form.save()
                 return redirect(f"/report_detail/{pk}")
-
         form = ReportForm(instance=report)
         context = {
             'form': form,
