@@ -155,7 +155,7 @@
                 <li class="nav-item"><a href="{% url 'matchingMatch:team_list' %}" class="nav-link px-2 text-muted">팀목록</a></li>
                 <li class="nav-item"><a href="{% url 'matchingMatch:notice_list' %}" class="nav-link px-2 text-muted">공지사항</a></li>
                 {% if request.user.is_authenticated %}
-                <li class="nav-item"><a href="{% url 'matchingMatch:report_list' request.user.id %}" class="nav-link px-2 text-muted">신고게시판</a></li>
+                <li class="nav-item"><a href="{% url 'matchingMatch:report_list' %}" class="nav-link px-2 text-muted">신고게시판</a></li>
                 {% endif %}
                 <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
             </ul>
