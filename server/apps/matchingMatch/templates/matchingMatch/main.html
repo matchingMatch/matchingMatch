@@ -78,7 +78,7 @@
 	
 	<div class="match_filter container">
 		<button
-		class="btn btn-primary"
+		class="btn btn-outline-primary btn-sm"
 		type="button"
 		data-bs-toggle="collapse"
 		data-bs-target="#matchFilter"
@@ -88,8 +88,8 @@
 		상세설정
 	</button>
 	
-		<div id="matchFilter" class="collapse">
-		<div class="container">
+		<div id="matchFilter" class="collapse my-2">
+		<div class="container border border-seconadry rounded p-1" style="font-size:13px;">
 			<b>지역</b>
 			<br>
 				<div id = "regions" class = "row">
@@ -101,8 +101,10 @@
 					{%endfor%}
 
 				</div>
-				<button type = 'button' class = "btn btn-primary" id = "region-all-check">전체 선택</button>
-				<button type = 'button' class = "btn btn-primary" id = "region-all-cancel">전체 선택 해제</button>
+				<div class="text-center m-2">
+				<button type = 'button' class = "btn btn-outline-info btn-sm" id = "region-all-check" style="font-size:12px;">전체 선택</button>
+				<button type = 'button' class = "btn btn-outline-info btn-sm" id = "region-all-cancel" style="font-size:12px;">전체 선택 해제</button>
+				</div>
 				<div>
 					<b>마감 여부</b>
 					<br>
@@ -118,7 +120,10 @@
 					{{option}}
 					{%endfor%}
 				</div>
-				<input class = "btn btn-outline-info" type="submit" value = "확인">
+				<div class="text-center">
+					<input class = "btn btn-outline-info btn-sm text-center" type="submit" value = "확인" style="font-size:12px;">
+				</div>
+				
 			</div>
 		
 		</div>
@@ -130,13 +135,17 @@
 		<a href="{% url 'matchingMatch:match_detail' match.pk%}"  class="w-100" style="text-decoration:none;">
 			<div class="list-group-item d-flex  p-2 text-black border-bottom align-items-center justify-content-center" >
 				<div class="time-wrap btn btn-warning h-50" style="font-size: 12px;">
+					<strong>
 					{{ match.date|date:"M d" }}일
 					<br>
 					{{match.start_time}}
+					</strong>
 				</div>
 				<div class="info-wrap col-6 p-3"  >
 					<div class="match-wrap" >
+					<strong>
 					{{match.stadium.stadium_name}}
+					</strong>
 					<br>
 					{{match.get_gender_display}}
 					</div>
@@ -152,12 +161,12 @@
 				</div>
 				<div class ="host-wrap">
 					{% if match.is_matched %}
-					<div class="btn btn-primary d-flex justify-content-center align-items-center py-3 " style="font-size: 12px; width:80px;">
-						<div>매치성사</div>
+					<div class="btn btn-primary d-flex justify-content-center align-items-center py-3 " style="font-size: 13px; width:80px;">
+						<div><strong>매치성사</strong></div>
 					</div>
 					{% else %}
-					<div class="btn btn-danger d-flex justify-content-center align-items-center py-3 " style="font-size: 12px; width:80px;">
-						<div>찾는 중</div>
+					<div class="btn btn-danger d-flex justify-content-center align-items-center py-3 " style="font-size: 13px; width:80px;">
+						<div><strong>찾는 중</strong></div>
 					</div>
 					{% endif %}
 				</div>
@@ -167,7 +176,7 @@
 		</div>
 		<div class="match_register_btn d-flex justify-content-end">
 			<a href="{% url 'matchingMatch:match_register'%}" style="text-decoration:none">
-				<div class="btn btn-success m-3">
+				<div class="btn btn-outline-success btn-sm m-3">
 					매치 등록하기
 				</div>
 			</a>

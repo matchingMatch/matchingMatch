@@ -2,7 +2,7 @@
 {%load static%}
 {% block content %}
 <body >
-	<div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+	<div class="wrap w-100 h-100 d-flex bg-light justify-content-center p-0" style="min-height:80vh">
 		<div class="d-flex flex-column bg-white" style = "width:700px;">
 			<div class="section justify-content-center text-center mt-3">
 				{% if user.team_logo %}
@@ -45,7 +45,7 @@
 				href="{% url 'matchingMatch:my_apply_matches' user.pk %}"
 				>우리 팀이 신청한 매치 목록 조회하기</a
 			>
-			<h3><a href="{% url 'matchingMatch:rate_list' user.id %}" style="text-decoration:none; color:black">경기 상대방의 실력, 매너 점수 등록하러가기</a></h3> 
+			<h3 class="btn btn-outline-light mt-5"><a href="{% url 'matchingMatch:rate_list' user.id %}"  style="text-decoration:none; color:black">경기 상대방의 실력, 매너 점수 등록하러가기</a></h3> 
 			</div>
 		</div>
 	</div>

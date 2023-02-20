@@ -248,10 +248,14 @@ def main(request, *args, **kwargs):
         filter_form = MatchFilterForm(request.GET)
         matches = MatchInfo.objects.filter(**filter_set)
         is_date_filter = request.GET.get('date', False)
-        if is_date_filter:
-            matches = matches.filter(date=today, start_time__gte = now_time)
+        if not is_date_filter:
+            matches = matches.filter(date=today, start_time__gt=now_time)
+        else:
+            print(bool(is_date_filter == today))
+            if is_date_filter == today:
+                matches = matches.filter(start_time__gt=now_time)
     else:
-        matches = MatchInfo.objects.filter(date=today, start_time__gte = now_time)
+        matches = MatchInfo.objects.filter(date=today, start_time__gt=now_time)
 
     context = {
         'matches': matches,
@@ -417,6 +421,14 @@ class delete_account(SuccessMessageMixin, generic.DeleteView):
     template_name = 'matchingMatch/delete_account_confirm.html'
     success_message = "유저가 성공적으로 삭제됐습니다."
     success_url = reverse_lazy('matchingMatch:main')
+
+    def get(self, request, pk, *args, **kwargs):
+        if request.user.id == pk:
+            self.object = self.get_object()
+            context = self.get_context_data(object=self.object)
+            return self.render_to_response(context)
+        else:
+            return redirect("/")
 
 
 @login_required(login_url='/login')
