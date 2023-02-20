@@ -32,8 +32,8 @@
                                 <div class="main-info justify-content-center col-5 ">
                                     <a href="{% url 'matchingMatch:match_detail' match.pk %}" style="text-decoration:none;">
                                         <div class="infoone" style="color:black;">
-                                            {{match.date}}
-                                            {{match.start_time}}
+                                            <strong>{{match.date}}
+                                            {{match.start_time}}</strong>
                                         </div>
                                         <div class="infotwo" style="color:black;">
                                             {{match.stadium.stadium_name}}
@@ -69,11 +69,12 @@
                                 <div class="main-info justify-content-center col-5">
                                     <a href="{% url 'matchingMatch:match_detail' match.id %}" style="text-decoration:none;">
                                         <div class="infoone" style="color:black;">
-                                            {{match.date}}
-                                            {{match.start_time}}
+                                            <strong>{{match.date}}
+                                            {{match.start_time}}</strong>
                                         </div>
                                         <div class="infotwo" style="color:black;">
                                             {{match.stadium.stadium_name}}
+                                            <br>
                                             {{match.participant_id.team_name}}
                                         </div>
                                     </a>
@@ -97,11 +98,12 @@
                                 <div class="main-info justify-content-center col-5">
                                     <a href="{% url 'matchingMatch:match_detail' match.id %}" style="text-decoration:none;">
                                         <div class="infoone" style="color:black;">
-                                            {{match.date}}
-                                            {{match.start_time}}
+                                            <strong>{{match.date}}
+                                            {{match.start_time}}</strong>
                                         </div>
                                         <div class="infotwo" style="color:black;">
                                             {{match.stadium.stadium_name}}
+                                            <br>
                                             {{match.participant_id.team_name}}
                                         </div>
                                     </a>

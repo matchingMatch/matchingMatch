@@ -114,14 +114,16 @@
 
 				{%if user.is_authenticated %} {% if user == match.host_id and match.is_matched == False %}
 				
-
-				<form action="{% url 'matchingMatch:match_update' match.pk %}" style="margin-bottom: 10px;">
-					<button class="btn btn-primary">수정</button>
-				</form>
-
-				<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
-					<button class="btn btn-primary">신청자 목록 확인하기</button>
-				</form>
+				<div class="text-center mb-5 d-flex flex-row justify-content-center">
+					<form action="{% url 'matchingMatch:match_update' match.pk %}" style="margin-bottom: 10px;">
+						<button class="btn btn-primary btn-sm mx-2">수정</button>
+					</form>
+	
+					<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
+						<button class="btn btn-primary btn-sm mx-2">신청자 목록 확인하기</button>
+					</form>
+				</div>
+				
 
 				{% elif match.is_matched == True %}
 				<div class="text-center mb-5">
