@@ -249,9 +249,9 @@ def main(request, *args, **kwargs):
         matches = MatchInfo.objects.filter(**filter_set)
         is_date_filter = request.GET.get('date', False)
         if is_date_filter:
-            matches = matches.filter(date=today)
+            matches = matches.filter(date=today, start_time__gte = now_time)
     else:
-        matches = MatchInfo.objects.filter(date=today)
+        matches = MatchInfo.objects.filter(date=today, start_time__gte = now_time)
 
     context = {
         'matches': matches,
