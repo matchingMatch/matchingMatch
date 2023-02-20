@@ -15,8 +15,23 @@
 
 <main class="wrap w-100% d-flex bg-light justify-content-center p-0">
 	<div class = "main_container d-flex flex-column bg-white">
-		<div class="banner p-2">
-		<img src="{%static 'image/banner_photo.jpg' %}" alt="banner_image">
+		<div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+			<div class="carousel-inner">
+				<div class="carousel-item active" data-bs-interval="5000">
+					<img src="{% static 'img/banner1.png' %}" class="d-block w-100" alt="">
+				</div>
+				<div class="carousel-item" data-bs-interval="5000">
+					<img src="{% static 'img/banner2.png' %}" class="d-block w-100" alt="">
+				</div>
+			</div>
+			<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+			<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
 		</div>
 
 		<form id = "date-form" action="" method = "get">
