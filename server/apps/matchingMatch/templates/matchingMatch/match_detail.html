@@ -106,57 +106,43 @@
 				</div>
 				<br />
 
-				<hr class="mx-3"/>
-				<div class="match-etc mx-3">
-					<div class="mx-3">
-						기타사항 : {{match.etc}}
-					</div>
-				</div>
-				<hr class="mx-3"/>
+				<hr />
+				<div class="match-etc">기타사항 : {{match.etc}}</div>
 
-				
+				<hr />
 
 				{%if user.is_authenticated %} {% if user == match.host_id and match.is_matched == False %}
 				
-				<div class="text-center my-5 d-flex flex-row justify-content-center">
-					<form action="{% url 'matchingMatch:match_update' match.pk %}" style="margin-bottom: 10px;">
-						<button class="btn btn-primary btn-sm mx-2">매치 수정하기</button>
-					</form>
-					<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
-						<button class="btn btn-primary btn-sm mx-2">신청자 목록 확인하기</button>
-					</form>
-				</div>
-				
+
+				<form action="{% url 'matchingMatch:match_update' match.pk %}" style="margin-bottom: 10px;">
+					<button class="btn btn-primary">수정</button>
+				</form>
+
+				<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
+					<button class="btn btn-primary">신청자 목록 확인하기</button>
+				</form>
 
 				{% elif match.is_matched == True %}
-				<div class="text-center my-5">
-					<button class="btn btn-danger">마감되었습니다</button>
-				</div>
-				
+				<button class="end">마감되었습니다</button>
 
 				{% elif match.host_id != user and status == 0 %}
-				<div class="text-center my-5">
-					<div id="enroll-btn">
-						<button
-							class=" enroll"
-							onclick="changeEnroll({{ match.id}}, 'enroll')"
-						>
-							신청하기
-						</button>
-					</div>
+				<div id="enroll-btn">
+					<button
+						class="enroll"
+						onclick="changeEnroll({{ match.id}}, 'enroll')"
+					>
+						신청하기
+					</button>
 				</div>
 				{% elif match.host_id != user and status == 1 %}
-				<div class="text-center my-5">
-					<div id="enroll">
-						<button
-							class="enroll-btn"
-							onclick="changeEnroll({{ match.id}}, 'enroll-cancel')"
-						>
-							신청취소
-						</button>
-					</div>
+				<div id="enroll">
+					<button
+						class="enroll-btn"
+						onclick="changeEnroll({{ match.id}}, 'enroll-cancel')"
+					>
+						신청취소
+					</button>
 				</div>
-				
 				{% endif %} {% endif %}
 			</div>
 		</div>

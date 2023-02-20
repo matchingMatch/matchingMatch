@@ -47,9 +47,13 @@
                                     let count = Number('{{team.match_count}}')
                                     let level = Number('{{team.level}}')
                                     let manner = Number('{{team.manner}}')
-                                    document.querySelector('.level').innerText = `${(level/count).toFixed(2)}`
-                                    document.querySelector('.manner').innerText = `${(manner/count).toFixed(2)}`
-
+                                    if (count <= 3) {
+                                        document.querySelector('.level').innerText = '-'
+                                        document.querySelector('.manner').innerText = '-'   
+                                    } else {
+                                        document.querySelector('.level').innerText = `${(level/count).toFixed(2)}`
+                                        document.querySelector('.manner').innerText = `${(manner/count).toFixed(2)}`
+                                    }
                                 </script>
                             </tr>
                         
