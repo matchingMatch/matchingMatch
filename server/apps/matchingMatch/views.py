@@ -412,12 +412,21 @@ def edit_account(request):
         return render(request, 'matchingMatch/user_form.html', context)
 
 
-class delete_account(SuccessMessageMixin, generic.DeleteView):
+class delete_account(SuccessMessageMixin, generic.DeleteView):     
     model = Team
     template_name = 'matchingMatch/delete_account_confirm.html'
     success_message = "유저가 성공적으로 삭제됐습니다."
     success_url = reverse_lazy('matchingMatch:main')
+    
+    def get(self, request, pk, *args, **kwargs):
+        if request.user.id == pk:
+            self.object = self.get_object()
+            context = self.get_context_data(object=self.object)
+            return self.render_to_response(context)
+        else:
+            return redirect("/")
 
+            
 
 @login_required(login_url='/login')
 @csrf_exempt
@@ -563,7 +572,7 @@ def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지
 
 def rate(request, pk):
     if request.method == "POST":
-        user = get_object_or_404(Team, id=pk)
+        user = request.user
         match = get_object_or_404(MatchInfo, id=pk)
         opponent = object()
         if user == match.host_id:
@@ -572,6 +581,7 @@ def rate(request, pk):
         elif user == match.participant_id:
             opponent = get_object_or_404(Team, id=match.host_id.id)
             match.host_rated = True
+            print('완료')
 
         user.match_count += 1
         opponent.match_count += 1
@@ -725,7 +735,8 @@ def report_update(request, pk):  # pk는 report pk
                 # if os.path.exists(image_path):
                 #     os.remove(image_path)
                 form.save()
-
+                if img:
+                    old_image.delete(save=False)
                 return redirect('matchingMatch:report_detail', pk=pk)
 
         form = ReportForm(instance=report)
