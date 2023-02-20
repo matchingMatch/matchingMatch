@@ -64,11 +64,15 @@ header {
 	padding: 0;
 }
 
-.week>label {
+.week-transition {
+	transition: left 0.5s ease-out;
+}
+
+.week > label {
 	width: calc(100vw / 7);
 }
 
-.week>label:hover {
+.week > label:hover {
 	cursor: pointer;
 	background-color: #cecece;
 }
@@ -128,11 +132,11 @@ header {
 }
 
 .alarm_modal_list {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
-	width: 100%;
-	height: 100%;
+	bottom: 0;
+	right: 0;
 	display: none;
 	background-color: rgba(0, 0, 0, 0.4);
 	z-index: 1030;
@@ -320,20 +324,19 @@ nav a {
 	font-style: normal;
 } */
 
-@font-face {
+/* @font-face {
 	font-family: 'HealthsetGothicLight';
 	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/HealthsetGothicLight.woff') format('woff');
 	font-weight: normal;
 	font-style: normal;
-}
+} */
 
-@font-face {
+/* @font-face {
 	font-family: "Jeju Gothic", sans-serif;
 	src: url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
 	font-weight: normal;
 	font-style: normal;
-}
-
+} */
 @font-face {
 	font-family: 'NEXONFootballGothicBA1';
 	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXONFootballGothicBA1.woff') format('woff');
@@ -343,11 +346,11 @@ nav a {
 
 body {
 	/* font-family: "Cafe24Ssurround" !important; */
-	font-family: 'HealthsetGothicLight' !important;
+	font-family: 'NEXONFootballGothicBA1' !important;
 
 }
 
-.week>input {
+.week > input {
 	position: absolute !important;
 	clip: rect(0, 0, 0, 0);
 	height: 1px;
@@ -355,7 +358,6 @@ body {
 	border: 0;
 	overflow: hidden;
 }
-
 .week label {
 	transition: all 0.1s ease-in-out;
 	border-radius: 5px;

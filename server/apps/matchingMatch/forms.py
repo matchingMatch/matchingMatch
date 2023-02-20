@@ -39,14 +39,13 @@ class MatchRegisterForm(forms.ModelForm):
         end_time = self.cleaned_data.get('end_time', False)
         date = self.cleaned_data.get('date', False)
         now_date = datetime.date.today()
-
         if not start_time or  not  end_time or not date:
             return clean_data 
-
         if start_time > end_time:
-            raise ValidationError({'start_time': "시작시간이 현재시간보다 이릅니다"}, code = 'invalid')
-        elif date < now_date or (date == now_date and datetime.datetime.now().time() < start_time):
-            raise ValidationError({"date": "시작시간이 현재시간보다 이릅니다"},
+            raise ValidationError({'start_time': "종료시간이 시작시간보다 이릅니다"}, code = 'invalid')
+        
+        elif date < now_date or (date == now_date and datetime.datetime.now().time()> start_time):
+            raise ValidationError({"date": "현재시간이 시작시간보다 이릅니다"},
                 code='invalid'
             )
         return clean_data
