@@ -78,6 +78,8 @@ window.addEventListener('load', () => {
 	const checked_one = document.getElementById(`date-${cur_checked}`)
 	
   checked_one.checked = true
+	const slide = document.querySelector(".week")
+	slide.classList.add('week-transition');
 })
 
 //https://eunhee-programming.tistory.com/106
