@@ -488,7 +488,7 @@ def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk
 def my_apply_matches(request, pk):
     if request.user.id == pk:
         if request.method == "POST": #매치 신청 취소 post
-            request_object = MatchRequest.objects.get(id=request.POST.get('request_object_id'))
+            request_object = get_object_or_404(MatchRequest, id=request.POST.get('request_object_id'))
             request_object.delete()
             return redirect(f"/my_apply_matches/{request.user.id}")
         else: 
@@ -530,12 +530,12 @@ def my_apply_matches(request, pk):
 
 @login_required(login_url='/login')
 def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지(주최자)에서 받아옴
-    match = MatchInfo.objects.get(id=pk)
+    match = get_object_or_404(MatchInfo, id=pk)
     if (request.user.id) == match.host_id.pk:
         if request.method == "POST":
             try:
-                team = Team.objects.get(id=request.POST['select_participant'])
-                match = MatchInfo.objects.get(id=pk)
+                team = get_object_or_404(Team, id=request.POST['select_participant'])
+                match = get_object_or_404(MatchInfo, id=pk)
                 match.participant_id = team
                 match.is_matched = True
                 match.save()
@@ -543,7 +543,7 @@ def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지
             except:
                 return redirect(f"/applying_team_list/{pk}")
         applying_team_list = MatchRequest.objects.filter(match_id=pk)
-        match = MatchInfo.objects.get(id=pk)
+        match = get_object_or_404(MatchInfo, id=pk)
         context = {
             'applying_team_list': applying_team_list,
             'match': match
@@ -555,14 +555,14 @@ def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지
 
 def rate(request, pk):
     if request.method == "POST":
-        user = Team.objects.get(id=request.user.id)
-        match = MatchInfo.objects.get(id=pk)
+        user = get_object_or_404(Team, id=pk)
+        match = get_object_or_404(MatchInfo, id=pk)
         opponent = object()
         if user == match.host_id:
-            opponent = Team.objects.get(id=match.participant_id.id)
+            opponent = get_object_or_404(Team, id=match.participant_id.id)
             match.participant_rated = True
         else:
-            opponent = Team.objects.get(id=match.host_id.id)
+            opponent = get_object_or_404(Team, id=match.host_id.id)
             match.host_rated = True
 
         user.match_count += 1
@@ -633,7 +633,7 @@ def notice_create(request):
 @login_required(login_url='/login')
 @admin_required
 def notice_update(request, pk):
-    notice = Notice.objects.get(id=pk)
+    notice = get_object_or_404(Notice, id=pk)
 
     if request.method == "POST":
         form = NoticeForm(request.POST, instance=notice)
@@ -657,52 +657,48 @@ def notice_update(request, pk):
 @admin_required
 def notice_delete(request, pk):
     if request.method == "POST":
-        notice = Notice.objects.get(id=pk)
+        notice = get_object_or_404(Notice, id=pk)
         notice.delete()
         return redirect("matchingMatch:notice_list")
 
 
 @login_required(login_url='/login')
-def report_list(request, pk):  # pk는 team pk
-    if (request.user.id) == pk or (request.user.is_superuser) == True:
-        team = Team.objects.get(id=pk)
-        report_objects = Report.objects.filter(writer_id=team)
-        all_reports = report_objects.order_by('-id') #최신순으로 보여주기 위해 order_by id로 
-        paginator = Paginator(all_reports, 10) # 한 페이지에 10개씩 보여줌
-        page = request.GET.get("page")
-        reports = paginator.get_page(page)
-
-        context = {
-            'reports': reports,
-            'team': team,
-        }
-        return render(request, "matchingMatch/report_list.html", context=context)
+def report_list(request):  # pk는 team pk
+    if request.user.is_superuser == False and request.user.is_staff == False:
+        team_id = request.user.id
+        report_objects = Report.objects.filter(writer_id=team_id)
+        all_reports = report_objects.order_by('-id') #최신순으로 보여주기 위해 
     else:
-        return redirect("/")
+        all_reports = Report.objects.order_by('-id')
 
-
+    paginator = Paginator(all_reports, 10) # 한 페이지에 10개씩 보여줌
+    page = request.GET.get("page")
+    reports = paginator.get_page(page)
+    context = {
+        'reports': reports,
+    }
+    return render(request, "matchingMatch/report_list.html", context=context)
 @login_required(login_url='/login')
-def report_create(request, pk):  # pk는 team pk
-    if (request.user.id) == pk:
-        form = ReportForm()
+def report_create(request):  # pk는 team pk
 
-        if request.method == "POST":
-            form = ReportForm(request.POST, request.FILES)
-            team = Team.objects.get(id=pk)
-            if form.is_valid:
-                report = form.save()
-                report.writer_id = team
-                report.save()
-                return redirect(f"/report_list/{pk}")
+    form = ReportForm()
+    if request.method == "POST":
+        form = ReportForm(request.POST, request.FILES)
 
-        team = Team.objects.get(id=pk)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.writer_id = request.user
+            report.save()
+            return redirect("matchingMatch:report_detail", pk = report.pk)
         context = {
-            'form': form,
-            'team': team,
+        'form': form,
         }
         return render(request, "matchingMatch/report_create.html", context=context)
     else:
-        return redirect("/")
+        context = {
+        'form': form,
+        }
+        return render(request, "matchingMatch/report_create.html", context=context)
 
 
 @login_required(login_url='/login')
@@ -720,16 +716,20 @@ def report_detail(request, pk):  # pk는 report pk
 @login_required(login_url='/login')
 def report_update(request, pk):  # pk는 report pk
 
-    report = Report.objects.get(id=pk)
+    report = get_object_or_404(Report, id=pk)
     if report.writer_id.id == request.user.id or request.user.is_superuser == True:
         if request.method == "POST":
+            old_image = report.image.url
             form = ReportForm(request.POST, request.FILES, instance=report)
+            img = request.FILES.get('image', False)
             if form.is_valid():
                 # image_path = form.image.path
                 # if os.path.exists(image_path):
                 #     os.remove(image_path)
                 form.save()
-                return redirect(f"/report_detail/{pk}")
+                if img:
+                    old_image.delete(save=False)
+                return redirect('matchingMatch:report_detail', pk=pk)
 
         form = ReportForm(instance=report)
         context = {
@@ -738,23 +738,23 @@ def report_update(request, pk):  # pk는 report pk
         }
         return render(request, "matchingMatch/report_update.html", context=context)
     else:
-        return redirect("/")
+        return redirect("matchingMatch:report_list")
 
 
 @login_required(login_url='/login')
 def report_delete(request, pk):  # pk는 report pk
-    report = Report.objects.get(id=pk)
-    if report.writer_id.id == request.user.id or request.user.is_superuser == True:
+    report = get_object_or_404(Report, id=pk)
+    if report.writer_id.id == request.user.id or request.user.is_superuser == True or request.user.is_staff:
         if request.method == "POST":
             report.delete()
-            return redirect(f"/report_list/{request.user.id}")
+            return redirect("matchingMatch:report_list")
     else:
         return redirect("/")
 
 
 @login_required(login_url='/login')
 def cancel_game(request, pk):  # pk는 match pk
-    match = MatchInfo.objects.get(id=pk)
+    match = get_object_or_404(MatchInfo, id=pk)
     if request.user.id == match.host_id.id or request.user.id == match.participant_id.id:
         if request.method == "POST":
             match_requests_filter = MatchRequest.objects.filter(
@@ -803,7 +803,7 @@ def rate_list(request,pk): #pk는 team pk
 
 @login_required(login_url='/login')
 def rate_match(request,pk): #pk는 match pk
-    match = MatchInfo.objects.get(id=pk)
+    match = get_object_or_404(MatchInfo, id=pk)
     if (request.user.id == match.participant_id.id) or (request.user.id == match.host_id.id):
         if request.method == "POST":
             try:
