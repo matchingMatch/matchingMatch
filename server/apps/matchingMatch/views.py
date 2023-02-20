@@ -249,13 +249,13 @@ def main(request, *args, **kwargs):
         matches = MatchInfo.objects.filter(**filter_set)
         is_date_filter = request.GET.get('date', False)
         if not is_date_filter:
-            matches = matches.filter(date=today, start_time__gt = now_time)
+            matches = matches.filter(date=today, start_time__gt=now_time)
         else:
             print(bool(is_date_filter == today))
             if is_date_filter == today:
-                matches = matches.filter(start_time__gt = now_time)
+                matches = matches.filter(start_time__gt=now_time)
     else:
-        matches = MatchInfo.objects.filter(date=today, start_time__gt = now_time)
+        matches = MatchInfo.objects.filter(date=today, start_time__gt=now_time)
 
     context = {
         'matches': matches,
@@ -416,12 +416,12 @@ def edit_account(request):
         return render(request, 'matchingMatch/user_form.html', context)
 
 
-class delete_account(SuccessMessageMixin, generic.DeleteView):     
+class delete_account(SuccessMessageMixin, generic.DeleteView):
     model = Team
     template_name = 'matchingMatch/delete_account_confirm.html'
     success_message = "유저가 성공적으로 삭제됐습니다."
     success_url = reverse_lazy('matchingMatch:main')
-    
+
     def get(self, request, pk, *args, **kwargs):
         if request.user.id == pk:
             self.object = self.get_object()
@@ -430,7 +430,6 @@ class delete_account(SuccessMessageMixin, generic.DeleteView):
         else:
             return redirect("/")
 
-            
 
 @login_required(login_url='/login')
 @csrf_exempt
