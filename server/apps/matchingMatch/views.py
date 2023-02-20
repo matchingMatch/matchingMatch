@@ -69,16 +69,17 @@ def team_detail(request, pk):  # pk = 팀 아이디
 
     team = get_object_or_404(Team, id=pk)
     match_list = MatchInfo.objects.filter(host_id=team)
-    
+
     if team.match_count >= 3:
         level = team.level / team.match_count
         manner = team.manner / team.match_count
-        level = round(level,1)
-        manner = round(manner,1)
+        level = round(level, 1)
+        manner = round(manner, 1)
     else:
         level = None
         manner = None
-    context = {"user": user, "team": team, "match_list": match_list, "level": level, "manner" : manner}
+    context = {"user": user, "team": team,
+               "match_list": match_list, "level": level, "manner": manner}
     return render(request, "matchingMatch/team_detail.html", context=context)
 
 
@@ -87,7 +88,7 @@ def team_list(request):
     search = request.GET.get("team_search")
     page = request.GET.get("page")
 
-    #print(order)
+    # print(order)
     # if order:
     #     teams = Team.objects.order_by(order)
     #     paginator = Paginator(teams, 10)
@@ -107,14 +108,14 @@ def team_list(request):
     #         teams = teams.filter(team_name__contains=search)
     #         paginator = Paginator(teams, 10)
     #         teams = paginator.get_page(page)
-    
+
     if search:
         teams = Team.objects.filter(team_name__contains=search)
     else:
         teams = Team.objects.all()
     if order:
         teams = teams.order_by(order)
-    teams = teams.filter(is_superuser=False, is_staff = False)
+    teams = teams.filter(is_superuser=False, is_staff=False)
     paginator = Paginator(teams, 10)
     teams = paginator.get_page(page)
     # order와 search가 동시에 존재하는 경우?
@@ -133,7 +134,8 @@ def match_register(request):
             match = match_form.save(commit=False)
             match.host_id = request.user
             match.save()
-            return redirect("matchingMatch:match_detail", pk = match.pk) #만들어진 페이지로 이동
+            # 만들어진 페이지로 이동
+            return redirect("matchingMatch:match_detail", pk=match.pk)
         else:
             print(match_form.errors)
             stadium_name = Stadium.objects.order_by('stadium_name')
@@ -193,7 +195,8 @@ def match_update(request, pk):
 
         else:
             stadium_name_list = Stadium.objects.order_by('stadium_name')
-            context = {"match_form": match_form, "match_stadium" : match.stadium, 'stadium_name_list' : stadium_name_list}
+            context = {"match_form": match_form, "match_stadium": match.stadium,
+                       'stadium_name_list': stadium_name_list}
             # 잘못된 부분 수정 요청
 
             # 다시 작성하기
@@ -204,7 +207,8 @@ def match_update(request, pk):
         # stadium = match_form.stadium
         # match_form.stadium = Stadium.objects.get(id=stadium)
         stadium_name_list = Stadium.objects.order_by('stadium_name')
-        context = {"match_form": match_form, "match_stadium" : match.stadium, 'stadium_name_list' : stadium_name_list}
+        context = {"match_form": match_form, "match_stadium": match.stadium,
+                   'stadium_name_list': stadium_name_list}
         return render(request, "matchingMatch/match_update.html", context=context)
 
 
@@ -217,19 +221,15 @@ def match_delete(request, pk):  # 매치 자체를 없애기 매치를 없애면
 
 
 def main(request, *args, **kwargs):
-        
+
     now_time = datetime.datetime.now().time()
     today = datetime.date.today()
-    
-
-
-
 
     match_detail_category = {
         'gender': 'gender__in',
         'is_matched': 'is_matched__in',
         'region': 'stadium__location__in',
-        'date' : 'date__in'
+        'date': 'date__in'
     }
     date_val = ''
     filter_set = dict()
@@ -241,7 +241,7 @@ def main(request, *args, **kwargs):
 
         key = match_detail_category.get(key)
         filter_set[key] = value
-    
+
     filter_form = MatchFilterForm()
     # html 태그 상의 name  : html 태그 상의 value
     if filter_set:
@@ -250,16 +250,14 @@ def main(request, *args, **kwargs):
         is_date_filter = request.GET.get('date', False)
         if is_date_filter:
             matches = matches.filter(date=today)
-    else:    
+    else:
         matches = MatchInfo.objects.filter(date=today)
-        
 
-    
     context = {
         'matches': matches,
-        'filter_form' : filter_form,
-        'date_val' : date_val
-        }
+        'filter_form': filter_form,
+        'date_val': date_val
+    }
     return render(request, "matchingMatch/main.html", context=context)
 
 
@@ -270,7 +268,7 @@ def check_endedmatch(request):
     today = datetime.date.today()
     # 알람이 생성되지 않은 매치: 경기가 끝나지 않은 매치들
     userMatches = (MatchInfo.objects.filter(host_id=request.user.id, participant_rated=False) & MatchInfo.objects.filter(is_matched=True)) | (MatchInfo.objects.filter(
-        participant_id=request.user.id, host_rated=False) & MatchInfo.objects.filter(is_matched = True))
+        participant_id=request.user.id, host_rated=False) & MatchInfo.objects.filter(is_matched=True))
     userMatches_json = []
     if len(userMatches) != 0:
         for match in userMatches:
@@ -328,12 +326,12 @@ def register_page(request):
     return render(request, 'matchingMatch/login_register.html', context)
 
 
-def success(request, message:str, url):
+def success(request, message: str, url):
     messages.info(request, message)
     sys_messages = list(messages.get_messages(request))
     sys_message = sys_messages.pop()
     print(sys_message)
-    context = {"message": sys_message, 'redirect_url' : url}
+    context = {"message": sys_message, 'redirect_url': url}
     return render(request, "matchingMatch/register_success.html", context)
 
 
@@ -393,13 +391,14 @@ def edit_account(request):
         # print('NEW Image', request.FILES.get('avatar'))
         old_image = request.user.team_logo
         form = UserForm(request.POST, request.FILES,  instance=request.user)
-        img = request.FILES.get('team_logo', False) #뭔가 새로운 파일 있는 경우에만 not False
-        # 수정사항이 존재하는 경우에만 
+        # 뭔가 새로운 파일 있는 경우에만 not False
+        img = request.FILES.get('team_logo', False)
+        # 수정사항이 존재하는 경우에만
         # if img:
         #   request.user.team_logo.url
 
         if form.is_valid():
-            
+
             user = form.save(commit=False)
             user.save()
             # 로고도 upload_to 설정해서 중복 없애야 할듯
@@ -408,7 +407,7 @@ def edit_account(request):
 
             return redirect('matchingMatch:account')
     else:
-        
+
         context = {'form': form}
         return render(request, 'matchingMatch/user_form.html', context)
 
@@ -462,9 +461,9 @@ def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk
         my_not_matched_matches = MatchInfo.objects.filter(
             is_matched=False, host_id=pk)
 
-        ended_matches = [] #경기 성사 후 종료된 매치
-        not_started_matches = []  #경기 성사 후 시작되지 않은 매치
-        before_start_time = [] #매칭 성사 되지 않은 매치 중에서 시작 시간이 지나지 않은 매치들
+        ended_matches = []  # 경기 성사 후 종료된 매치
+        not_started_matches = []  # 경기 성사 후 시작되지 않은 매치
+        before_start_time = []  # 매칭 성사 되지 않은 매치 중에서 시작 시간이 지나지 않은 매치들
 
         for match in my_matched_matches:
             if match.date < today:
@@ -482,9 +481,9 @@ def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk
                 before_start_time.append(match)
 
         context = {
-            'ended': ended_matches, #성사 후 종료
-            'not_started': not_started_matches, #성사 후 시작 전
-            'before_start': before_start_time, #성사 되기 전 경기 시작시간 전
+            'ended': ended_matches,  # 성사 후 종료
+            'not_started': not_started_matches,  # 성사 후 시작 전
+            'before_start': before_start_time,  # 성사 되기 전 경기 시작시간 전
         }
         return render(request, 'matchingMatch/my_register_matches.html', context=context)
     else:
@@ -494,21 +493,22 @@ def my_register_matches(request, pk):  # pk는 team pk, 마이페이지에서 pk
 @login_required(login_url='/login')
 def my_apply_matches(request, pk):
     if request.user.id == pk:
-        if request.method == "POST": #매치 신청 취소 post
-            request_object = get_object_or_404(MatchRequest, id=request.POST.get('request_object_id'))
+        if request.method == "POST":  # 매치 신청 취소 post
+            request_object = get_object_or_404(
+                MatchRequest, id=request.POST.get('request_object_id'))
             request_object.delete()
             return redirect(f"/my_apply_matches/{request.user.id}")
-        else: 
+        else:
             today = datetime.date.today()
             now = datetime.datetime.now().time()
 
             my_matched_matches = MatchInfo.objects.filter(
                 is_matched=True, participant_id=pk)
             my_match_requests = MatchRequest.objects.filter(team_id=pk)
-            
-            ended_matches = [] #경기 성사 후 종료된 매치
-            not_started_matches = [] #경기 성사 후 시작하기 전 매치
-            before_start_time = [] #경기 시작시간 지나기 전 성사되지 않은 요청
+
+            ended_matches = []  # 경기 성사 후 종료된 매치
+            not_started_matches = []  # 경기 성사 후 시작하기 전 매치
+            before_start_time = []  # 경기 시작시간 지나기 전 성사되지 않은 요청
 
             for match in my_matched_matches:
                 if match.date < today:
@@ -519,7 +519,7 @@ def my_apply_matches(request, pk):
                     if match.end_time < now:
                         ended_matches.append(match)
                     if match.start_time > now:
-                        not_started_matches.append(match)   
+                        not_started_matches.append(match)
 
             for requests in my_match_requests:
                 if (requests.match_id.date > today) or (requests.match_id.date == today and requests.match_id.start_time > now):
@@ -541,7 +541,8 @@ def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지
     if (request.user.id) == match.host_id.pk:
         if request.method == "POST":
             try:
-                team = get_object_or_404(Team, id=request.POST['select_participant'])
+                team = get_object_or_404(
+                    Team, id=request.POST['select_participant'])
                 match = get_object_or_404(MatchInfo, id=pk)
                 match.participant_id = team
                 match.is_matched = True
@@ -577,6 +578,8 @@ def rate(request, pk):
         try:
             opponent.level = opponent.level + int(request.POST['level'])
             opponent.manner = opponent.manner + int(request.POST['manner'])
+            opponent.level = opponent.level + int(request.POST['level'])
+            opponent.manner = opponent.manner + int(request.POST['manner'])
             match.save()
             user.save()
             opponent.save()
@@ -585,15 +588,12 @@ def rate(request, pk):
         return redirect('/')
 
 
-
-
-
 @login_required(login_url='/login')
 def notice_list(request):
     all_notices = Notice.objects.all()
-    notices_objects = all_notices.order_by('-id') #최신 순으로 보여 주기 위해
+    notices_objects = all_notices.order_by('-id')  # 최신 순으로 보여 주기 위해
     page = request.GET.get("page")
-    paginator = Paginator(notices_objects, 10) #한 페이지당 10개의 공지사항을 보여줌
+    paginator = Paginator(notices_objects, 10)  # 한 페이지당 10개의 공지사항을 보여줌
     notices = paginator.get_page(page)
     context = {
         'notices': notices,
@@ -663,17 +663,19 @@ def report_list(request):  # pk는 team pk
     if request.user.is_superuser == False and request.user.is_staff == False:
         team_id = request.user.id
         report_objects = Report.objects.filter(writer_id=team_id)
-        all_reports = report_objects.order_by('-id') #최신순으로 보여주기 위해 
+        all_reports = report_objects.order_by('-id')  # 최신순으로 보여주기 위해
     else:
         all_reports = Report.objects.order_by('-id')
 
-    paginator = Paginator(all_reports, 10) # 한 페이지에 10개씩 보여줌
+    paginator = Paginator(all_reports, 10)  # 한 페이지에 10개씩 보여줌
     page = request.GET.get("page")
     reports = paginator.get_page(page)
     context = {
         'reports': reports,
     }
     return render(request, "matchingMatch/report_list.html", context=context)
+
+
 @login_required(login_url='/login')
 def report_create(request):  # pk는 team pk
 
@@ -685,14 +687,14 @@ def report_create(request):  # pk는 team pk
             report = form.save(commit=False)
             report.writer_id = request.user
             report.save()
-            return redirect("matchingMatch:report_detail", pk = report.pk)
+            return redirect("matchingMatch:report_detail", pk=report.pk)
         context = {
-        'form': form,
+            'form': form,
         }
         return render(request, "matchingMatch/report_create.html", context=context)
     else:
         context = {
-        'form': form,
+            'form': form,
         }
         return render(request, "matchingMatch/report_create.html", context=context)
 
@@ -723,7 +725,7 @@ def report_update(request, pk):  # pk는 report pk
                 # if os.path.exists(image_path):
                 #     os.remove(image_path)
                 form.save()
-                
+
                 return redirect('matchingMatch:report_detail', pk=pk)
 
         form = ReportForm(instance=report)
@@ -765,44 +767,45 @@ def cancel_game(request, pk):  # pk는 match pk
     else:
         return redirect("/")
 
+
 @login_required(login_url='/login')
-def rate_list(request,pk): #pk는 team pk
+def rate_list(request, pk):  # pk는 team pk
     if request.user.id == pk:
         today = datetime.date.today()
         now = datetime.datetime.now().time()
-        
-        matches = MatchInfo.objects.filter(host_id=pk, is_matched=True, participant_rated=False)
-        not_rated_matches_by_host = [] #host가 별점 안 매긴 매치들
-        
+
+        matches = MatchInfo.objects.filter(
+            host_id=pk, is_matched=True, participant_rated=False)
+        not_rated_matches_by_host = []  # host가 별점 안 매긴 매치들
+
         for match in matches:
             if (match.date < today) or (match.date == today and match.end_time < now):
                 not_rated_matches_by_host.append(match)
 
-        matches = MatchInfo.objects.filter(participant_id=pk, is_matched=True, host_rated=False)
-        not_rated_matches_by_participant = [] #participant가 별점 안 매긴 매치들
- 
+        matches = MatchInfo.objects.filter(
+            participant_id=pk, is_matched=True, host_rated=False)
+        not_rated_matches_by_participant = []  # participant가 별점 안 매긴 매치들
+
         for match in matches:
             if (match.date < today) or (match.date == today and match.end_time < now):
                 not_rated_matches_by_participant.append(match)
 
         context = {
-            'not_rated_matches_by_host' : not_rated_matches_by_host,
-            'not_rated_matches_by_participant' :  not_rated_matches_by_participant,
+            'not_rated_matches_by_host': not_rated_matches_by_host,
+            'not_rated_matches_by_participant':  not_rated_matches_by_participant,
         }
         return render(request, "matchingMatch/rate_list.html", context=context)
     else:
         return redirect("/")
 
 
-
-
 @login_required(login_url='/login')
-def rate_match(request,pk): #pk는 match pk
+def rate_match(request, pk):  # pk는 match pk
     match = get_object_or_404(MatchInfo, id=pk)
     if (request.user.id == match.participant_id.id) or (request.user.id == match.host_id.id):
         if request.method == "POST":
             try:
-                if request.user.id == match.participant_id.id: # 상대방 아이디가 접속한 경우, host를 평가해야 됨.
+                if request.user.id == match.participant_id.id:  # 상대방 아이디가 접속한 경우, host를 평가해야 됨.
                     match.host_id.manner += request.POST.get('manner')
                     match.host_id.level += request.POST.get('level')
                     match.host_id.match_count += 1
@@ -810,7 +813,7 @@ def rate_match(request,pk): #pk는 match pk
                     match.host_id.save()
                     match.save()
                     return redirect(f"/rate_list/{request.user.id}")
-                else: # 주최자 아이디가 접속한 경우, participant를 평가해야됨.
+                else:  # 주최자 아이디가 접속한 경우, participant를 평가해야됨.
                     match.participant_id.manner += request.POST.get('manner')
                     match.participant_id.level += request.POST.get('level')
                     match.participant_id.match_count += 1
@@ -822,7 +825,7 @@ def rate_match(request,pk): #pk는 match pk
                 return redirect(f"/rate_match/{pk}")
         else:
             context = {
-                'match' : match,
+                'match': match,
             }
             return render(request, "matchingMatch/rate_match.html", context=context)
     else:
