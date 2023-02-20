@@ -251,7 +251,7 @@ def main(request, *args, **kwargs):
         if is_date_filter:
             matches = matches.filter(date=today)
     else:
-        matches = MatchInfo.objects.filter(date=today)
+        matches = MatchInfo.objects.filter(date=today, star_time__gte = now_time)
 
     context = {
         'matches': matches,
