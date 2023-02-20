@@ -718,7 +718,6 @@ def report_update(request, pk):  # pk는 report pk
     report = get_object_or_404(Report, id=pk)
     if report.writer_id.id == request.user.id or request.user.is_superuser == True:
         if request.method == "POST":
-            old_image = report.image.url
             form = ReportForm(request.POST, request.FILES, instance=report)
             img = request.FILES.get('image', False)
             if form.is_valid():
@@ -726,8 +725,7 @@ def report_update(request, pk):  # pk는 report pk
                 # if os.path.exists(image_path):
                 #     os.remove(image_path)
                 form.save()
-                if img:
-                    old_image.delete(save=False)
+                
                 return redirect('matchingMatch:report_detail', pk=pk)
 
         form = ReportForm(instance=report)
