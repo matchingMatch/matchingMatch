@@ -108,7 +108,7 @@
                     <a href="{% url 'matchingMatch:team_list' %}">팀 목록</a>
                     <a href="{% url 'matchingMatch:notice_list' %}">공지사항</a>
                     {% if request.user.is_authenticated %}
-                    <a href="{% url 'matchingMatch:report_list' request.user.id %}">신고게시판</a>
+                    <a href="{% url 'matchingMatch:report_list'%}">신고게시판</a>
                     {% endif %}
                 </div>
             </div>

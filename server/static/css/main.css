@@ -60,7 +60,7 @@ header {
 	top: 0;
 	width: 3100px;
 	/* 슬라이드할 사진과 마진 총 넓이 */
-	transition: left 0.5s ease-out;
+	/* transition: left 0.5s ease-out; */
 	padding: 0;
 }
 

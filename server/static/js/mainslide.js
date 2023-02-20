@@ -9,7 +9,6 @@ dates = [];
 //지금부터 이번 달 말일
 for (let i = thisDate; i <= lastDate; i++) {
 	dates.push(i);
-  console.log(i)
 }
 // 다음 달 날짜껒
 thisDateLength = dates.length;
@@ -22,8 +21,10 @@ let flag = 0;
 const urlstr = window.location.href;
 const url = new URL(urlstr);
 const cur_date = url.searchParams.get("date");
+
+
 let new_index = 0 // 새로 로드 될 떄의 curIndex
-let cur_checked = null //  현재 체크된 경우 window.onload에서 checked 이용
+let cur_checked = 0 //  현재 체크된 경우 window.onload에서 checked 이용
 dates.forEach((date, i) => {
 	let condition =
 		dayIndex % 7 == 0 ? "sun" : dayIndex % 7 == 6 ? "sat" : "rest_day";
@@ -34,7 +35,6 @@ dates.forEach((date, i) => {
 	let now_month = flag ? thisMonth + 2 : thisMonth + 1;
 	let now_year = now_month / 13 == 1 ? thisYear + 1 : thisYear;
 
-	console.log(cur_date);
 
 	if (cur_date == `${now_year}-${now_month}-${date}`) {
     cur_checked = i
@@ -68,11 +68,15 @@ week.innerHTML = days.join("");
 // 상세 설정 필터 이후에도 현재 선택된 슬라이드의 checked 상태 변환
 window.addEventListener('load', () => {
   // 아직 날짜 필터를 걸지 않았을 경우
-  if (cur_checked == null) {
-    return;
-  }
-  const checked_one = document.getElementById(`date-${cur_checked}`)
-  console.log(cur_checked)
+	if (cur_date == null) {
+		const date_form = document.getElementById("date-form");
+		const checked_one = document.getElementById(`date-${cur_checked}`)
+		checked_one.checked = true;
+		date_form.submit();
+	}
+ 
+	const checked_one = document.getElementById(`date-${cur_checked}`)
+	
   checked_one.checked = true
 })
 
@@ -120,7 +124,6 @@ moveSlide 함수 불러옴 */
 
 
 const slide_list = document.querySelectorAll(".slide-list");
-console.log(slide_list);
 const date_form = document.getElementById("date-form");
 
 slide_list.forEach((e) => {
@@ -128,7 +131,6 @@ slide_list.forEach((e) => {
   
 	e.addEventListener("click", (event) => {
 		//무한로딩 방지
-    console.log(event.target);
 		event.preventDefault();
     date_form.submit();
 
