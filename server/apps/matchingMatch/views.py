@@ -563,7 +563,7 @@ def applying_team_list(request, pk):  # pk는 매치 pk, 경기 정보 페이지
 
 def rate(request, pk):
     if request.method == "POST":
-        user = get_object_or_404(Team, id=pk)
+        user = request.user
         match = get_object_or_404(MatchInfo, id=pk)
         opponent = object()
         if user == match.host_id:
@@ -572,6 +572,7 @@ def rate(request, pk):
         elif user == match.participant_id:
             opponent = get_object_or_404(Team, id=match.host_id.id)
             match.host_rated = True
+            print('완료')
 
         user.match_count += 1
         opponent.match_count += 1
