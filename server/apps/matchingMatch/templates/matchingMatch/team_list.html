@@ -2,7 +2,7 @@
 {%load static%}
 {% block content %}
 <body>
-    <div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+    <div class="wrap w-100 h-100 d-flex bg-light justify-content-center p-0" style="min-height:100vh">
 		<div class="d-flex flex-column bg-white " style = "width:700px;">
             <div class="team-list d-flex flex-column justify-content-center text-center m-3">
                 <h4>팀목록</h4>
@@ -36,31 +36,42 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <script>
+                            
+                                let count = null
+                                let level = null
+                                let manner =null
+                                let teamLevel = null
+                                let teamManner = null
+                        </script>
                         {% for team in teams %}
 
                             <tr onclick="location.href='{% url 'matchingMatch:team_detail' team.pk %}'" style="cursor:pointer;">
                                 <th>{{team.team_name}}</th>
                                 <th>{{team.region}}</th>
-                                <th class="level"></th>
-                                <th class="manner"></th>
+                                <th class="level" id="{{team.id}}level"></th>
+                                <th class="manner" id="{{team.id}}manner"></th>
                                 <script>
-                                    let count = Number('{{team.match_count}}')
-                                    let level = Number('{{team.level}}')
-                                    let manner = Number('{{team.manner}}')
+                                    count = Number('{{team.match_count}}')
+                                    level = Number('{{team.level}}')
+                                    manner = Number('{{team.manner}}')
+                                    teamLevel = document.getElementById('{{team.id}}level')
+                                    teamManner = document.getElementById('{{team.id}}manner')
                                     if (count <= 3) {
-                                        document.querySelector('.level').innerText = '-'
-                                        document.querySelector('.manner').innerText = '-'   
+                                        teamLevel.innerText = '-'
+                                        teamManner.innerText = '-'   
                                     } else {
-                                        document.querySelector('.level').innerText = `${(level/count).toFixed(2)}`
-                                        document.querySelector('.manner').innerText = `${(manner/count).toFixed(2)}`
+                                        teamLevel.innerText = `${(level/count).toFixed(2)}`
+                                        teamManner.innerText = `${(manner/count).toFixed(2)}`
                                     }
+                                        
                                 </script>
                             </tr>
                         
                         {% endfor %}
                     </tbody>
                 </table>
-                <nav>
+                <nav class="mt-5">
                     <ul class="pagination pagination-sm justify-content-center">
                         
                         <li class="page-item">

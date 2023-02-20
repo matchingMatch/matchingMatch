@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <div style="display:none">{{notice.hits_counter}}</div> <!--이거 지우지 마세요!-->
-<div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+<div class="wrap w-100 h-100 d-flex bg-light justify-content-center p-0" style="min-height:80vh">
     <div class="d-flex flex-column bg-white " style = "width:700px;">
         <div class="title border-bottom mx-3">
             <div class="mx-3">
@@ -47,6 +47,7 @@
             {% csrf_token %}
             <input type="submit" value="삭제하기">
         </form>
+        {% endif %}
     </div>
 </div>
 
@@ -55,6 +56,6 @@
 <!--css display none 속성 달아야됨 -->
 
 
-{% endif %}
+
 {% endblock content %}
 
