@@ -72,7 +72,7 @@ header {
 	width: calc(100vw / 7);
 }
 
-.week>label:hover {
+.week > label:hover {
 	cursor: pointer;
 	background-color: #cecece;
 }
@@ -331,27 +331,26 @@ nav a {
 	font-style: normal;
 }
 
-@font-face {
+/* @font-face {
 	font-family: "Jeju Gothic", sans-serif;
 	src: url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
 	font-weight: normal;
 	font-style: normal;
-}
-
-@font-face {
+} */
+/* @font-face {
 	font-family: 'NEXONFootballGothicBA1';
 	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXONFootballGothicBA1.woff') format('woff');
 	font-weight: normal;
 	font-style: normal;
-}
+} */
 
 body {
 	/* font-family: "Cafe24Ssurround" !important; */
-	font-family: 'HealthsetGothicLight' !important;
+	font-family: 'NEXONFootballGothicBA1' !important;
 
 }
 
-.week>input {
+.week > input {
 	position: absolute !important;
 	clip: rect(0, 0, 0, 0);
 	height: 1px;
@@ -359,7 +358,6 @@ body {
 	border: 0;
 	overflow: hidden;
 }
-
 .week label {
 	transition: all 0.1s ease-in-out;
 	border-radius: 5px;
