@@ -738,7 +738,8 @@ def report_update(request, pk):  # pk는 report pk
                 # if os.path.exists(image_path):
                 #     os.remove(image_path)
                 form.save()
-
+                if img:
+                    old_image.delete(save=False)
                 return redirect('matchingMatch:report_detail', pk=pk)
 
         form = ReportForm(instance=report)
