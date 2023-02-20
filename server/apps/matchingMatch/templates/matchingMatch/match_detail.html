@@ -84,7 +84,7 @@
 						{% endif %}
 						<br />
 
-						<a href="{% url 'matchingMatch:team_detail' match.host_id.pk %}" style="text-decoration: none;">
+						<a href="{% url 'matchingMatch:team_detail' match.host_id.pk %}" style="text-decoration: none; font-size:18px;">
 							{{match.host_id.team_name}}
 						</a>
 					</div>
@@ -98,7 +98,7 @@
 						<br />
 
 						<a
-							href="{% url 'matchingMatch:team_detail' match.participant_id.pk %}" style="text-decoration: none;"
+							href="{% url 'matchingMatch:team_detail' match.participant_id.pk %}" style="text-decoration: none; font-size:18px;" 
 						>
 							{{match.participant_id.team_name}}
 						</a>
@@ -130,7 +130,7 @@
 					</div>
 				</div>
 				
-
+				
 				{% elif match.host_id != user and status == 0 %}
 				<div id="enroll-btn">
 					<button
@@ -151,6 +151,7 @@
 					</button>
 				</div>
 				{% endif %} {% endif %}
+				
 			</div>
 		</div>
 	</main>
