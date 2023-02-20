@@ -18,7 +18,6 @@
         <script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script defer src="{% static 'js/calendar.js' %}"></script>
         <script defer src="{% static 'js/mainslide.js' %}"></script>
-        <script defer src="{% static 'js/mainalarm.js' %}"></script>
         <script defer src="{% static 'js/maincheck.js' %}"></script>
         <script src="https://www.google.com/recaptcha/api.js"></script>
 		<!-- JavaScript Bundle with Popper -->
@@ -109,7 +108,7 @@
                     <a href="{% url 'matchingMatch:team_list' %}">팀 목록</a>
                     <a href="{% url 'matchingMatch:notice_list' %}">공지사항</a>
                     {% if request.user.is_authenticated %}
-                    <a href="{% url 'matchingMatch:report_list' request.user.id %}">신고게시판</a>
+                    <a href="{% url 'matchingMatch:report_list'%}">신고게시판</a>
                     {% endif %}
                 </div>
             </div>
