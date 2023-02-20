@@ -1,4 +1,29 @@
 {% extends 'matchingMatch/base.html' %} {% load static %} {% block content %}
+{%block extra_head%}
+<style>
+	datalist {
+  position: absolute;
+  max-height: 20em;
+  border: 0 none;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+datalist option {
+  font-size: 0.8em;
+  padding: 0.3em 1em;
+  background-color: #ccc;
+  cursor: pointer;
+}
+
+/* option active styles */
+datalist option:hover, datalist option:focus {
+  color: #fff;
+  background-color: #036;
+  outline: 0 none;
+}
+</style>
+{%endblock%}
 <body>
 	{{ match_form.errors }} {{match_form.non_field_errors }}
 	<div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
@@ -33,6 +58,7 @@
 					list="stadium_list"
 					value ="{{match_stadium}}"
 					placeholder="축구장 검색"
+					autocomplete="off"
 				/>
 				<datalist id="stadium_list">
 					{% for stadium_object in stadium_name_list %}

@@ -112,12 +112,9 @@ def team_list(request):
         teams = Team.objects.filter(team_name__contains=search)
     else:
         teams = Team.objects.all()
-
     if order:
         teams = teams.order_by(order)
-
     
-
     paginator = Paginator(teams, 10)
     teams = paginator.get_page(page)
     # order와 search가 동시에 존재하는 경우?
@@ -138,14 +135,14 @@ def match_register(request):
             match.save()
             return redirect("matchingMatch:match_detail", pk = match.pk) #만들어진 페이지로 이동
         else:
-            stadium_name = Stadium.objects.all()
+            stadium_name = Stadium.objects.order_by('stadium_name')
             stadium_name_list = stadium_name
             context = {"match_form": match_form, "stadium_name": stadium_name,
                        "stadium_name_list": stadium_name_list, }
             return render(request, "matchingMatch/match_register.html", context=context)
 
     else:
-        stadium_name = Stadium.objects.all()
+        stadium_name = Stadium.objects.order_by('stadium_name')
         stadium_name_list = stadium_name
         match_form = MatchRegisterForm()
         context = {"match_form": match_form, "stadium_name": stadium_name,
@@ -193,7 +190,8 @@ def match_update(request, pk):
             return redirect("matchingMatch:match_detail", pk=pk)  # 수정된 페이지로 이동
 
         else:
-            context = {"match_form": match_form, "match_stadium" : match.stadium}
+            stadium_name_list = Stadium.objects.order_by('stadium_name')
+            context = {"match_form": match_form, "match_stadium" : match.stadium, 'stadium_name_list' : stadium_name_list}
             # 잘못된 부분 수정 요청
 
             # 다시 작성하기
@@ -203,7 +201,8 @@ def match_update(request, pk):
         match_form = MatchRegisterForm(instance=match)
         # stadium = match_form.stadium
         # match_form.stadium = Stadium.objects.get(id=stadium)
-        context = {"match_form": match_form, "match_stadium" : match.stadium}
+        stadium_name_list = Stadium.objects.order_by('stadium_name')
+        context = {"match_form": match_form, "match_stadium" : match.stadium, 'stadium_name_list' : stadium_name_list}
         return render(request, "matchingMatch/match_update.html", context=context)
 
 
@@ -266,9 +265,8 @@ def check_endedmatch(request):
     now = datetime.datetime.now().time()
     today = datetime.date.today()
     # 알람이 생성되지 않은 매치: 경기가 끝나지 않은 매치들
-
-    userMatches = (MatchInfo.objects.filter(host_id=request.user.id, participant_rated=False) & MatchInfo.objects.exclude(participant_id=None)) | MatchInfo.objects.filter(
-        participant_id=request.user.id, host_rated=False)
+    userMatches = (MatchInfo.objects.filter(host_id=request.user.id, participant_rated=False) & MatchInfo.objects.filter(is_matched=True)) | (MatchInfo.objects.filter(
+        participant_id=request.user.id, host_rated=False) & MatchInfo.objects.filter(is_matched = True))
     userMatches_json = []
     if len(userMatches) != 0:
         for match in userMatches:
@@ -402,7 +400,8 @@ def edit_account(request):
             user = form.save(commit=False)
             user.save()
             # 로고도 upload_to 설정해서 중복 없애야 할듯
-            old_image.delete(save=False)
+            if img:
+                old_image.delete(save=False)
 
             return redirect('matchingMatch:account')
     else:

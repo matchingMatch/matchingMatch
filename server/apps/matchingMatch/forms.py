@@ -35,7 +35,7 @@ class UserForm(ModelForm):
         model = Team
         fields = ['username', 'email', 'team_name', 'team_logo', 'team_intro', 'region', 'photo', 'gender', 'pre_proplayer']
         labels = {
-            'username': '유저네임',
+            'username': '아이디',
             'email': '이메일',
             'team_name': '팀 이름',
             'team_logo': '팀 로고 (이미지 첨부파일)',
@@ -56,7 +56,7 @@ class CustomUserCreateForm(UserCreationForm):
         model = Team
         fields = ['username', 'email', 'password1', 'password2', 'team_name', 'team_logo', 'team_intro', 'region', 'photo', 'gender', 'pre_proplayer']
         labels = {
-            'username': '유저네임',
+            'username': '아이디',
             'team_name': '팀 이름',
             'team_logo': '팀 로고 (이미지 첨부파일)',
             'team_intro': '팀 소개 (자세하게 적어주세요.)',
