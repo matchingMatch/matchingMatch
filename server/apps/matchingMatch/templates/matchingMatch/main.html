@@ -179,16 +179,7 @@
 	</div>
 </main>
 </body>
-<script>
-	const checkMode = (e, theother) => {
-		document.querySelector(`.${e.target.value}`).style.display = 'block'
-		document.querySelector(`.${theother}`).style.display = 'none'
-	}
-	const slideModeBtn = document.querySelector('#slide')
-	const calendarModeBtn = document.querySelector('#calendar')
-	slideModeBtn.addEventListener('click', (e) => checkMode(e, 'calendar_container'))
-	calendarModeBtn.addEventListener('click', (e) => checkMode(e, 'week_slideshow'))
-	
+<script>	
 	const sendRequest = async () => {
 		const url = "/match/ended/";
 		let userMatches = await axios.get(url);
@@ -206,13 +197,6 @@
 	
 	const createModal = (userMatches) => {
 		const alarmModalList = document.querySelector(".alarm_modal_list");
-		
-		/*
-		alarmModalList.addEventListener('click', (e)=> {
-			alarmModalList.classList.toggle('show')
-			console.log(e.target)
-		})
-		*/
 		alarmModalList.classList.toggle('show')
 		alarmModalList.innerHTML = "";
 		for (let i = 0; i < userMatches.length; i++) {
