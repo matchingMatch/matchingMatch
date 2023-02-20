@@ -10,12 +10,21 @@
 <div class="alarm_modal_list"></div>
 <body>
 
+<div class="alarm_modal_list"></div>
 <main class="wrap w-100% d-flex bg-light justify-content-center p-0">
 	<div class = "main_container d-flex flex-column bg-white">
 		<div class="banner p-2">
 		<img src="{%static 'image/banner_photo.jpg' %}" alt="banner_image">
 		</div>
-
+		<div class="plans_mode">
+		<div class="mode">
+			<img src="{% static 'icon/arrows-left-right-solid.svg' %}" alt="슬라이드"> <input type="radio" value="week_slideshow" name="mode" id="slide" checked>
+		</div>
+		<div class="mode">
+			<img src="{% static 'icon/calendar-solid.svg' %}" alt="캘린더"> <input type="radio" value="calendar_container" name="mode" id="calendar" >
+		</div>
+		
+		</div>
 		<form id = "date-form" action="" method = "get">
 
 		<div class="calendar_container sticky-top">
@@ -42,7 +51,7 @@
 		</div>
 		</div>
 	</div>
-		<div class="week_slideshow sticky-top">
+		<div class="week_slideshow sticky-top ">
 		<ul class="week">
 			<li class="date">
 				<div>x요일</div>
@@ -57,18 +66,19 @@
 	
 
 	
-	<div class="match_filter container">
+	<div class="match_filter container d-flex flex-row" style="font-size:12px;">
 		<button
-		class="btn btn-primary"
+		class="btn btn-outline-primary"
 		type="button"
 		data-bs-toggle="collapse"
 		data-bs-target="#matchFilter"
 		aria-expanded="true"
 		aria-controls="matchFilter"
+		style="font-size:13px;"
 		>
 		상세설정
-	</button>
-	
+		</button>
+
 		<div id="matchFilter" class="collapse">
 		<div class="container">
 			<b>지역</b>
@@ -82,8 +92,8 @@
 					{%endfor%}
 
 				</div>
-				<button type = 'button' class = "btn btn-primary" id = "region-all-check">전체 선택</button>
-				<button type = 'button' class = "btn btn-primary" id = "region-all-cancel">전체 선택 해제</button>
+				<button type = 'button' class = "btn btn-outline-info btn-sm" id = "region-all-check" style="font-size:12px;">전체 선택</button>
+				<button type = 'button' class = "btn btn-outline-info btn-sm" id = "region-all-cancel" style="font-size:12px;">전체 선택 해제</button>
 				<div>
 					<b>마감 여부</b>
 					<br>
@@ -99,11 +109,9 @@
 					{{option}}
 					{%endfor%}
 				</div>
-				<input class = "btn btn-outline-info" type="submit" value = "확인">
+				<input class = "btn btn-outline-info btn-sm" type="submit" value = "확인" style="font-size:12px;">
 			</div>
-		
 		</div>
-		
 		</div>
 	</form>
 		<div class="match_list d-flex flex-column flex-nowrap align-items-center ">
@@ -111,13 +119,16 @@
 		<a href="{% url 'matchingMatch:match_detail' match.pk%}"  class="w-100" style="text-decoration:none;">
 			<div class="list-group-item d-flex  p-2 text-black border-bottom align-items-center justify-content-center" >
 				<div class="time-wrap btn btn-warning h-50" style="font-size: 12px;">
-					{{ match.date|date:"M d" }}일
+					<strong>{{ match.date|date:"M d" }}일
 					<br>
 					{{match.start_time}}
+					</strong>
 				</div>
 				<div class="info-wrap col-6 p-3"  >
 					<div class="match-wrap" >
-					{{match.stadium.stadium_name}}
+					<strong>{{match.stadium.stadium_name}}
+					</strong>
+					
 					<br>
 					{{match.get_gender_display}}
 					</div>
@@ -134,7 +145,8 @@
 				<div class ="host-wrap">
 					{% if match.is_matched %}
 					<div class="btn btn-primary d-flex justify-content-center align-items-center py-3 " style="font-size: 12px; width:80px;">
-						<div>매치성사</div>
+						<div>
+							<strong>매치성사</strong></div>
 					</div>
 					{% else %}
 					<div class="btn btn-danger d-flex justify-content-center align-items-center py-3 " style="font-size: 12px; width:80px;">
@@ -146,26 +158,31 @@
 		</a>
 		{% endfor %}
 		</div>
-		<div class="match_register_btn d-flex justify-content-end">
-			<a href="{% url 'matchingMatch:match_register'%}" style="text-decoration:none">
-				<div class="btn btn-success m-3">
-					매치 등록하기
-				</div>
-			</a>
+		<div class="match_register_btn">
+		<a href="{% url 'matchingMatch:match_register'%}" style="text-decoration:none">
+			<div class="btn btn-success m-3">
+				매치 등록하기
+			</div>
+		</a>
 		</div>
 	</div>
 </main>
 </body>
 <script>
+	const checkMode = (e, theother) => {
+		document.querySelector(`.${e.target.value}`).style.display = 'block'
+		document.querySelector(`.${theother}`).style.display = 'none'
+	}
+	const slideModeBtn = document.querySelector('#slide')
+	const calendarModeBtn = document.querySelector('#calendar')
+	slideModeBtn.addEventListener('click', (e) => checkMode(e, 'calendar_container'))
+	calendarModeBtn.addEventListener('click', (e) => checkMode(e, 'week_slideshow'))
 	
 	const sendRequest = async () => {
 		const url = "/match/ended/";
 		let userMatches = await axios.get(url);
 		userMatches = userMatches.data.userMatches;
 		console.log("userMatches:", userMatches);
-		if (userMatches.length == 0) {
-			return
-		}
 		createModal(userMatches);
 	};
 	window.onload = () => {
@@ -176,6 +193,12 @@
 	const createModal = (userMatches) => {
 		const alarmModalList = document.querySelector(".alarm_modal_list");
 		
+		/*
+		alarmModalList.addEventListener('click', (e)=> {
+			alarmModalList.classList.toggle('show')
+			console.log(e.target)
+		})
+		*/
 		alarmModalList.classList.toggle('show')
 		alarmModalList.innerHTML = "";
 		for (let i = 0; i < userMatches.length; i++) {
@@ -199,17 +222,12 @@
 			</div>
 			`;
 		}
-		const exitModal = document.querySelector('.alarm_modal .exit_modal img')
-		const rateSave = document.querySelector('.alarm_modal .rate_save')
+		const exitModal = document.querySelector('.alarm_modal .exit_modal')
+
 		exitModal.addEventListener('click', (e)=> {
 			alarmModalList.classList.toggle('show')
 			console.log(e.target)
 		})
-		/*
-		rateSave.addEventListener('click', () => {
-			alarmModalList.classList.toggle('show')
-		})
-		*/
 	};
 </script>
 {%endblock%}
