@@ -186,6 +186,9 @@
 		let userMatches = await axios.get(url);
 		userMatches = userMatches.data.userMatches;
 		console.log("userMatches:", userMatches);
+		if (userMatches.length == 0) {
+			return;
+		}
 		createModal(userMatches);
 	};
 	window.onload = () => {
