@@ -36,56 +36,107 @@ datalist option:hover, datalist option:focus {
 				method="post"
 				enctype="multipart/form-data"
 				class="mt-3 d-flex flex-column justify-content-center text-center mx-5"
-			>
+			> {% endcomment %} -->
+			<form action="" method="post" class="mt-3 d-flex flex-column justify-content-center text-center mx-5" style="font-size:12px;" enctype="multipart/form-data">
 				{% csrf_token %}
 
-				<label for="gender"> 성별 </label>
-				<div>{{match_form.gender}}</div>
+				<div class="form-group border-bottom border-dark d-flex flex-row align-items-center " style="position: relative; margin-bottom: 25px; overflow: hidden; width:80%; padding: 6px 0px;">
+					<div class="col-4 px-2 text-start">
+						<label for="gender" class="p-0 text-center">
+							<img src="{% static 'icon/venus-mars-solid.svg' %}" alt="venus-mars-solid" style="height:12px; width:12px;"> 성별
+						</label>
+					</div>
+					<div class="col-8 text-center">
+						{{match_form.gender}}
+					</div>
+				</div>
 
-				<!-- <label for="date"> 날짜 </label>
-				<input name="date" type="date" id="date" value = ""/> -->
-				<label for="date">날짜</label>
-				{{match_form.date}}
-				<!-- <label for="start_time">시작시간</label>
-				<input name="start_time" type="time" id="start_time" value = ""/> -->
-				<label for="start_time">시작시간</label>
-				{{match_form.start_time}}
+				<div class="form-group border-bottom border-dark d-flex flex-row align-items-center " style="position: relative; margin-bottom: 25px; overflow: hidden; width:80%; padding: 6px 0px;">
+					<div class="col-4 px-2 text-start">
+						<label for="date" class="p-0 text-center">
+							<img src="{% static 'icon/calendar-days-solid.svg' %}" alt="calendar" style="height:12px; width:12px;"> 날짜
+						</label>
+					</div>
+					<div class="col-8 text-center">
+						<input name="date" type="date" id="date" style="width:100%; border:none;" value="{{match_form.date.value|date:'Y-m-d' }}">
+					</div>
+				</div>
 				
-				<!-- <label for="end_time"> 끝나는 시간</label>
-				<input name="end_time" type="time" id="end_time" value = ""/> -->
-				<label for="end_time"> 끝나는 시간</label>
-				{{match_form.end_time}}
-				<label for="stadium"> 축구장 </label>
-				<input
-					id="stadium_search"
-					list="stadium_list"
-					value ="{{match_stadium}}"
-					placeholder="축구장 검색"
-					autocomplete="off"
-				/>
-				<datalist id="stadium_list">
-					{% for stadium_object in stadium_name_list %}
-					<option data-value="{{stadium_object.id}}">{{stadium_object.stadium_name}}</option>
 
-					{% endfor %}
-				</datalist>
-				<input type="hidden" name="stadium" id="stadium_search-hidden" value = "{{match_form.stadium.value}}"/>
+				<div class="form-group border-bottom border-dark d-flex flex-row align-items-center " style="position: relative; margin-bottom: 25px; overflow: hidden; width:80%; padding: 6px 0px;">
+					<div class="col-4 px-2 text-start">
+						<label for="start_time" class="p-0 text-center">
+							<img src="{% static 'icon/clock-regular.svg' %}" alt="clock-regular" style="height:12px; width:12px;"> 시작시간
+						</label>
+					</div>
+					<div class="col-8 text-center">
+						<input name="start_time" type="time" id="start_time" style="width:100%; border:none; " value="{{ match_form.start_time.value|time:'H:i:s' }}">
+					</div>
+				</div>
 
-				<label for="stadium_cost"> 축구장 비용 </label>
-				<input
-					type="text"
-					name="stadium_cost"
-					value = "{{match_form.date.value}}"
-					placeholder="원구장비/상대팀 부담비용"
-				/>
 
-				<label for="etc"> 기타사항 </label>
-				<input name="etc" type="text" id="etc" placeholder="기타사항" value = "{{match_form.etc.value}}" />
+
+				<div class="form-group border-bottom border-dark d-flex flex-row align-items-center " style="position: relative; margin-bottom: 25px; overflow: hidden; width:80%; padding: 6px 0px;">
+					<div class="col-4 px-2 text-start">
+						<label for="end_time" class="p-0 text-center">
+							<img src="{% static 'icon/clock-solid.svg' %}" alt="clock-solid" style="height:12px; width:12px;"> 끝나는 시간
+						</label>
+					</div>
+					<div class="col-8 text-center">
+						<input name="end_time" type="time" id="end_time" style="width:100%; border:none;" value="{{match_form.end_time.value|time:'H:i:s'}}">
+					</div>
+				</div>
+
+				<div class="form-group border-bottom border-dark d-flex flex-row align-items-center " style="position: relative; margin-bottom: 25px; overflow: hidden; width:80%; padding: 6px 0px;">
+					<div class="col-4 px-2 text-start">
+						<label for="stadium" class="p-0 text-center">
+							<img src="{% static 'icon/archway-solid.svg' %}" alt="archway-solid" style="height:12px; width:12px;"> 축구장 
+						</label>
+					</div>
+					<div class="col-8 text-center">
+						<input
+						id="stadium_search"
+						list="stadium_list"
+						placeholder="축구장 검색"
+						style="width:100%; border:none; ">
+						<datalist id="stadium_list">
+						{% for stadium_object in stadium_name_list %}
+						<option data-value="{{stadium_object.id}}">{{stadium_object.stadium_name}}</option>
+						{% endfor %}
+						</datalist>
+						<input type="hidden" name="stadium" id="stadium_search-hidden" value="{{match_form.stadium.value}}"/>
+					</div>
+				</div>
+
+				<div class="form-group border-bottom border-dark d-flex flex-row align-items-center " style="position: relative; margin-bottom: 25px; overflow: hidden; width:80%; padding: 6px 0px;">
+					<div class="col-4 px-2 text-start">
+						<label for="end_time" class="p-0 text-center">
+							<img src="{% static 'icon/won-sign-solid.svg' %}" alt="won-sign-solid" style="height:12px; width:12px;"> 축구장 비용 
+						</label>
+					</div>
+					<div class="col-8 text-center">
+						<input type="text"
+						name="stadium_cost"
+						placeholder="원구장비/상대팀 부담비용" style="width:100%; border:none;" value="{{match_form.stadium_cost.value}}"/>
+					</div>
+				</div>
+
+				<div class="form-group border-bottom border-dark d-flex flex-row align-items-center " style="position: relative; margin-bottom: 25px; overflow: hidden; width:80%; padding: 6px 0px;">
+					<div class="col-4 px-2 text-start">
+						<label for="etc" class="p-0 text-center">
+							<img src="{% static 'icon/comment-dots-solid.svg' %}" alt="comment-dots-solid" style="height:12px; width:12px;"> 기타사항 
+						</label>
+					</div>
+					<div class="col-8 text-center">
+						<textarea rows="8" cols="50" name="etc" type="text" id="etc" placeholder="기타사항/ 연락처 혹은 카톡 아이디 남겨주세요" style="width:100%; border:none;" value="{{match_form.etc.value}}">{{ match_form.etc.value}}</textarea>
+					</div>
+				</div>
+
 				<div
 					class="g-recaptcha"
 					data-sitekey="6LerqngkAAAAAB3wEJV0hNQnBn3RWtlv5pkoL-7v"
 				></div>
-				<input type="submit" , value="저장하기" />
+				<input type="submit" , value="저장하기" style="width:50%" />
 			</form>
 		</div>
 	</div>
@@ -95,6 +146,42 @@ datalist option:hover, datalist option:focus {
 		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
 		crossorigin="anonymous"
 	></script>
+
+
+	<style>
+		input[type="date"] {
+			position: relative;
+			}
+		input[type="date"]::-webkit-clear-button,
+		input[type="date"]::-webkit-inner-spin-button {display: none;}
+		input[type="date"]::-webkit-calendar-picker-indicator{
+			position:absolute;
+			left: 0;
+			top: 0;
+			width:100%;
+			height: 100%;
+			background: transparent;
+			color:transparent;
+			cursor: pointer;
+		}
+
+		input[type="time"] {position: relative;}
+		input[type="time"]::-webkit-clear-button,
+		input[type="time"]::-webkit-inner-spin-button {display: none;}
+		input[type="time"]::-webkit-calendar-picker-indicator{
+			position:absolute;
+			left: 0;
+			top: 0;
+			width:100%;
+			height: 100%;
+			background: transparent;
+			color:transparent;
+			cursor: pointer;
+		}
+		
+	</style>
+
+	
 </body>
 <script>
 	window.onload = () => {

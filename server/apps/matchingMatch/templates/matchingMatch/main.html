@@ -6,8 +6,11 @@
 </script>
 
 {%endblock%}
-{% block content %}
+{%block modal%}
 <div class="alarm_modal_list"></div>
+{%endblock%}
+{% block content %}
+
 <body>
 
 <main class="wrap w-100% d-flex bg-light justify-content-center p-0">
@@ -146,11 +149,12 @@
 		</a>
 		{% endfor %}
 		</div>
-		<div class="match_register_btn">
-		<a href="{% url 'matchingMatch:match_register'%}" style="text-decoration:none">
-			<div class="btn btn-success m-3">
-				매치 등록하기
-			</div>
+		<div class="match_register_btn d-flex justify-content-end">
+			<a href="{% url 'matchingMatch:match_register'%}" style="text-decoration:none">
+				<div class="btn btn-success m-3">
+					매치 등록하기
+				</div>
+			</a>
 		</div>
 	</div>
 </main>
