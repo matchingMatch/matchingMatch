@@ -3,7 +3,7 @@
 {% endblock%} {% block content %}
 <body>
 	{{m}}
-	<main id = "match-detail" class="wrap w-100% d-flex bg-light justify-content-center p-0">
+	<main id = "match-detail" class="wrap w-100% d-flex bg-light justify-content-center p-0" style="min-height:80vh">
 		<div class="d-flex flex-column bg-white" style="width: 700px">
 			<!-- 카카오맵 api -->
 			<div id="map" style="width: auto; height: 25rem"></div>
@@ -84,7 +84,7 @@
 						{% endif %}
 						<br />
 
-						<a href="{% url 'matchingMatch:team_detail' match.host_id.pk %}" style="text-decoration: none;">
+						<a href="{% url 'matchingMatch:team_detail' match.host_id.pk %}" style="text-decoration: none; font-size:18px;">
 							{{match.host_id.team_name}}
 						</a>
 					</div>
@@ -98,7 +98,7 @@
 						<br />
 
 						<a
-							href="{% url 'matchingMatch:team_detail' match.participant_id.pk %}" style="text-decoration: none;"
+							href="{% url 'matchingMatch:team_detail' match.participant_id.pk %}" style="text-decoration: none; font-size:18px;" 
 						>
 							{{match.participant_id.team_name}}
 						</a>
@@ -108,21 +108,17 @@
 				<br />
 
 				<hr class="mx-3"/>
-				<div class="match-etc mx-3">
-					<div class="mx-3">
-						기타사항 : {{match.etc}}
-					</div>
-				</div>
-				<hr class="mx-3"/>
+				<div class="match-etc mx-5">기타사항 : {{match.etc}}</div>
 
-				
+				<hr class="mx-3"/>
 
 				{%if user.is_authenticated %} {% if user == match.host_id and match.is_matched == False %}
 				
-				<div class="text-center my-5 d-flex flex-row justify-content-center">
+				<div class="text-center mb-5 d-flex flex-row justify-content-center">
 					<form action="{% url 'matchingMatch:match_update' match.pk %}" style="margin-bottom: 10px;">
-						<button class="btn btn-primary btn-sm mx-2">매치 수정하기</button>
+						<button class="btn btn-primary btn-sm mx-2">수정</button>
 					</form>
+	
 					<form action="{% url 'matchingMatch:applying_team_list' match.pk %}">
 						<button class="btn btn-primary btn-sm mx-2">신청자 목록 확인하기</button>
 					</form>
@@ -130,35 +126,34 @@
 				
 
 				{% elif match.is_matched == True %}
-				<div class="text-center my-5">
-					<button class="btn btn-danger">마감되었습니다</button>
+				<div class="text-center mb-5">
+					<div class="btn btn-primary mx-3">
+						마감되었습니다
+					</div>
 				</div>
 				
-
+				
 				{% elif match.host_id != user and status == 0 %}
-				<div class="text-center my-5">
-					<div id="enroll-btn">
-						<button
-							class=" enroll"
-							onclick="changeEnroll({{ match.id}}, 'enroll')"
-						>
-							신청하기
-						</button>
-					</div>
-				</div>
-				{% elif match.host_id != user and status == 1 %}
-				<div class="text-center my-5">
-					<div id="enroll-btn">
-						<button
-							class="enroll-btn"
-							onclick="changeEnroll({{ match.id}}, 'enroll-cancel')"
-						>
-							신청취소
-						</button>
-					</div>
+				<div id="enroll-btn">
+					<button
+						class="enroll"
+						onclick="changeEnroll({{ match.id}}, 'enroll')"
+					>
+						신청하기
+					</button>
 				</div>
 				
+				{% elif match.host_id != user and status == 1 %}
+				<div id="enroll-btn" >
+					<button
+						class="enroll-btn"
+						onclick="changeEnroll({{ match.id}}, 'enroll-cancel')"
+					>
+						신청취소
+					</button>
+				</div>
 				{% endif %} {% endif %}
+				
 			</div>
 		</div>
 	</main>

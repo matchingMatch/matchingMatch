@@ -68,11 +68,11 @@ header {
 	transition: left 0.5s ease-out;
 }
 
-.week > label {
+.week>label {
 	width: calc(100vw / 7);
 }
 
-.week > label:hover {
+.week>label:hover {
 	cursor: pointer;
 	background-color: #cecece;
 }
@@ -346,11 +346,11 @@ nav a {
 
 body {
 	/* font-family: "Cafe24Ssurround" !important; */
-	font-family: 'NEXONFootballGothicBA1' !important;
+	font-family: 'HealthsetGothicLight' !important;
 
 }
 
-.week > input {
+.week>input {
 	position: absolute !important;
 	clip: rect(0, 0, 0, 0);
 	height: 1px;
@@ -358,7 +358,12 @@ body {
 	border: 0;
 	overflow: hidden;
 }
+
 .week label {
 	transition: all 0.1s ease-in-out;
 	border-radius: 5px;
+}
+
+.error {
+	color: red;
 }

@@ -43,9 +43,9 @@ dates.forEach((date, i) => {
 			i
 		] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}" checked>
   <label class = "date-select" style ="background-color:skyblue;" for="date-${i}">
-  <li class='date ${condition}' name = "date"><div>${
+  <li class='date ${condition}' name = "date"><div><strong>${
 			daysKorean[dayIndex++ % 7]
-		}요일</div><div>${date}일</div></li>
+		}요일</strong></div><div><strong>${date}일</strong></div></li>
   </label>
   `;
 	} else {
@@ -53,9 +53,9 @@ dates.forEach((date, i) => {
 			i
 		] = `<input class = "slide-list" id = "date-${i}" type = "radio" name = "date" value = "${now_year}-${now_month}-${date}">
     <label class = "date-select" for="date-${i}">
-    <li class='date ${condition}' name = "date"><div>${
+    <li class='date ${condition}' name = "date"><div><strong>${
 			daysKorean[dayIndex++ % 7]
-		}요일</div><div>${date}일</div></li>
+		}요일</strong></div><div><strong>${date}일</strong></div></li>
     </label>
     `;
 	}

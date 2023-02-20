@@ -4,7 +4,7 @@
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/report_detail.css' %}" />
 {% endblock%}
-<div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+<div class="wrap w-100 h-100 d-flex bg-light justify-content-center p-0" style="min-height:80vh">
     <div class="d-flex flex-column bg-white " style = "width:700px;">
         <div class="title border-bottom mx-3">
             <div class="mx-3">
@@ -12,15 +12,15 @@
             </div>
         </div>
         
-        <div class="content border-bottom m-3" style="font-size:12px; height:30%;">
-            <div class="mx-3" >
+        <div class="content border-bottom mx-3 mt-3" style="font-size:12px;">
+            <div class="mx-3">
                 {{report.content}}
             </div>
         </div>
         {% if report.image %}
-        <div class="image border-bottom mx-3" style="font-size:12px; height:40%;">
-            <div class="mx-3" style="height:100%;">
-                <img class="report_image" src="{{report.image.url}}" style="max-height:100%; width:auto !important ">
+        <div class="image border-bottom mx-3" style="font-size:12px;">
+            <div class="m-3">
+                <img class="report_image" src="{{report.image.url}}" />
             </div>
         </div>
         {% endif %}
@@ -35,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <div class="update_delete_container d-flex flex-row justify-content-end m-3">
+        <div class="update_delete_container">
             <div class="update text-center mx-1">
                 <button class="btn btn-outline-warning btn-sm">
                     <a href="/report_detail/{{report.pk}}/update" style="text-decoration:none; color:black;">수정하기</a>
