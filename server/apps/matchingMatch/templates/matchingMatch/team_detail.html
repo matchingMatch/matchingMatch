@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <body>
-  <div class="wrap w-100 vh-100 d-flex bg-light justify-content-center p-0">
+  <div class="wrap w-100 h-100 d-flex bg-light justify-content-center p-0" style="min-height:100vh">
 		<div class="d-flex flex-column bg-white " style = "width:700px;">
       <div class="section justify-content-center text-center mt-3">
 				{% if user.team_logo %}
@@ -11,28 +11,35 @@
 				{% endif %}
 			</div>
 
-      <div class = "team-detail-mid justify-content-center text-center">
-        <div class="team-intro">
-          <h3>팀 소개</h3>
-          <div>{{team.team_intro}}</div>
+      <div class = "team-detail-mid justify-content-center text-center ">
+        <div class="team-intro text-center mb-4">
+          <div><h3>팀 소개</h3></div>
+          <div style="margin:auto; width:60%;
+          height: 50%; ">안녕하세요 저희는 축구팀이빈다. 많이 많이 맣ㄴ이 안녕하세요 안녕하세요 아낭혀사넝라 나ㅓㄹ지ㅓ ㄴ려저{{team.team_intro}}</div>
         </div>
         <div class = "team-info">
-          <div>경기횟수: {{team.match_count}}</div>
+          <div class="my-1"><strong>경기횟수:</strong> {{team.match_count}}</div>
           {% if team.match_count >= 3 %}
-          <div>실력: {{level}}</div>
-          <div>매너: {{manner}}</div>
+          <div class="my-1"><strong>실력:</strong> {{level}}</div>
+          <div class="my-1"><strong>매너:</strong> {{manner}}</div>
           {% else %}
           <div style="color:gray;">경기 횟수를 충족시키지 않아 실력과 매너 점수가 보이지 않습니다</div>
           {% endif %}
-          <div>선출 여부: {{team.pre_proplayer}}</div>
+          <div class="my-1"><strong>선출여부</strong>: {{team.pre_proplayer}}</div>
         </div>
       </div class = "team-detail-bottom">
         
-      <div class="team_match justify-content-center text-center">
+      <div class="team_match justify-content-center text-center my-5">
         <h3>{{team.team_name}}팀이 현재 모집 중인 매치:</h3>
         {% for match in match_list %}
-        <div>
-          <a href="{% url 'matchingMatch:match_detail' match.pk%}">{{match.stadium}}</a>
+        <div class="my-1">
+          <a href="{% url 'matchingMatch:match_detail' match.pk%}" style="text-decoration:none;">
+            <div class="row" style="width: 60%; margin:auto;" >
+              <div class="col-4" style="padding:0;">{{match.date}}</div>
+              <div class="col-2" style="padding:0;">{{match.start_time}}</div>
+              <div class="col-6" style="padding:0;">{{match.stadium}}</div>
+            </div>
+          </a>
         </div>
         {%endfor%}  
       </div>

@@ -3,7 +3,7 @@
 {% endblock%} {% block content %}
 <body>
 	{{m}}
-	<main id = "match-detail" class="wrap w-100% d-flex bg-light justify-content-center p-0">
+	<main id = "match-detail" class="wrap w-100% d-flex bg-light justify-content-center p-0" style="min-height:80vh">
 		<div class="d-flex flex-column bg-white" style="width: 700px">
 			<!-- 카카오맵 api -->
 			<div id="map" style="width: auto; height: 25rem"></div>
@@ -107,10 +107,10 @@
 				</div>
 				<br />
 
-				<hr />
-				<div class="match-etc">기타사항 : {{match.etc}}</div>
+				<hr class="mx-3"/>
+				<div class="match-etc mx-5">기타사항 : {{match.etc}}</div>
 
-				<hr />
+				<hr class="mx-3"/>
 
 				{%if user.is_authenticated %} {% if user == match.host_id and match.is_matched == False %}
 				
@@ -124,7 +124,12 @@
 				</form>
 
 				{% elif match.is_matched == True %}
-				<button class="end">마감되었습니다</button>
+				<div class="text-center mb-5">
+					<div class="btn btn-primary mx-3">
+						마감되었습니다
+					</div>
+				</div>
+				
 
 				{% elif match.host_id != user and status == 0 %}
 				<div id="enroll-btn">
@@ -135,8 +140,9 @@
 						신청하기
 					</button>
 				</div>
+				
 				{% elif match.host_id != user and status == 1 %}
-				<div id="enroll">
+				<div id="enroll" >
 					<button
 						class="enroll-btn"
 						onclick="changeEnroll({{ match.id}}, 'enroll-cancel')"
