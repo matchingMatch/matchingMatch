@@ -248,8 +248,8 @@ def main(request, *args, **kwargs):
         filter_form = MatchFilterForm(request.GET)
         matches = MatchInfo.objects.filter(**filter_set)
         is_date_filter = request.GET.get('date', False)
-        if is_date_filter:
-            matches = matches.filter(date=today)
+        if not is_date_filter:
+            matches = matches.filter(date=today, star_time__gte = now_time)
     else:
         matches = MatchInfo.objects.filter(date=today, star_time__gte = now_time)
 
