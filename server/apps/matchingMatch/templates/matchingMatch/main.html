@@ -72,8 +72,8 @@
 		상세설정
 	</button>
 	
-		<div id="matchFilter" class="collapse">
-		<div class="container" style="font-size:13px;">
+		<div id="matchFilter" class="collapse my-2">
+		<div class="container border border-seconadry rounded p-1" style="font-size:13px;">
 			<b>지역</b>
 			<br>
 				<div id = "regions" class = "row">
@@ -85,8 +85,10 @@
 					{%endfor%}
 
 				</div>
+				<div class="text-center m-2">
 				<button type = 'button' class = "btn btn-outline-info btn-sm" id = "region-all-check" style="font-size:12px;">전체 선택</button>
 				<button type = 'button' class = "btn btn-outline-info btn-sm" id = "region-all-cancel" style="font-size:12px;">전체 선택 해제</button>
+				</div>
 				<div>
 					<b>마감 여부</b>
 					<br>
@@ -102,7 +104,10 @@
 					{{option}}
 					{%endfor%}
 				</div>
-				<input class = "btn btn-outline-info" type="submit" value = "확인" style="font-size:12px;">
+				<div class="text-center">
+					<input class = "btn btn-outline-info btn-sm text-center" type="submit" value = "확인" style="font-size:12px;">
+				</div>
+				
 			</div>
 		
 		</div>
