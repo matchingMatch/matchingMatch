@@ -246,7 +246,7 @@ def main(request, *args, **kwargs):
     # html 태그 상의 name  : html 태그 상의 value
     if filter_set:
         filter_form = MatchFilterForm(request.GET)
-        matches = MatchIn`fo.objects.filter(**filter_set)
+        matches = MatchInfo.objects.filter(**filter_set)
         is_date_filter = request.GET.get('date', False)
         if not is_date_filter:
             matches = matches.filter(date=today, start_time__gt=now_time)
