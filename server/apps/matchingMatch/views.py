@@ -20,6 +20,7 @@ from .models import Team, MatchInfo, Stadium, MatchRequest, Notice, Report
 from .forms import CustomUserCreateForm, UserForm, NoticeForm, ReportForm, MatchFilterForm
 from .decorator import admin_required, check_recaptcha
 from django.conf import settings
+from django.template.loader import render_to_string
 import re
 import datetime
 import json
@@ -221,48 +222,49 @@ def match_delete(request, pk):  # 매치 자체를 없애기 매치를 없애면
 
 
 def main(request, *args, **kwargs):
+    now_time = datetime.datetime.now().time() # 현재 시간
+    today = datetime.date.today() # 오늘 날짜
+    print(request.headers.get('x-requested-with'))
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        print('yes')
+        # 필터 카테고리
+        match_detail_category = {
+            'gender': 'gender__in',
+            'is_matched': 'is_matched__in',
+            'region': 'stadium__location__in',
+            'date': 'date__in',
+        } 
 
-    now_time = datetime.datetime.now().time()
-    today = datetime.date.today()
+        filter_set = dict()
+        for key, value in dict(request.GET).items():
+            if key == 'date' and value:
 
-    match_detail_category = {
-        'gender': 'gender__in',
-        'is_matched': 'is_matched__in',
-        'region': 'stadium__location__in',
-        'date': 'date__in'
-    }
-    date_val = ''
-    filter_set = dict()
-    for key, value in dict(request.GET).items():
-        if key == 'date' and value:
+                value[0] = datetime.datetime.strptime(value[0], '%Y-%m-%d').date()
 
-            date_val = value[0]
-            value[0] = datetime.datetime.strptime(value[0], '%Y-%m-%d').date()
+            key = match_detail_category.get(key)
+            filter_set[key] = value
+        matches = MatchInfo.objects.filter(**filter_set)
+        matches_html = render_to_string(
+        'matchingMatch/match_list.html', {'matches': matches}
+)
 
-        key = match_detail_category.get(key)
-        filter_set[key] = value
+        
+        print(matches_html)
+        return JsonResponse({'matches' : matches_html})
+
+        
 
     filter_form = MatchFilterForm()
-    # html 태그 상의 name  : html 태그 상의 value
-    if filter_set:
-        filter_form = MatchFilterForm(request.GET)
-        matches = MatchInfo.objects.filter(**filter_set)
-        is_date_filter = request.GET.get('date', False)
-        if not is_date_filter:
-            matches = matches.filter(date=today, start_time__gt=now_time)
-        else:
-            print(bool(is_date_filter == today))
-            if is_date_filter == today:
-                matches = matches.filter(start_time__gt=now_time)
-    else:
-        matches = MatchInfo.objects.filter(date=today, start_time__gt=now_time)
+
+
+    matches = MatchInfo.objects.filter(date=today, start_time__gt=now_time)
 
     context = {
         'matches': matches,
         'filter_form': filter_form,
-        'date_val': date_val
     }
     return render(request, "matchingMatch/main.html", context=context)
+
 
 
 @csrf_exempt

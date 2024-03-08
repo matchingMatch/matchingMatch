@@ -2,14 +2,14 @@
 <link rel="stylesheet" href="{% static 'css/team_detail.css' %}" />
 {% endblock%} {% block content %}
 <body>
-	{{m}}
+	
 	<main id = "match-detail" class="wrap w-100% d-flex bg-light justify-content-center p-0" style="min-height:80vh">
 		<div class="d-flex flex-column bg-white" style="width: 700px">
 			<!-- 카카오맵 api -->
 			<div id="map" style="width: auto; height: 25rem"></div>
 			<script
 				type="text/javascript"
-				src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c9e1b4e5a36072194c8a19208ed6cb28&libraries=serviceclusterer,drawing"
+				src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c9e1b4e5a36072194c8a19208ed6cb28&libraries=services,clusterer,drawing"
 			></script>
 
 			<script>
@@ -105,10 +105,17 @@
 					</div>
 					{% endif %}
 				</div>
+                                <br />
+
+                                <hr class="mx-3"/>
+                                <div class="match-etc mx-5">원구장비 : {{match.stadium_cost|linebreaksbr}}</div>
+
+                                <hr class="mx-3"/>
+
 				<br />
 
 				<hr class="mx-3"/>
-				<div class="match-etc mx-5">기타사항 : {{match.etc}}</div>
+				<div class="match-etc mx-5">기타사항 : {{match.etc|linebreaksbr}}</div>
 
 				<hr class="mx-3"/>
 

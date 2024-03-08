@@ -62,7 +62,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = 'server.config.urls'
 
 TEMPLATES = [
     {
@@ -87,7 +87,6 @@ WSGI_APPLICATION = 'server.config.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 GOOGLE_RECAPTCHA_SECRET_KEY = get_secret('GOOGLE_RECAPTCHA_SECRET_KEY')
-DEBUG = True
 
 DATABASES = {
     'default': {
@@ -137,13 +136,16 @@ STATIC_URL = 'static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'statics')
 
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'media')
 ]
 
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

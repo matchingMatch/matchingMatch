@@ -68,17 +68,13 @@ header {
 	transition: left 0.5s ease-out;
 }
 
-.week>label {
+.week > label {
 	width: calc(100vw / 7);
 }
 
-.week>label:hover {
+.week > label:hover {
 	cursor: pointer;
 	background-color: #cecece;
-}
-
-.week_slideshow .date:first-child {
-	/* margin-left: 15px; */
 }
 
 .week_slideshow .date div {
@@ -106,11 +102,9 @@ header {
 	left: -20px;
 }
 
-
 .next {
 	right: -20px;
 }
-
 
 .match_list {
 	height: 500px;
@@ -161,7 +155,7 @@ header {
 	padding: 10px;
 }
 
-.alarm_modal>* {
+.alarm_modal > * {
 	margin-bottom: 10px;
 }
 
@@ -198,7 +192,6 @@ header {
 	width: 100%;
 	padding: 0.5em 2em;
 }
-
 
 nav a {
 	text-decoration: none;
@@ -325,8 +318,9 @@ nav a {
 } */
 
 @font-face {
-	font-family: 'HealthsetGothicLight';
-	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/HealthsetGothicLight.woff') format('woff');
+	font-family: "HealthsetGothicLight";
+	src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/HealthsetGothicLight.woff")
+		format("woff");
 	font-weight: normal;
 	font-style: normal;
 }
@@ -346,11 +340,10 @@ nav a {
 
 body {
 	/* font-family: "Cafe24Ssurround" !important; */
-	font-family: 'HealthsetGothicLight' !important;
-
+	font-family: "HealthsetGothicLight" !important;
 }
 
-.week>input {
+.week > input {
 	position: absolute !important;
 	clip: rect(0, 0, 0, 0);
 	height: 1px;
@@ -363,7 +356,11 @@ body {
 	transition: all 0.1s ease-in-out;
 	border-radius: 5px;
 }
+.week > input[type="radio"]:checked + label {
+	background-color: skyblue;
+}
 
 .error {
 	color: red;
 }
+
